@@ -7,10 +7,10 @@ begin
     select 1
     from pg_type t
     join pg_namespace n on n.oid = t.typnamespace
-    where t.typname = 'listing_type'
+    where t.typname = 'type'
       and n.nspname = 'public'
   ) then
-    create type public.listing_type as enum ('community', 'lfg', 'server');
+    create type public.type as enum ('COMMUNITY', 'LFG', 'SERVER');
   end if;
 end $$;
 
@@ -49,7 +49,7 @@ create table if not exists public.listings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
   game_id uuid not null references public.games(id) on delete restrict,
-  listing_type public.listing_type not null default 'lfg',
+  type public.type not null default 'LFG',
   title text not null,
   description text,
   ip text,

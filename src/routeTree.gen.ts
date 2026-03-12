@@ -18,6 +18,7 @@ import { Route as GameIdRouteImport } from './routes/game.$id'
 import { Route as ApiUserRouteImport } from './routes/api/user'
 import { Route as ApiListingsRouteImport } from './routes/api/listings'
 import { Route as ApiGamesRouteImport } from './routes/api/games'
+import { Route as ApiListingsIdRouteImport } from './routes/api/listings.$id'
 import { Route as ApiListingsIdViewsRouteImport } from './routes/api/listings.$id.views'
 
 const ProfileRoute = ProfileRouteImport.update({
@@ -65,10 +66,15 @@ const ApiGamesRoute = ApiGamesRouteImport.update({
   path: '/api/games',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiListingsIdViewsRoute = ApiListingsIdViewsRouteImport.update({
-  id: '/$id/views',
-  path: '/$id/views',
+const ApiListingsIdRoute = ApiListingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
   getParentRoute: () => ApiListingsRoute,
+} as any)
+const ApiListingsIdViewsRoute = ApiListingsIdViewsRouteImport.update({
+  id: '/views',
+  path: '/views',
+  getParentRoute: () => ApiListingsIdRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/api/user': typeof ApiUserRoute
   '/game/$id': typeof GameIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/api/listings/$id': typeof ApiListingsIdRouteWithChildren
   '/api/listings/$id/views': typeof ApiListingsIdViewsRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/api/user': typeof ApiUserRoute
   '/game/$id': typeof GameIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/api/listings/$id': typeof ApiListingsIdRouteWithChildren
   '/api/listings/$id/views': typeof ApiListingsIdViewsRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/api/user': typeof ApiUserRoute
   '/game/$id': typeof GameIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/api/listings/$id': typeof ApiListingsIdRouteWithChildren
   '/api/listings/$id/views': typeof ApiListingsIdViewsRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/api/user'
     | '/game/$id'
     | '/listing/$id'
+    | '/api/listings/$id'
     | '/api/listings/$id/views'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/api/user'
     | '/game/$id'
     | '/listing/$id'
+    | '/api/listings/$id'
     | '/api/listings/$id/views'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/api/user'
     | '/game/$id'
     | '/listing/$id'
+    | '/api/listings/$id'
     | '/api/listings/$id/views'
   fileRoutesById: FileRoutesById
 }
@@ -224,22 +236,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGamesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/listings/$id': {
+      id: '/api/listings/$id'
+      path: '/$id'
+      fullPath: '/api/listings/$id'
+      preLoaderRoute: typeof ApiListingsIdRouteImport
+      parentRoute: typeof ApiListingsRoute
+    }
     '/api/listings/$id/views': {
       id: '/api/listings/$id/views'
-      path: '/$id/views'
+      path: '/views'
       fullPath: '/api/listings/$id/views'
       preLoaderRoute: typeof ApiListingsIdViewsRouteImport
-      parentRoute: typeof ApiListingsRoute
+      parentRoute: typeof ApiListingsIdRoute
     }
   }
 }
 
-interface ApiListingsRouteChildren {
+interface ApiListingsIdRouteChildren {
   ApiListingsIdViewsRoute: typeof ApiListingsIdViewsRoute
 }
 
-const ApiListingsRouteChildren: ApiListingsRouteChildren = {
+const ApiListingsIdRouteChildren: ApiListingsIdRouteChildren = {
   ApiListingsIdViewsRoute: ApiListingsIdViewsRoute,
+}
+
+const ApiListingsIdRouteWithChildren = ApiListingsIdRoute._addFileChildren(
+  ApiListingsIdRouteChildren,
+)
+
+interface ApiListingsRouteChildren {
+  ApiListingsIdRoute: typeof ApiListingsIdRouteWithChildren
+}
+
+const ApiListingsRouteChildren: ApiListingsRouteChildren = {
+  ApiListingsIdRoute: ApiListingsIdRouteWithChildren,
 }
 
 const ApiListingsRouteWithChildren = ApiListingsRoute._addFileChildren(

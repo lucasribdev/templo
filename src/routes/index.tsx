@@ -165,7 +165,7 @@ function App() {
 								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all appearance-none cursor-pointer"
 							>
 								<option value="ALL">Todos os Tipos</option>
-								<option value="LFG">Procuro Grupo</option>
+								<option value="LFG">Procurando Grupo</option>
 								<option value="SERVER">Servidores</option>
 								<option value="COMMUNITY">Comunidades</option>
 							</select>

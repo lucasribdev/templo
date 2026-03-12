@@ -27,7 +27,7 @@ export default function ListingCard({
 	const getTypeText = (type: ListingType) => {
 		switch (type) {
 			case "LFG":
-				return "Procuro Grupo";
+				return "Procurando Grupo";
 			case "SERVER":
 				return "Servidor";
 			case "COMMUNITY":

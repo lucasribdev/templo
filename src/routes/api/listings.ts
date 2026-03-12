@@ -9,6 +9,7 @@ export const Route = createFileRoute("/api/listings")({
 			GET: async ({ request }) => {
 				const url = new URL(request.url);
 				const gameId = url.searchParams.get("gameId");
+				const userId = url.searchParams.get("userId");
 
 				let query = supabase
 					.from("listings")
@@ -18,6 +19,10 @@ export const Route = createFileRoute("/api/listings")({
 
 				if (gameId) {
 					query = query.eq("game_id", gameId);
+				}
+
+				if (userId) {
+					query = query.eq("user_id", userId);
 				}
 
 				const { data, error } = await query;

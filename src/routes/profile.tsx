@@ -19,7 +19,7 @@ function Profile() {
 	const profileId = profile?.id;
 
 	const { data: listings, isLoading: isListingsLoading } = useQuery({
-		queryKey: ["listings"],
+		queryKey: ["listing", profileId],
 		queryFn: ({ signal }) => {
 			if (!profileId) {
 				throw new Error("Missing profile");

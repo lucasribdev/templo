@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { createListing, getGames } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { ListingType } from "@/types";
+import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
 
 export const Route = createFileRoute("/create-listing")({
 	validateSearch: (search) => ({
@@ -92,7 +93,7 @@ function RouteComponent() {
 					type,
 					title: value.title,
 					description: value.description,
-					discordInvite: value.discord_invite,
+					discordInvite: normalizeDiscordInvite(value.discord_invite) ?? "",
 					ip: type === "SERVER" ? value.ip : undefined,
 					tags: value.tags,
 				},
@@ -344,10 +345,7 @@ function RouteComponent() {
 									validators={{
 										onChange: ({ value }) => {
 											if (!value.trim()) return "Discord é obrigatório";
-											if (
-												!value.includes("discord.gg") &&
-												!value.includes("discord.com")
-											) {
+											if (!isValidDiscordInvite(value)) {
 												return "Use um link válido do Discord";
 											}
 											return undefined;
@@ -369,7 +367,7 @@ function RouteComponent() {
 												value={field.state.value}
 												onBlur={field.handleBlur}
 												onChange={(e) => field.handleChange(e.target.value)}
-												placeholder="discord.gg/..."
+												placeholder="https://discord.gg/..."
 												className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
 											/>
 											{field.state.meta.isTouched &&

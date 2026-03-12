@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { normalizeDiscordInvite } from "@/utils/discord";
 import { mapListing } from "@/utils/mappers";
 import { createSupabaseUserClient, supabase } from "@/utils/supabase";
 
@@ -40,6 +41,14 @@ export const Route = createFileRoute("/api/listings")({
 				}
 
 				const body = await request.json();
+				const discordInvite = normalizeDiscordInvite(body.discordInvite ?? "");
+
+				if (!discordInvite) {
+					return Response.json(
+						{ error: "Discord invite must be a valid Discord URL" },
+						{ status: 400 },
+					);
+				}
 
 				const supabaseUser = createSupabaseUserClient(authHeader);
 				const { data: authData } = await supabaseUser.auth.getUser();
@@ -57,7 +66,7 @@ export const Route = createFileRoute("/api/listings")({
 						title: body.title,
 						description: body.description,
 						tags: body.tags,
-						discord_invite: body.discordInvite,
+						discord_invite: discordInvite,
 						ip: body.ip,
 						active: true,
 					})
@@ -68,7 +77,7 @@ export const Route = createFileRoute("/api/listings")({
 					return Response.json({ error: error.message }, { status: 500 });
 				}
 
-				return Response.json(data, { status: 201 });
+				return Response.json(mapListing(data), { status: 201 });
 			},
 		},
 	},

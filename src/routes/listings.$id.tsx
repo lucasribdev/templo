@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Check, Copy, Eye, MessageSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getGameById, getListingById, incrementListingViews } from "@/lib/api";
+import { normalizeDiscordInvite } from "@/utils/discord";
 
 export const Route = createFileRoute("/listings/$id")({
 	loader: async ({ params }) => {
@@ -57,6 +58,8 @@ function ListingDetails() {
 	if (!listing || !game) {
 		return <div className="p-20 text-center">Anúncio não encontrado.</div>;
 	}
+
+	const discordInviteUrl = normalizeDiscordInvite(listing.discordInvite ?? "");
 
 	const handleCopyIP = () => {
 		if ("ip" in listing && listing.ip) {
@@ -119,14 +122,16 @@ function ListingDetails() {
 								{isLiked ? "Curtido" : "Curtir"} ({likesCount})
 							</button> */}
 
-							<a
-								href={listing?.discordInvite}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="btn-primary w-full flex items-center justify-center gap-2"
-							>
-								<MessageSquare className="w-5 h-5" /> Entrar no Discord
-							</a>
+							{discordInviteUrl && (
+								<a
+									href={discordInviteUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="btn-primary w-full flex items-center justify-center gap-2"
+								>
+									<MessageSquare className="w-5 h-5" /> Entrar no Discord
+								</a>
+							)}
 
 							{"ip" in listing && listing.ip && (
 								<button

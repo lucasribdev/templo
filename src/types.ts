@@ -75,7 +75,7 @@ export interface ProfileRow {
 	bio: string;
 	discord_id: string;
 	created_at: string;
-	update_at: string;
+	updated_at: string;
 }
 
 export interface CreateListingInput {

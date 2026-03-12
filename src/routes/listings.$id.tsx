@@ -9,7 +9,7 @@ import {
 	incrementListingViews,
 } from "@/lib/api";
 
-export const Route = createFileRoute("/listing/$id")({
+export const Route = createFileRoute("/listings/$id")({
 	loader: async ({ params }) => {
 		return { id: params?.id };
 	},
@@ -71,7 +71,7 @@ function ListingDetails() {
 	return (
 		<div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
 			<Link
-				to="/game/$id"
+				to="/games/$id"
 				params={{ id: game.id }}
 				className="flex items-center gap-2 text-gray-500 hover:text-brand-primary transition-colors text-sm font-bold"
 			>
@@ -122,7 +122,7 @@ function ListingDetails() {
 							</button> */}
 
 							<a
-								href={listing?.discord}
+								href={listing?.discordInvite}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="btn-primary w-full flex items-center justify-center gap-2"

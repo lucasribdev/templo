@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/utils/supabase";
 
-export const Route = createFileRoute("/api/listings/$id")({
+export const Route = createFileRoute("/api/games/$id")({
 	server: {
 		handlers: {
 			GET: async ({ params }) => {
 				const { data, error } = await supabase
-					.from("listings")
+					.from("games")
 					.select("*")
 					.eq("id", params.id)
 					.single();
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/api/listings/$id")({
 				if (error) {
 					return Response.json(
 						{
-							error: "Failed to fetch listing",
+							error: "Failed to fetch game",
 						},
 						{ status: 500 },
 					);

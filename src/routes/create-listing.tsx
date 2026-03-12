@@ -99,7 +99,7 @@ function RouteComponent() {
 				session.access_token,
 			);
 
-			navigate({ to: "/listing/$id", params: { id: createdListing.id } });
+			navigate({ to: "/listings/$id", params: { id: createdListing.id } });
 		},
 	});
 

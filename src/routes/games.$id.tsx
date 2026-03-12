@@ -8,7 +8,7 @@ import { getGames, getListings } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { ListingType } from "@/types";
 
-export const Route = createFileRoute("/game/$id")({
+export const Route = createFileRoute("/games/$id")({
 	loader: async ({ params }) => {
 		return { id: params?.id };
 	},
@@ -27,7 +27,7 @@ function GameDetails() {
 	} = useQuery({
 		queryKey: ["games"],
 		queryFn: ({ signal }) => getGames(signal),
-	});
+	})
 
 	const {
 		data: listingsData,
@@ -36,7 +36,7 @@ function GameDetails() {
 	} = useQuery({
 		queryKey: ["listings"],
 		queryFn: ({ signal }) => getListings(signal),
-	});
+	})
 
 	const game = games?.find((g) => g.id === id);
 
@@ -45,7 +45,7 @@ function GameDetails() {
 
 	const listings = listingsData?.filter(
 		(l) => l.gameId === id && l.type === activeTab,
-	);
+	)
 
 	return (
 		<div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
@@ -148,5 +148,5 @@ function GameDetails() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

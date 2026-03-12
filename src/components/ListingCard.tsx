@@ -39,7 +39,9 @@ export default function ListingCard({
 		<motion.div
 			whileHover={{ y: -4 }}
 			className="glass-panel p-5 flex flex-col gap-4 cursor-pointer group"
-			onClick={() => navigate({ to: `/listing/${listing.id}` })}
+			onClick={() =>
+				navigate({ to: "/listings/$id", params: { id: listing.id } })
+			}
 		>
 			<div className="flex justify-between items-start">
 				<div
@@ -79,7 +81,7 @@ export default function ListingCard({
 			</p>
 
 			<div className="flex flex-wrap gap-2 mt-auto">
-				{listing.tags.slice(0, 3).map((tag) => (
+				{listing?.tags?.slice(0, 3).map((tag) => (
 					<span
 						key={tag}
 						className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-gray-400"

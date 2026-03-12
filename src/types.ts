@@ -19,27 +19,32 @@ export interface User {
 
 export interface Listing {
 	id: string;
-	type: ListingType;
-	gameId: string;
 	userId: string;
+	gameId: string;
+	type: ListingType;
 	title: string;
-	description: string;
-	createdAt: string;
-	tags: string[];
-	views: number;
+	description?: string;
 	ip?: string;
+	tags?: string[];
+	discordInvite?: string;
+	views: number;
+	active: boolean;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface ListingRow {
 	id: string;
-	type: ListingType;
-	game_id: string;
 	user_id: string;
+	game_id: string;
+	type: ListingType;
 	title: string;
-	description: string;
-	created_at: string;
-	tags: string[];
-	views: number;
+	description?: string;
 	ip?: string;
+	tags?: string[];
 	discord_invite?: string;
+	views: number;
+	active: boolean;
+	created_at: string;
+	updated_at: string;
 }

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { title } from "process";
 import { mapListing } from "@/utils/mappers";
 import { createSupabaseUserClient, supabase } from "@/utils/supabase";
 
@@ -34,11 +35,19 @@ export const Route = createFileRoute("/api/listings")({
 					return Response.json({ error: "Unauthorized" }, { status: 401 });
 				}
 
+				console.log(body);
+
 				const { data, error } = await supabaseUser
 					.from("listings")
 					.insert({
-						...body,
 						user_id: authData.user.id,
+						game_id: body.gameId,
+						type: body.type,
+						title: body.title,
+						description: body.description,
+						tags: body.tags,
+						discord_invite: body.discordInvite,
+						ip: body.ip,
 						active: true,
 					})
 					.select()

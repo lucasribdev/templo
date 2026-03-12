@@ -35,8 +35,6 @@ export const Route = createFileRoute("/api/listings")({
 					return Response.json({ error: "Unauthorized" }, { status: 401 });
 				}
 
-				console.log(body);
-
 				const { data, error } = await supabaseUser
 					.from("listings")
 					.insert({

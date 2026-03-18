@@ -12,11 +12,7 @@ export const Route = createFileRoute("/games/")({
 function Games() {
 	const [search, setSearch] = useState("");
 
-	const {
-		data: games,
-		isLoading: isGamesLoading,
-		isError: isGamesError,
-	} = useQuery({
+	const { data: games } = useQuery({
 		queryKey: ["games"],
 		queryFn: ({ signal }) => getGames(signal),
 	});

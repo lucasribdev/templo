@@ -13,7 +13,9 @@ import { supabase } from "@/utils/supabase";
 type AuthContextValue = {
 	session: Session | null;
 	isSessionLoading: boolean;
-	signInWithDiscord: (redirectTo?: string) => Promise<{ error: AuthError | null }>;
+	signInWithDiscord: (
+		redirectTo?: string,
+	) => Promise<{ error: AuthError | null }>;
 	signOut: () => Promise<{ error: AuthError | null }>;
 };
 
@@ -47,21 +49,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		};
 	}, []);
 
-	const signInWithDiscord = useCallback(
-		async (redirectTo = "/") => {
-			if (typeof window === "undefined") {
-				return { error: null };
-			}
+	const signInWithDiscord = useCallback(async (redirectTo = "/") => {
+		if (typeof window === "undefined") {
+			return { error: null };
+		}
 
-			const { error } = await supabase.auth.signInWithOAuth({
-				provider: "discord",
-				options: { redirectTo },
-			});
+		const { error } = await supabase.auth.signInWithOAuth({
+			provider: "discord",
+			options: { redirectTo },
+		});
 
-			return { error };
-		},
-		[],
-	);
+		return { error };
+	}, []);
 
 	const signOut = useCallback(async () => {
 		const { error } = await supabase.auth.signOut();

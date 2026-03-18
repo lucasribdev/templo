@@ -20,20 +20,12 @@ function GameDetails() {
 
 	const { id } = Route.useLoaderData();
 
-	const {
-		data: game,
-		isLoading: isGameLoading,
-		isError: isGameError,
-	} = useQuery({
+	const { data: game } = useQuery({
 		queryKey: ["game", id],
 		queryFn: ({ signal }) => getGameById(id, signal),
 	});
 
-	const {
-		data: listingsData,
-		isLoading: isListingsLoading,
-		isError: isListingsError,
-	} = useQuery({
+	const { data: listingsData } = useQuery({
 		queryKey: ["listings", id],
 		queryFn: ({ signal }) => getListingsByGameId(id, signal),
 	});

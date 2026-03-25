@@ -22,6 +22,7 @@ export interface Listing {
 	id: string;
 	userId: string;
 	game: Game;
+	profile: Profile;
 	type: ListingType;
 	title: string;
 	description?: string;
@@ -80,6 +81,8 @@ export interface ListingsRpcRow {
 	game_genres?: string[];
 	game_release_date?: string;
 	game_website?: string;
+	profile_username: string;
+	profile_avatar_url: string;
 }
 
 export interface Profile {

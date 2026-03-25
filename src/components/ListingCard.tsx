@@ -145,6 +145,17 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 
 			<div className="pt-4 border-t border-border-dark flex justify-between items-center">
 				<div className="flex items-center gap-3">
+					<div className="flex items-center gap-1.5">
+						<img
+							src={listing?.profile.avatarUrl}
+							className="w-4 h-4 rounded-full border border-white/10"
+							alt={listing?.profile.username}
+							referrerPolicy="no-referrer"
+						/>
+						<span className="text-[10px] text-gray-400 font-bold">
+							{listing.profile?.username}
+						</span>
+					</div>
 					<span className="text-[10px] text-gray-500 uppercase font-mono">
 						{new Date(listing.createdAt).toLocaleDateString("pt-BR")}
 					</span>

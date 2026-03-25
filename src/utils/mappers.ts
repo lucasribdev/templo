@@ -1,3 +1,4 @@
+import { profile } from "console";
 import type {
 	GameRow,
 	ListingByIdRpcRow,
@@ -35,7 +36,6 @@ export function mapListingByIdRpc(row: ListingByIdRpcRow) {
 export function mapListingsRpc(row: ListingsRpcRow) {
 	return {
 		id: row.id,
-		userId: row.user_id,
 		game: {
 			id: row.game_id,
 			name: row.game_name,
@@ -43,6 +43,11 @@ export function mapListingsRpc(row: ListingsRpcRow) {
 			genres: row.game_genres ?? [],
 			releaseDate: row.game_release_date ?? "",
 			website: row.game_website ?? "",
+		},
+		profile: {
+			id: row.user_id,
+			username: row.profile_username,
+			avatarUrl: row.profile_avatar_url,
 		},
 		type: row.type,
 		title: row.title,

@@ -277,7 +277,9 @@ returns table (
   game_cover_url text,
   game_genres text[],
   game_release_date date,
-  game_website text
+  game_website text,
+  profile_username text,
+  profile_avatar_url text
 )
 language sql
 stable
@@ -304,9 +306,12 @@ as $$
     g.cover_url as game_cover_url,
     g.genres as game_genres,
     g.release_date as game_release_date,
-    g.website as game_website
+    g.website as game_website,
+    p.username as profile_username,
+    p.avatar_url as profile_avatar_url
   from public.listings l
   join public.games g on g.id = l.game_id
+  join public.profiles p on p.id = l.user_id
   left join public.listing_likes ll on ll.listing_id = l.id
   where l.active = true
     and (p_game_id is null or l.game_id = p_game_id)
@@ -317,7 +322,9 @@ as $$
     g.cover_url,
     g.genres,
     g.release_date,
-    g.website
+    g.website,
+    p.username,
+    p.avatar_url
   order by l.created_at desc;
 $$;
 

@@ -218,7 +218,10 @@ returns table (
   likes_count bigint,
   user_liked boolean,
   created_at timestamptz,
-  updated_at timestamptz
+  updated_at timestamptz,
+  profile_username text,
+  profile_full_name text,
+  profile_avatar_url text
 )
 language sql
 stable
@@ -245,17 +248,32 @@ as $$
     count(ll.id)::bigint as likes_count,
     coalesce(bool_or(ll.user_id = auth.uid()), false) as user_liked,
     l.created_at,
-    l.updated_at
+    l.updated_at,
+    p.username as profile_username,
+    p.full_name as profile_full_name,
+    p.avatar_url as profile_avatar_url
   from public.listings l
   join public.games g on g.id = l.game_id
+  join public.profiles p on p.id = l.user_id
   left join public.listing_likes ll on ll.listing_id = l.id
   where l.id = p_listing_id
-  group by l.id, g.name, g.cover_url, g.genres, g.release_date, g.website;
+  group by
+    l.id,
+    g.name,
+    g.cover_url,
+    g.genres,
+    g.release_date,
+    g.website,
+    p.username,
+    p.full_name,
+    p.avatar_url;
 $$;
 
 create or replace function public.get_listings(
   p_game_id uuid default null,
-  p_user_id uuid default null
+  p_user_id uuid default null,
+  p_limit int default 12,
+  p_offset int default 0
 )
 returns table (
   id uuid,
@@ -328,7 +346,9 @@ as $$
     p.username,
     p.full_name,
     p.avatar_url
-  order by l.created_at desc;
+  order by l.created_at desc
+  limit p_limit
+  offset p_offset;
 $$;
 
 alter table public.games enable row level security;
@@ -405,4 +425,4 @@ using (auth.uid() = user_id);
 grant execute on function public.increment_listing_views(uuid) to anon, authenticated;
 grant execute on function public.toggle_listing_like(uuid) to authenticated;
 grant execute on function public.get_listing_by_id(uuid) to anon, authenticated;
-grant execute on function public.get_listings(uuid, uuid) to anon, authenticated;
+grant execute on function public.get_listings(uuid, uuid, integer, integer) to anon, authenticated;

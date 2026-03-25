@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useState } from "react";
@@ -9,13 +9,28 @@ export const Route = createFileRoute("/games/")({
 	component: Games,
 });
 
+const pageSize = 12;
+
 function Games() {
 	const [search, setSearch] = useState("");
 
-	const { data: games } = useQuery({
-		queryKey: ["games"],
-		queryFn: ({ signal }) => getGames(signal),
-	});
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+		useInfiniteQuery({
+			queryKey: ["games"],
+			initialPageParam: 0,
+			queryFn: ({ pageParam, signal }) =>
+				getGames({
+					signal,
+					limit: pageSize,
+					offset: pageParam,
+				}),
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.length < pageSize) return undefined;
+				return allPages.flat().length;
+			},
+		});
+
+	const games = data?.pages.flat() ?? [];
 
 	const filteredGames = games?.filter(
 		(game) =>

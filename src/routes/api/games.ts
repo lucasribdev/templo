@@ -8,15 +8,18 @@ export const Route = createFileRoute("/api/games")({
 			GET: async ({ request }) => {
 				const { searchParams } = new URL(request.url);
 				const limitParam = searchParams.get("limit");
+				const offsetParam = searchParams.get("offset");
+
 				const limit = limitParam ? Number(limitParam) : undefined;
+				const offset = offsetParam ? Number(offsetParam) : 0;
 
 				let query = supabase
 					.from("games")
 					.select("id, name, cover_url, genres, release_date, website")
 					.order("name");
 
-				if (limit && !Number.isNaN(limit)) {
-					query = query.limit(limit);
+				if (limit !== undefined) {
+					query = query.range(offset, offset + limit - 1);
 				}
 
 				const { data, error } = await query;

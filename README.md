@@ -31,7 +31,7 @@ Notes:
 
 - `supabase/migrations/20260318130000_initial_schema.sql`
   - Creates the full initial schema in one step: tables, indexes, triggers, RLS policies, RPCs and grants.
-  - Represents the final database state expected by the app, without intermediate migration history.
+  - Represents the final database state expected by the app, including the profile fields returned by `get_listing_by_id`.
   - This is intended for `supabase db reset` / fresh environments, since there is no existing data to preserve.
 
 Seed data:

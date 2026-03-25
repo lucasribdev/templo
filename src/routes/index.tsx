@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
 	ArrowUpDown,
@@ -10,7 +10,7 @@ import {
 	Users,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GameCard from "@/components/GameCard";
 import ListingCard from "@/components/ListingCard";
 import { getGames, getListings } from "@/lib/api";
@@ -19,6 +19,7 @@ import type { Game, ListingType } from "@/types";
 export const Route = createFileRoute("/")({ component: App });
 
 const limit = 6;
+const pageSize = 12;
 
 function App() {
 	const [search, setSearch] = useState("");
@@ -28,15 +29,47 @@ function App() {
 		"DATE",
 	);
 
+	const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
 	const { data: games } = useQuery({
 		queryKey: ["games", limit],
 		queryFn: ({ signal }) => getGames({ signal, limit }),
 	});
 
-	const { data: listings } = useQuery({
-		queryKey: ["listings"],
-		queryFn: ({ signal }) => getListings(signal),
-	});
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+		useInfiniteQuery({
+			queryKey: ["listings"],
+			initialPageParam: 0,
+			queryFn: ({ pageParam, signal }) =>
+				getListings({
+					signal,
+					limit: pageSize,
+					offset: pageParam,
+				}),
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.length < pageSize) return undefined;
+				return allPages.flat().length;
+			},
+		});
+
+	const listings = data?.pages.flat() ?? [];
+
+	useEffect(() => {
+		const node = loadMoreRef.current;
+		if (!node || !hasNextPage) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0]?.isIntersecting && !isFetchingNextPage) {
+					void fetchNextPage();
+				}
+			},
+			{ rootMargin: "300px" },
+		);
+
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	const normalizedSearch = search.trim().toLowerCase();
 	const handleFilterTypeChange = (
@@ -197,6 +230,11 @@ function App() {
 					{filteredListings.map((listing) => (
 						<ListingCard key={listing.id} listing={listing} />
 					))}
+					{isFetchingNextPage && (
+						<div className="col-span-full text-center text-sm text-gray-400 py-4">
+							Carregando mais anúncios...
+						</div>
+					)}
 					{filteredListings.length === 0 && (
 						<div className="col-span-full py-20 text-center glass-panel">
 							<Info className="w-12 h-12 text-gray-600 mx-auto mb-4" />
@@ -206,6 +244,7 @@ function App() {
 						</div>
 					)}
 				</div>
+				<div ref={loadMoreRef}></div>
 			</section>
 		</div>
 	);

@@ -143,3 +143,9 @@ export interface ListingLikeCount {
 export interface ListingLikeUser {
 	user_id: string;
 }
+
+export interface GetGamesParams {
+	signal?: AbortSignal;
+	limit?: number;
+	offset?: number;
+}

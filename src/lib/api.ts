@@ -1,4 +1,11 @@
-import type { CreateListingInput, Game, Listing, Profile } from "@/types";
+import type { off } from "process";
+import type {
+	CreateListingInput,
+	Game,
+	GetGamesParams,
+	Listing,
+	Profile,
+} from "@/types";
 import { supabase } from "@/utils/supabase";
 
 async function getAuthHeaders() {
@@ -12,19 +19,19 @@ async function getAuthHeaders() {
 		: undefined;
 }
 
-type GetGamesParams = {
-	signal?: AbortSignal;
-	limit?: number;
-};
-
 export async function getGames({
 	signal,
 	limit,
+	offset,
 }: GetGamesParams): Promise<Game[]> {
 	const url = new URL("/api/games", window.location.origin);
 
 	if (limit) {
 		url.searchParams.set("limit", String(limit));
+	}
+
+	if (offset) {
+		url.searchParams.set("offset", String(offset));
 	}
 
 	const response = await fetch(url.toString(), { signal });
@@ -49,16 +56,31 @@ export async function getGameById(
 	return response.json() as Promise<Game>;
 }
 
-export async function getListings(signal?: AbortSignal): Promise<Listing[]> {
-	const response = await fetch("/api/listings", {
+export async function getListings({
+	signal,
+	limit,
+	offset,
+}: {
+	signal?: AbortSignal;
+	limit: number;
+	offset: number;
+}): Promise<Listing[]> {
+	const url = new URL("/api/listings", window.location.origin);
+
+	if (limit) {
+		url.searchParams.set("limit", String(limit));
+	}
+
+	if (offset) {
+		url.searchParams.set("offset", String(offset));
+	}
+
+	const response = await fetch(url.toString(), {
 		signal,
 		headers: await getAuthHeaders(),
 	});
 
-	if (!response.ok) {
-		throw new Error("Failed to fetch listings");
-	}
-
+	if (!response.ok) throw new Error("Failed to fetch listings");
 	return response.json() as Promise<Listing[]>;
 }
 

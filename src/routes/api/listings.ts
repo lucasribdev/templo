@@ -9,8 +9,12 @@ export const Route = createFileRoute("/api/listings")({
 		handlers: {
 			GET: async ({ request }) => {
 				const url = new URL(request.url);
+
 				const gameId = url.searchParams.get("gameId");
 				const userId = url.searchParams.get("userId");
+				const limit = Number(url.searchParams.get("limit") ?? 12);
+				const offset = Number(url.searchParams.get("offset") ?? 0);
+
 				const authHeader = request.headers.get("authorization");
 				const supabaseClient = authHeader
 					? createSupabaseUserClient(authHeader)
@@ -18,6 +22,8 @@ export const Route = createFileRoute("/api/listings")({
 				const { data, error } = await supabaseClient.rpc("get_listings", {
 					p_game_id: gameId,
 					p_user_id: userId,
+					p_limit: limit,
+					p_offset: offset,
 				});
 
 				if (error) {

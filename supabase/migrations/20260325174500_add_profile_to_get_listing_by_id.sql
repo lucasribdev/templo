@@ -1,3 +1,5 @@
+drop function if exists public.get_listing_by_id(uuid);
+
 create or replace function public.get_listing_by_id(p_listing_id uuid)
 returns table (
   id uuid,

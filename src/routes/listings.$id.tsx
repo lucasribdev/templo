@@ -218,9 +218,10 @@ function ListingDetails() {
 						</motion.div>
 
 						{/* Game Info Card */}
-						<div
+						<Link
+							to={`/games/$id`}
+							params={{ id: listing.game.id }}
 							className="glass-panel p-6 flex items-center justify-between group cursor-pointer"
-							// onClick={() => navigate(`/game/${game.id}`)}
 						>
 							<div className="flex items-center gap-4">
 								<img
@@ -239,7 +240,7 @@ function ListingDetails() {
 								</div>
 							</div>
 							<ChevronRight className="w-6 h-6 text-gray-600 group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-						</div>
+						</Link>
 					</div>
 
 					{/* Sidebar */}
@@ -298,7 +299,7 @@ function ListingDetails() {
 											href={discordInviteUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-black text-sm bg-brand-primary text-white hover:bg-brand-primary/90 transition-all shadow-lg shadow-brand-primary/20 group"
+											className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-black text-sm btn-primary transition-all shadow-lg shadow-brand-primary/20 group"
 										>
 											<MessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform" />
 											ENTRAR NO DISCORD
@@ -350,16 +351,6 @@ function ListingDetails() {
 									</div>
 									{/* </>
 									)} */}
-								</div>
-							</div>
-
-							<div className="pt-8 border-t border-white/5">
-								<div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-gray-500">
-									<span>Visualizações</span>
-									<span className="text-gray-300">{listing.views}</span>
-								</div>
-								<div className="mt-2 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-									<div className="h-full bg-brand-primary/50 w-2/3" />
 								</div>
 							</div>
 						</motion.div>

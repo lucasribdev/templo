@@ -1,6 +1,10 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	type SearchSchemaInput,
+	useNavigate,
+} from "@tanstack/react-router";
 import { MessageSquare, Server, Users, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
@@ -11,8 +15,12 @@ import { cn } from "@/lib/utils";
 import type { ListingType } from "@/types";
 import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
 
+type CreateListingSearch = {
+	game?: string;
+};
+
 export const Route = createFileRoute("/create-listing")({
-	validateSearch: (search) => ({
+	validateSearch: (search: CreateListingSearch & SearchSchemaInput) => ({
 		game: typeof search.game === "string" ? search.game : undefined,
 	}),
 	component: RouteComponent,

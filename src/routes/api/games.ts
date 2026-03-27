@@ -9,6 +9,7 @@ export const Route = createFileRoute("/api/games")({
 				const { searchParams } = new URL(request.url);
 				const limitParam = searchParams.get("limit");
 				const offsetParam = searchParams.get("offset");
+				const search = searchParams.get("search")?.trim();
 
 				const limit = limitParam ? Number(limitParam) : undefined;
 				const offset = offsetParam ? Number(offsetParam) : 0;
@@ -17,6 +18,10 @@ export const Route = createFileRoute("/api/games")({
 					.from("games")
 					.select("id, name, cover_url, genres, release_date, website")
 					.order("name");
+
+				if (search) {
+					query = query.ilike("name", `%${search}%`);
+				}
 
 				if (limit !== undefined) {
 					query = query.range(offset, offset + limit - 1);

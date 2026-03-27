@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
 	createFileRoute,
 	type SearchSchemaInput,
@@ -19,6 +19,8 @@ import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
 type CreateListingSearch = {
 	game?: string;
 };
+
+const pageSize = 20;
 
 export const Route = createFileRoute("/create-listing")({
 	validateSearch: (search: CreateListingSearch & SearchSchemaInput) => ({
@@ -55,6 +57,7 @@ function RouteComponent() {
 	const [suggestedGame, setSuggestedGame] = useState<string | null>(null);
 	const [tagInput, setTagInput] = useState("");
 	const [search, setSearch] = useState("");
+	const [debouncedSearch, setDebouncedSearch] = useState("");
 	const tagsInputId = useId();
 	const navigate = useNavigate();
 	const { isSessionLoading, session, signInWithDiscord } = useAuth();
@@ -67,10 +70,51 @@ function RouteComponent() {
 		}
 	}, [searchGame]);
 
-	const { data: games } = useQuery({
-		queryKey: ["games"],
-		queryFn: ({ signal }) => getGames({ signal }),
-	});
+	useEffect(() => {
+		const timeout = window.setTimeout(() => {
+			setDebouncedSearch(search.trim());
+		}, 300);
+
+		return () => window.clearTimeout(timeout);
+	}, [search]);
+
+	const [loadMoreNode, setLoadMoreNode] = useState<HTMLDivElement | null>(null);
+
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+		useInfiniteQuery({
+			queryKey: ["games", debouncedSearch],
+			initialPageParam: 0,
+			queryFn: ({ pageParam, signal }) =>
+				getGames({
+					signal,
+					limit: pageSize,
+					offset: pageParam,
+					search: debouncedSearch,
+				}),
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.length < pageSize) return undefined;
+				return allPages.flat().length;
+			},
+		});
+
+	const games = data?.pages.flat() ?? [];
+
+	useEffect(() => {
+		const node = loadMoreNode;
+		if (step !== 2 || !node || !hasNextPage) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0]?.isIntersecting && !isFetchingNextPage) {
+					void fetchNextPage();
+				}
+			},
+			{ rootMargin: "300px" },
+		);
+
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, [fetchNextPage, hasNextPage, isFetchingNextPage, loadMoreNode, step]);
 
 	const listingForm = useForm({
 		defaultValues: {
@@ -234,37 +278,31 @@ function RouteComponent() {
 						</div>
 
 						<div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-							{games
-								?.filter((g) =>
-									g.name.toLowerCase().includes(search.toLowerCase()),
-								)
-								.map((game) => (
-									<button
-										type="button"
-										key={game.id}
-										onClick={() => {
-											setSelectedGame(game.id);
-											setSuggestedGame(null);
-											setStep(3);
-										}}
-										className={cn(
-											"glass-panel p-4 flex flex-col items-center gap-3 transition-all hover:border-brand-primary",
-											selectedGame === game.id &&
-												"border-brand-primary bg-brand-primary/5",
-										)}
-									>
-										<img
-											alt={`${game.name} cover`}
-											src={game.coverUrl}
-											className="w-12 h-12 rounded-lg object-cover"
-											referrerPolicy="no-referrer"
-										/>
-										<span className="font-bold text-sm">{game.name}</span>
-									</button>
-								))}
-							{games?.filter((g) =>
-								g.name.toLowerCase().includes(search.toLowerCase()),
-							).length === 0 && (
+							{games?.map((game) => (
+								<button
+									type="button"
+									key={game.id}
+									onClick={() => {
+										setSelectedGame(game.id);
+										setSuggestedGame(null);
+										setStep(3);
+									}}
+									className={cn(
+										"glass-panel p-4 flex flex-col items-center gap-3 transition-all hover:border-brand-primary",
+										selectedGame === game.id &&
+											"border-brand-primary bg-brand-primary/5",
+									)}
+								>
+									<img
+										alt={`${game.name} cover`}
+										src={game.coverUrl}
+										className="w-12 h-12 rounded-lg object-cover"
+										referrerPolicy="no-referrer"
+									/>
+									<span className="font-bold text-sm">{game.name}</span>
+								</button>
+							))}
+							{search.trim() && games?.length === 0 && (
 								<div className="col-span-full py-8 text-center space-y-4">
 									<p className="text-gray-500">
 										Não encontrou o jogo "{search}"?
@@ -285,6 +323,7 @@ function RouteComponent() {
 								</div>
 							)}
 						</div>
+						<div ref={setLoadMoreNode} className="h-1 w-full" />
 						<button
 							type="button"
 							onClick={() => setStep(1)}

@@ -13,18 +13,28 @@ const pageSize = 20;
 
 function Games() {
 	const [search, setSearch] = useState("");
+	const [debouncedSearch, setDebouncedSearch] = useState("");
+
+	useEffect(() => {
+		const timeout = window.setTimeout(() => {
+			setDebouncedSearch(search.trim());
+		}, 300);
+
+		return () => window.clearTimeout(timeout);
+	}, [search]);
 
 	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
 		useInfiniteQuery({
-			queryKey: ["games"],
+			queryKey: ["games", debouncedSearch],
 			initialPageParam: 0,
 			queryFn: ({ pageParam, signal }) =>
 				getGames({
 					signal,
 					limit: pageSize,
 					offset: pageParam,
+					search: debouncedSearch,
 				}),
 			getNextPageParam: (lastPage, allPages) => {
 				if (lastPage.length < pageSize) return undefined;
@@ -51,14 +61,6 @@ function Games() {
 		return () => observer.disconnect();
 	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-	const filteredGames = games?.filter(
-		(game) =>
-			game.name.toLowerCase().includes(search.toLowerCase()) ||
-			game.genres.some((genre) =>
-				genre.toLowerCase().includes(search.toLowerCase()),
-			),
-	);
-
 	return (
 		<div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -81,7 +83,7 @@ function Games() {
 				</div>
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-				{filteredGames?.map((game) => (
+				{games?.map((game) => (
 					<GameCard key={game.id} game={game} />
 				))}
 			</div>

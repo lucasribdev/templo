@@ -149,4 +149,5 @@ export interface GetGamesParams {
 	signal?: AbortSignal;
 	limit?: number;
 	offset?: number;
+	search?: string;
 }

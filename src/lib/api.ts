@@ -22,6 +22,7 @@ export async function getGames({
 	signal,
 	limit,
 	offset,
+	search,
 }: GetGamesParams): Promise<Game[]> {
 	const url = new URL("/api/games", window.location.origin);
 
@@ -31,6 +32,10 @@ export async function getGames({
 
 	if (offset) {
 		url.searchParams.set("offset", String(offset));
+	}
+
+	if (search) {
+		url.searchParams.set("search", String(search));
 	}
 
 	const response = await fetch(url.toString(), { signal });
@@ -102,19 +107,17 @@ export async function getListingsByGameId(
 	return response.json() as Promise<Listing[]>;
 }
 
-export async function getListingsByUserId(
-	{
-		id,
-		signal,
-		limit,
-		offset,
-	}: {
-		id: string;
-		signal?: AbortSignal;
-		limit?: number;
-		offset?: number;
-	},
-): Promise<Listing[]> {
+export async function getListingsByUserId({
+	id,
+	signal,
+	limit,
+	offset,
+}: {
+	id: string;
+	signal?: AbortSignal;
+	limit?: number;
+	offset?: number;
+}): Promise<Listing[]> {
 	const url = new URL("/api/listings", window.location.origin);
 	url.searchParams.set("userId", id);
 
@@ -138,19 +141,17 @@ export async function getListingsByUserId(
 	return response.json() as Promise<Listing[]>;
 }
 
-export async function getLikedListingsByUserId(
-	{
-		id,
-		signal,
-		limit,
-		offset,
-	}: {
-		id: string;
-		signal?: AbortSignal;
-		limit?: number;
-		offset?: number;
-	},
-): Promise<Listing[]> {
+export async function getLikedListingsByUserId({
+	id,
+	signal,
+	limit,
+	offset,
+}: {
+	id: string;
+	signal?: AbortSignal;
+	limit?: number;
+	offset?: number;
+}): Promise<Listing[]> {
 	const url = new URL(
 		`/api/users/${encodeURIComponent(id)}/liked-listings`,
 		window.location.origin,

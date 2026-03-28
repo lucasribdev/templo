@@ -53,6 +53,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 			]);
 		},
 	});
+	const canLike = Boolean(session) && !isSessionLoading && !likeMutation.isPending;
 
 	const getTypeStyles = (type: ListingType) => {
 		switch (type) {
@@ -115,9 +116,10 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 						"flex items-center gap-1 transition-all",
 						likeState.userLiked
 							? "text-red-500"
-							: "text-gray-500 hover:text-red-400",
-						(isSessionLoading || !session || likeMutation.isPending) &&
-							"pointer-events-none opacity-70",
+							: canLike
+								? "text-gray-500 hover:text-red-400"
+								: "text-gray-500",
+						!canLike && "pointer-events-none opacity-70",
 					)}
 				>
 					<span className="text-xs font-bold">{likeState.likesCount}</span>

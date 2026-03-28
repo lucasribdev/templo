@@ -19,6 +19,7 @@ import {
 	toggleListingLike,
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import type { Listing } from "@/types";
 import { normalizeDiscordInvite } from "@/utils/discord";
 
 export const Route = createFileRoute("/listings/$slug")({
@@ -95,12 +96,8 @@ function ListingDetailsSkeleton() {
 }
 
 function ListingDetails() {
-	const [likeState, setLikeState] = useState({
-		likesCount: 0,
-		userLiked: false,
-	});
 	const [copied, setCopied] = useState(false);
-	const [_viewsCount, setViewsCount] = useState(0);
+	const [viewsCount, setViewsCount] = useState<number | null>(null);
 
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
@@ -113,19 +110,13 @@ function ListingDetails() {
 	});
 
 	useEffect(() => {
-		if (!listing) return;
-
-		setLikeState({
-			likesCount: listing.likesCount,
-			userLiked: listing.userLiked,
-		});
-		setViewsCount(listing.views);
-	}, [listing]);
-
-	useEffect(() => {
-		if (!listing?.slug) return;
+		if (!listing?.slug) {
+			setViewsCount(null);
+			return;
+		}
 
 		let isMounted = true;
+		setViewsCount(listing.views);
 
 		incrementListingViews(listing.slug)
 			.then((updatedViews) => {
@@ -137,7 +128,7 @@ function ListingDetails() {
 		return () => {
 			isMounted = false;
 		};
-	}, [listing?.slug]);
+	}, [listing?.slug, listing?.views]);
 
 	const likeMutation = useMutation({
 		mutationFn: () => {
@@ -147,22 +138,41 @@ function ListingDetails() {
 
 			return toggleListingLike(listing.slug);
 		},
-		onMutate: () => {
-			const previousState = {
-				likesCount: likeState.likesCount,
-				userLiked: likeState.userLiked,
-			};
+		onMutate: async () => {
+			if (!listing?.slug) {
+				return {};
+			}
 
-			setLikeState((current) => ({
-				userLiked: !current.userLiked,
-				likesCount: current.likesCount + (current.userLiked ? -1 : 1),
-			}));
+			await queryClient.cancelQueries({ queryKey: ["listing", listing.slug] });
 
-			return { previousState };
+			const previousListing = queryClient.getQueryData<Listing>([
+				"listing",
+				listing.slug,
+			]);
+
+			queryClient.setQueryData<Listing>(
+				["listing", listing.slug],
+				(current) => {
+					if (!current) {
+						return current;
+					}
+
+					return {
+						...current,
+						userLiked: !current.userLiked,
+						likesCount: current.likesCount + (current.userLiked ? -1 : 1),
+					};
+				},
+			);
+
+			return { previousListing };
 		},
 		onError: (_error, _variables, context) => {
-			if (context?.previousState) {
-				setLikeState(context.previousState);
+			if (listing?.slug && context?.previousListing) {
+				queryClient.setQueryData(
+					["listing", listing.slug],
+					context.previousListing,
+				);
 			}
 		},
 		onSettled: async () => {
@@ -185,11 +195,10 @@ function ListingDetails() {
 		return <div className="p-20 text-center">Anúncio não encontrado.</div>;
 	}
 
-	if (!listing.game) {
-		return <div className="p-20 text-center">Carregando anúncio...</div>;
-	}
-
 	const discordInviteUrl = normalizeDiscordInvite(listing.discordInvite ?? "");
+	const displayedViewsCount = viewsCount ?? listing.views;
+	const canLike =
+		Boolean(session) && !isSessionLoading && !likeMutation.isPending;
 
 	const handleCopyIP = () => {
 		if ("ip" in listing && listing.ip) {
@@ -201,7 +210,7 @@ function ListingDetails() {
 
 	const handleLike = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		if (!listing?.id) return;
+		if (!listing.slug) return;
 		if (isSessionLoading || !session || likeMutation.isPending) return;
 		likeMutation.mutate();
 	};
@@ -237,21 +246,6 @@ function ListingDetails() {
 							className="glass-panel p-8 md:p-12 space-y-8"
 						>
 							<div className="space-y-6">
-								{/* {isLoading ? (
-									<>
-										<div className="flex gap-3">
-											<Skeleton className="w-16 h-5" />
-											<Skeleton className="w-32 h-5" />
-										</div>
-										<Skeleton className="w-3/4 h-12" />
-										<div className="space-y-2">
-											<Skeleton className="w-full h-4" />
-											<Skeleton className="w-full h-4" />
-											<Skeleton className="w-2/3 h-4" />
-										</div>
-									</>
-								) : ( */}
-								{/* <> */}
 								<div className="flex items-center gap-4">
 									<span className="px-3 py-1 rounded-full text-[10px] font-black border border-brand-primary/30 bg-brand-primary/10 text-brand-primary uppercase tracking-[0.2em]">
 										{listing.type}
@@ -283,8 +277,6 @@ function ListingDetails() {
 										</span>
 									))}
 								</div>
-								{/* </> */}
-								{/* )} */}
 							</div>
 						</motion.div>
 
@@ -322,15 +314,6 @@ function ListingDetails() {
 							transition={{ delay: 0.1 }}
 							className="glass-panel p-8 space-y-8 sticky top-24"
 						>
-							{/* {isLoading ? (
-								<div className="flex items-center gap-4 pb-8 border-b border-white/5">
-									<Skeleton className="w-14 h-14 rounded-2xl" />
-									<div className="space-y-2">
-										<Skeleton className="w-12 h-3" />
-										<Skeleton className="w-24 h-5" />
-									</div>
-								</div>
-							) : ( */}
 							<Link
 								to="/profile/$profileFullName"
 								params={{ profileFullName: listing.profile.fullName }}
@@ -354,7 +337,6 @@ function ListingDetails() {
 									</p>
 								</div>
 							</Link>
-							{/* )} */}
 
 							<div className="space-y-4">
 								<h3 className="font-black text-xs uppercase tracking-[0.2em] text-gray-500">
@@ -362,13 +344,6 @@ function ListingDetails() {
 								</h3>
 
 								<div className="grid grid-cols-1 gap-3">
-									{/* {isLoading ? (
-										<>
-											<Skeleton className="w-full h-14" />
-											<Skeleton className="w-full h-14" />
-										</>
-									) : ( */}
-									{/* <> */}
 									{discordInviteUrl && (
 										<a
 											href={discordInviteUrl}
@@ -381,15 +356,33 @@ function ListingDetails() {
 										</a>
 									)}
 
-									<div className="grid grid-cols-2 gap-3">
+									{listing.ip && (
+										<button
+											type="button"
+											onClick={handleCopyIP}
+											className="flex items-center justify-center gap-2 py-4 px-4 rounded-2xl font-bold text-xs bg-white/5 border border-white/10 text-gray-400 hover:border-brand-primary/50 hover:text-brand-primary transition-all"
+										>
+											{copied ? (
+												<Check className="w-4 h-4 text-emerald-500" />
+											) : (
+												<Copy className="w-4 h-4" />
+											)}
+											{copied ? "COPIADO" : "COPIAR IP"}
+										</button>
+									)}
+
+									<div className={cn("grid grid-cols-2 gap-2")}>
 										<button
 											type="button"
 											onClick={handleLike}
+											disabled={!canLike}
 											className={cn(
 												"flex items-center justify-center gap-2 py-4 px-4 rounded-2xl font-bold text-xs transition-all border",
 												listing.userLiked
 													? "bg-red-500/10 border-red-500/50 text-red-500"
-													: "bg-white/5 border-white/10 text-gray-400 hover:border-red-500/50 hover:text-red-500",
+													: canLike
+														? "bg-white/5 border-white/10 text-gray-400 hover:border-red-500/50 hover:text-red-500"
+														: "bg-white/5 border-white/10 text-gray-400",
 											)}
 										>
 											<Heart
@@ -401,31 +394,11 @@ function ListingDetails() {
 											{listing.likesCount}
 										</button>
 
-										{"ip" in listing && listing.ip ? (
-											<button
-												type="button"
-												onClick={handleCopyIP}
-												className="flex items-center justify-center gap-2 py-4 px-4 rounded-2xl font-bold text-xs bg-white/5 border border-white/10 text-gray-400 hover:border-brand-primary/50 hover:text-brand-primary transition-all"
-											>
-												{copied ? (
-													<Check className="w-4 h-4 text-emerald-500" />
-												) : (
-													<Copy className="w-4 h-4" />
-												)}
-												{copied ? "COPIADO" : "COPIAR IP"}
-											</button>
-										) : (
-											<button
-												type="button"
-												className="flex items-center justify-center gap-2 py-4 px-4 rounded-2xl font-bold text-xs bg-white/5 border border-white/10 text-gray-600 cursor-not-allowed"
-											>
-												<Eye className="w-4 h-4" />
-												{listing.views}
-											</button>
-										)}
+										<div className="flex items-center justify-center gap-2 py-4 px-4 rounded-2xl font-bold text-xs bg-white/5 border border-white/10 text-gray-400">
+											<Eye className="w-4 h-4" />
+											{displayedViewsCount}
+										</div>
 									</div>
-									{/* </>
-									)} */}
 								</div>
 							</div>
 						</motion.div>

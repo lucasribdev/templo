@@ -8,8 +8,10 @@ import type {
 export function mapListingByIdRpc(row: ListingByIdRpcRow) {
 	return {
 		id: row.id,
+		slug: row.slug,
 		game: {
 			id: row.game_id,
+			slug: row.game_slug,
 			name: row.game_name,
 			coverUrl: row.game_cover_url ?? "",
 			genres: row.game_genres ?? [],
@@ -40,8 +42,10 @@ export function mapListingByIdRpc(row: ListingByIdRpcRow) {
 export function mapListingsRpc(row: ListingsRpcRow) {
 	return {
 		id: row.id,
+		slug: row.slug,
 		game: {
 			id: row.game_id,
+			slug: row.game_slug,
 			name: row.game_name,
 			coverUrl: row.game_cover_url ?? "",
 			genres: row.game_genres ?? [],
@@ -72,6 +76,7 @@ export function mapListingsRpc(row: ListingsRpcRow) {
 export function mapGame(row: GameRow) {
 	return {
 		id: row.id,
+		slug: row.slug,
 		name: row.name,
 		coverUrl: row.cover_url,
 		genres: row.genres ?? [],

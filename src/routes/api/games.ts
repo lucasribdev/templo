@@ -16,7 +16,7 @@ export const Route = createFileRoute("/api/games")({
 
 				let query = supabase
 					.from("games")
-					.select("id, name, cover_url, genres, release_date, website")
+					.select("id, slug, name, cover_url, genres, release_date, website")
 					.order("name");
 
 				if (search) {

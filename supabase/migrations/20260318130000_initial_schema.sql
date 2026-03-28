@@ -1,4 +1,5 @@
 create extension if not exists "pgcrypto";
+create extension if not exists "unaccent";
 
 do $$
 begin
@@ -17,7 +18,7 @@ create table if not exists public.games (
   id uuid primary key default gen_random_uuid(),
   rawg_id integer unique,
   source text not null default 'manual',
-  slug text,
+  slug text not null unique,
   name text not null,
   website text,
   cover_url text,
@@ -48,6 +49,7 @@ create table if not exists public.listings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
   game_id uuid not null references public.games(id) on delete restrict,
+  slug text not null unique,
   type public.type not null default 'LFG',
   title text not null,
   description text,
@@ -78,6 +80,14 @@ create table if not exists public.listing_likes (
 create index if not exists listing_likes_listing_id_idx on public.listing_likes (listing_id);
 create index if not exists listing_likes_user_id_idx on public.listing_likes (user_id);
 
+create or replace function public.slugify(value text)
+returns text
+language sql
+immutable
+as $$
+  select trim(both '-' from regexp_replace(lower(coalesce(unaccent(value), '')), '[^a-z0-9]+', '-', 'g'));
+$$;
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
@@ -94,6 +104,47 @@ before update on public.games
 for each row
 execute procedure public.set_updated_at();
 
+create or replace function public.set_game_slug()
+returns trigger
+language plpgsql
+as $$
+declare
+  base_slug text;
+  candidate_slug text;
+  suffix integer := 1;
+begin
+  base_slug := nullif(public.slugify(new.name), '');
+
+  if base_slug is null then
+    base_slug := 'game';
+  end if;
+
+  candidate_slug := base_slug;
+
+  if tg_op = 'INSERT' or new.name is distinct from old.name or coalesce(trim(new.slug), '') = '' then
+    while exists (
+      select 1
+      from public.games g
+      where g.slug = candidate_slug
+        and g.id <> coalesce(new.id, '00000000-0000-0000-0000-000000000000'::uuid)
+    ) loop
+      suffix := suffix + 1;
+      candidate_slug := base_slug || '-' || suffix::text;
+    end loop;
+
+    new.slug := candidate_slug;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists set_game_slug on public.games;
+create trigger set_game_slug
+before insert or update of name, slug on public.games
+for each row
+execute procedure public.set_game_slug();
+
 drop trigger if exists set_profiles_updated_at on public.profiles;
 create trigger set_profiles_updated_at
 before update on public.profiles
@@ -105,6 +156,47 @@ create trigger set_listings_updated_at
 before update on public.listings
 for each row
 execute procedure public.set_updated_at();
+
+create or replace function public.set_listing_slug()
+returns trigger
+language plpgsql
+as $$
+declare
+  base_slug text;
+  candidate_slug text;
+  suffix integer := 1;
+begin
+  base_slug := nullif(public.slugify(new.title), '');
+
+  if base_slug is null then
+    base_slug := 'listing';
+  end if;
+
+  candidate_slug := base_slug;
+
+  if tg_op = 'INSERT' or new.title is distinct from old.title or coalesce(trim(new.slug), '') = '' then
+    while exists (
+      select 1
+      from public.listings l
+      where l.slug = candidate_slug
+        and l.id <> coalesce(new.id, '00000000-0000-0000-0000-000000000000'::uuid)
+    ) loop
+      suffix := suffix + 1;
+      candidate_slug := base_slug || '-' || suffix::text;
+    end loop;
+
+    new.slug := candidate_slug;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists set_listing_slug on public.listings;
+create trigger set_listing_slug
+before insert or update of title, slug on public.listings
+for each row
+execute procedure public.set_listing_slug();
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -200,8 +292,10 @@ $$;
 create or replace function public.get_listing_by_id(p_listing_id uuid)
 returns table (
   id uuid,
+  slug text,
   user_id uuid,
   game_id uuid,
+  game_slug text,
   game_name text,
   game_cover_url text,
   game_genres text[],
@@ -230,8 +324,10 @@ set search_path = public
 as $$
   select
     l.id,
+    l.slug,
     l.user_id,
     l.game_id,
+    g.slug as game_slug,
     g.name as game_name,
     g.cover_url as game_cover_url,
     g.genres as game_genres,
@@ -259,6 +355,8 @@ as $$
   where l.id = p_listing_id
   group by
     l.id,
+    l.slug,
+    g.slug,
     g.name,
     g.cover_url,
     g.genres,
@@ -267,6 +365,96 @@ as $$
     p.username,
     p.full_name,
     p.avatar_url;
+$$;
+
+create or replace function public.get_listing_by_slug(p_listing_slug text)
+returns table (
+  id uuid,
+  slug text,
+  user_id uuid,
+  game_id uuid,
+  game_slug text,
+  game_name text,
+  game_cover_url text,
+  game_genres text[],
+  game_release_date date,
+  game_website text,
+  type public.type,
+  title text,
+  description text,
+  ip text,
+  tags text[],
+  discord_invite text,
+  views bigint,
+  active boolean,
+  likes_count bigint,
+  user_liked boolean,
+  created_at timestamptz,
+  updated_at timestamptz,
+  profile_username text,
+  profile_full_name text,
+  profile_avatar_url text
+)
+language sql
+stable
+security invoker
+set search_path = public
+as $$
+  select *
+  from public.get_listing_by_id(
+    (
+      select l.id
+      from public.listings l
+      where l.slug = p_listing_slug
+      limit 1
+    )
+  );
+$$;
+
+create or replace function public.get_or_create_manual_game(
+  p_name text,
+  p_cover_url text default null
+)
+returns uuid
+language plpgsql
+security invoker
+set search_path = public
+as $$
+declare
+  normalized_slug text;
+  existing_game_id uuid;
+  created_game_id uuid;
+begin
+  normalized_slug := nullif(public.slugify(p_name), '');
+
+  if normalized_slug is null then
+    raise exception 'Invalid game name';
+  end if;
+
+  select g.id
+  into existing_game_id
+  from public.games g
+  where g.slug = normalized_slug
+  limit 1;
+
+  if existing_game_id is not null then
+    return existing_game_id;
+  end if;
+
+  insert into public.games (
+    name,
+    source,
+    cover_url
+  )
+  values (
+    p_name,
+    'manual',
+    p_cover_url
+  )
+  returning id into created_game_id;
+
+  return created_game_id;
+end;
 $$;
 
 create or replace function public.get_listings(
@@ -280,8 +468,10 @@ create or replace function public.get_listings(
 )
 returns table (
   id uuid,
+  slug text,
   user_id uuid,
   game_id uuid,
+  game_slug text,
   game_name text,
   type public.type,
   title text,
@@ -311,8 +501,10 @@ as $$
   with listing_stats as (
     select
       l.id,
+      l.slug,
       l.user_id,
       l.game_id,
+      g.slug as game_slug,
       g.name as game_name,
       l.type,
       l.title,
@@ -373,6 +565,8 @@ as $$
       )
     group by
       l.id,
+      l.slug,
+      g.slug,
       g.name,
       g.cover_url,
       g.genres,
@@ -384,8 +578,10 @@ as $$
   )
   select
     id,
+    slug,
     user_id,
     game_id,
+    game_slug,
     game_name,
     type,
     title,
@@ -489,4 +685,6 @@ using (auth.uid() = user_id);
 grant execute on function public.increment_listing_views(uuid) to anon, authenticated;
 grant execute on function public.toggle_listing_like(uuid) to authenticated;
 grant execute on function public.get_listing_by_id(uuid) to anon, authenticated;
+grant execute on function public.get_listing_by_slug(text) to anon, authenticated;
+grant execute on function public.get_or_create_manual_game(text, text) to authenticated;
 grant execute on function public.get_listings(uuid, uuid, text, public.type, text, integer, integer) to anon, authenticated;

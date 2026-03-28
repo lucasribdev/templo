@@ -25,7 +25,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 	}, [listing.likesCount, listing.userLiked]);
 
 	const likeMutation = useMutation({
-		mutationFn: () => toggleListingLike(listing.id),
+		mutationFn: () => toggleListingLike(listing.slug),
 		onMutate: () => {
 			const previousState = {
 				likesCount: likeState.likesCount,
@@ -46,7 +46,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 		},
 		onSettled: async () => {
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ["listing", listing.id] }),
+				queryClient.invalidateQueries({ queryKey: ["listing", listing.slug] }),
 				queryClient.invalidateQueries({ queryKey: ["listings"] }),
 				queryClient.invalidateQueries({ queryKey: ["profile"] }),
 				queryClient.invalidateQueries({ queryKey: ["favorite-listings"] }),
@@ -95,7 +95,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 			whileHover={{ y: -4 }}
 			className="glass-panel p-5 flex flex-col gap-4 cursor-pointer group"
 			onClick={() =>
-				navigate({ to: "/listings/$id", params: { id: listing.id } })
+				navigate({ to: "/listings/$slug", params: { slug: listing.slug } })
 			}
 		>
 			<div className="flex justify-between items-start">

@@ -4,13 +4,13 @@ import { Calendar, Globe, PlusCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import ListingCard from "@/components/ListingCard";
-import { getGameById, getListingsByGameId } from "@/lib/api";
+import { getGameBySlug, getListingsByGameId } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { ListingType } from "@/types";
 
-export const Route = createFileRoute("/games/$id")({
+export const Route = createFileRoute("/games/$slug")({
 	loader: async ({ params }) => {
-		return { id: params?.id };
+		return { slug: params?.slug };
 	},
 	component: GameDetails,
 });
@@ -18,16 +18,17 @@ export const Route = createFileRoute("/games/$id")({
 function GameDetails() {
 	const [activeTab, setActiveTab] = useState<ListingType>("SERVER");
 
-	const { id } = Route.useLoaderData();
+	const { slug } = Route.useLoaderData();
 
 	const { data: game } = useQuery({
-		queryKey: ["game", id],
-		queryFn: ({ signal }) => getGameById(id, signal),
+		queryKey: ["game", slug],
+		queryFn: ({ signal }) => getGameBySlug(slug, signal),
 	});
 
 	const { data: listingsData } = useQuery({
-		queryKey: ["listings", id],
-		queryFn: ({ signal }) => getListingsByGameId(id, signal),
+		queryKey: ["listings", slug, game?.id],
+		queryFn: ({ signal }) => getListingsByGameId(game?.id ?? "", signal),
+		enabled: Boolean(game?.id),
 	});
 
 	if (!game)
@@ -84,7 +85,7 @@ function GameDetails() {
 						</div>
 						<Link
 							to={`/create-listing`}
-							search={{ game: id }}
+							search={{ game: game.slug }}
 							className="btn-primary flex items-center gap-2"
 						>
 							<PlusCircle className="w-5 h-5" /> Criar Chamado

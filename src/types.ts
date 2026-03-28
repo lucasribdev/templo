@@ -3,6 +3,7 @@ export type ListingSortBy = "DATE" | "POPULARITY" | "RELEVANCE";
 
 export interface Game {
 	id: string;
+	slug: string;
 	name: string;
 	coverUrl: string;
 	genres: string[];
@@ -12,6 +13,7 @@ export interface Game {
 
 export interface GameRow {
 	id: string;
+	slug: string;
 	name: string;
 	cover_url: string;
 	genres: string[];
@@ -21,6 +23,7 @@ export interface GameRow {
 
 export interface Listing {
 	id: string;
+	slug: string;
 	userId: string;
 	game: Game;
 	profile: Profile;
@@ -40,8 +43,10 @@ export interface Listing {
 
 export interface ListingByIdRpcRow {
 	id: string;
+	slug: string;
 	user_id: string;
 	game_id: string;
+	game_slug: string;
 	game_name: string;
 	game_cover_url?: string;
 	game_genres?: string[];
@@ -66,8 +71,10 @@ export interface ListingByIdRpcRow {
 
 export interface ListingsRpcRow {
 	id: string;
+	slug: string;
 	user_id: string;
 	game_id: string;
+	game_slug: string;
 	game_name: string;
 	type: ListingType;
 	title: string;

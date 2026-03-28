@@ -3,7 +3,7 @@ import type { Game } from "@/types";
 
 export default function GameCard({ game }: { game: Game }) {
 	return (
-		<Link to="/games/$id" params={{ id: game.id }} className="group">
+		<Link to="/games/$slug" params={{ slug: game.slug }} className="group">
 			<div className="relative aspect-video rounded-xl overflow-hidden border border-border-dark">
 				<img
 					src={game.coverUrl}

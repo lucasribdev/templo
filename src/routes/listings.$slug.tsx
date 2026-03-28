@@ -13,16 +13,16 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import {
-	getListingById,
+	getListingBySlug,
 	incrementListingViews,
 	toggleListingLike,
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { normalizeDiscordInvite } from "@/utils/discord";
 
-export const Route = createFileRoute("/listings/$id")({
+export const Route = createFileRoute("/listings/$slug")({
 	loader: async ({ params }) => {
-		return { id: params?.id };
+		return { slug: params?.slug };
 	},
 	component: ListingDetails,
 });
@@ -38,11 +38,11 @@ function ListingDetails() {
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
 
-	const { id } = Route.useLoaderData();
+	const { slug } = Route.useLoaderData();
 
 	const { data: listing } = useQuery({
-		queryKey: ["listing", id],
-		queryFn: ({ signal }) => getListingById(id, signal),
+		queryKey: ["listing", slug],
+		queryFn: ({ signal }) => getListingBySlug(slug, signal),
 	});
 
 	useEffect(() => {
@@ -56,11 +56,11 @@ function ListingDetails() {
 	}, [listing]);
 
 	useEffect(() => {
-		if (!listing?.id) return;
+		if (!listing?.slug) return;
 
 		let isMounted = true;
 
-		incrementListingViews(listing.id)
+		incrementListingViews(listing.slug)
 			.then((updatedViews) => {
 				if (!isMounted) return;
 				setViewsCount(updatedViews);
@@ -70,15 +70,15 @@ function ListingDetails() {
 		return () => {
 			isMounted = false;
 		};
-	}, [listing?.id]);
+	}, [listing?.slug]);
 
 	const likeMutation = useMutation({
 		mutationFn: () => {
-			if (!listing?.id) {
-				throw new Error("Missing listing id");
+			if (!listing?.slug) {
+				throw new Error("Missing listing slug");
 			}
 
-			return toggleListingLike(listing.id);
+			return toggleListingLike(listing.slug);
 		},
 		onMutate: () => {
 			const previousState = {
@@ -99,10 +99,10 @@ function ListingDetails() {
 			}
 		},
 		onSettled: async () => {
-			if (!listing?.id) return;
+			if (!listing?.slug) return;
 
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ["listing", listing.id] }),
+				queryClient.invalidateQueries({ queryKey: ["listing", listing.slug] }),
 				queryClient.invalidateQueries({ queryKey: ["listings"] }),
 				queryClient.invalidateQueries({ queryKey: ["profile"] }),
 				queryClient.invalidateQueries({ queryKey: ["favorite-listings"] }),
@@ -149,8 +149,8 @@ function ListingDetails() {
 
 			<div className="relative z-10 max-w-6xl mx-auto px-4 py-12 space-y-8">
 				<Link
-					to="/games/$id"
-					params={{ id: listing.game.id }}
+					to="/games/$slug"
+					params={{ slug: listing.game.slug }}
 					className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-primary transition-colors text-sm font-bold group"
 				>
 					<ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -219,8 +219,8 @@ function ListingDetails() {
 
 						{/* Game Info Card */}
 						<Link
-							to={`/games/$id`}
-							params={{ id: listing.game.id }}
+							to={`/games/$slug`}
+							params={{ slug: listing.game.slug }}
 							className="glass-panel p-6 flex items-center justify-between group cursor-pointer"
 						>
 							<div className="flex items-center gap-4">

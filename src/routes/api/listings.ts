@@ -6,16 +6,6 @@ import { createSupabaseUserClient, supabase } from "@/utils/supabase";
 
 const MANUAL_GAME_COVER_URL = "/logo512.png";
 
-function slugifyGameName(value: string) {
-	return value
-		.normalize("NFD")
-		.replace(/[\u0300-\u036f]/g, "")
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, "-")
-		.replace(/^-+|-+$/g, "");
-}
-
 export const Route = createFileRoute("/api/listings")({
 	server: {
 		handlers: {
@@ -90,57 +80,23 @@ export const Route = createFileRoute("/api/listings")({
 				let gameId = String(body.gameId ?? "").trim();
 
 				if (!gameId && suggestedGameName) {
-					const slug = slugifyGameName(suggestedGameName);
+					const { data: resolvedGameId, error: resolvedGameError } =
+						await supabaseUser.rpc("get_or_create_manual_game", {
+							p_name: suggestedGameName,
+							p_cover_url: MANUAL_GAME_COVER_URL,
+						});
 
-					if (!slug) {
+					if (resolvedGameError || !resolvedGameId) {
 						return Response.json(
-							{ error: "Suggested game name is invalid" },
-							{ status: 400 },
-						);
-					}
-
-					const { data: existingGame, error: existingGameError } =
-						await supabaseUser
-							.from("games")
-							.select("id")
-							.eq("slug", slug)
-							.limit(1)
-							.maybeSingle();
-
-					if (existingGameError) {
-						return Response.json(
-							{ error: "Failed to resolve suggested game" },
+							{
+								error: "Failed to resolve suggested game",
+								message: resolvedGameError?.message,
+							},
 							{ status: 500 },
 						);
 					}
 
-					if (existingGame?.id) {
-						gameId = existingGame.id;
-					} else {
-						const { data: createdGame, error: createdGameError } =
-							await supabaseUser
-								.from("games")
-								.insert({
-									name: suggestedGameName,
-									slug,
-									source: "manual",
-									cover_url: MANUAL_GAME_COVER_URL,
-								})
-								.select("id")
-								.single();
-
-						if (createdGameError || !createdGame) {
-							return Response.json(
-								{
-									error: "Failed to create suggested game",
-									message: createdGameError?.message,
-								},
-								{ status: 500 },
-							);
-						}
-
-						gameId = createdGame.id;
-					}
+					gameId = resolvedGameId;
 				}
 
 				const { data, error } = await supabaseUser

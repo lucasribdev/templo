@@ -48,11 +48,11 @@ export async function getGames({
 	return response.json();
 }
 
-export async function getGameById(
-	id: string,
+export async function getGameBySlug(
+	slug: string,
 	signal?: AbortSignal,
 ): Promise<Game> {
-	const response = await fetch(`/api/games/${id}`, { signal });
+	const response = await fetch(`/api/games/${slug}`, { signal });
 
 	if (!response.ok) {
 		throw new Error("Failed to fetch game");
@@ -199,11 +199,11 @@ export async function getLikedListingsByUserId({
 	return response.json() as Promise<Listing[]>;
 }
 
-export async function getListingById(
-	id: string,
+export async function getListingBySlug(
+	slug: string,
 	signal?: AbortSignal,
 ): Promise<Listing> {
-	const response = await fetch(`/api/listings/${id}`, {
+	const response = await fetch(`/api/listings/${slug}`, {
 		signal,
 		headers: await getAuthHeaders(),
 	});
@@ -232,10 +232,10 @@ export async function getProfile(
 }
 
 export async function incrementListingViews(
-	id: string,
+	slug: string,
 	signal?: AbortSignal,
 ): Promise<number> {
-	const response = await fetch(`/api/listings/${id}/views`, {
+	const response = await fetch(`/api/listings/${slug}/views`, {
 		method: "POST",
 		signal,
 	});
@@ -249,10 +249,10 @@ export async function incrementListingViews(
 }
 
 export async function toggleListingLike(
-	id: string,
+	slug: string,
 	signal?: AbortSignal,
 ): Promise<void> {
-	const response = await fetch(`/api/listings/${id}/likes`, {
+	const response = await fetch(`/api/listings/${slug}/likes`, {
 		method: "POST",
 		headers: await getAuthHeaders(),
 		signal,

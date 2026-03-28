@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createSupabaseUserClient } from "@/utils/supabase";
 
-export const Route = createFileRoute("/api/listings/$id/likes")({
+export const Route = createFileRoute("/api/listings/$slug/likes")({
 	server: {
 		handlers: {
 			POST: async ({ params, request }) => {
@@ -25,8 +25,24 @@ export const Route = createFileRoute("/api/listings/$id/likes")({
 					);
 				}
 
+				const { data: listing, error: listingError } = await supabase
+					.from("listings")
+					.select("id")
+					.eq("slug", params.slug)
+					.maybeSingle();
+
+				if (listingError || !listing) {
+					return Response.json(
+						{
+							error: "Listing not found",
+							message: listingError?.message,
+						},
+						{ status: 404 },
+					);
+				}
+
 				const { data, error } = await supabase.rpc("toggle_listing_like", {
-					p_listing_id: params.id,
+					p_listing_id: listing.id,
 				});
 
 				if (error) {

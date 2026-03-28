@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
 	createFileRoute,
 	type SearchSchemaInput,
@@ -11,7 +11,7 @@ import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import TypeOption from "@/components/TypeOption";
 import { useAuth } from "@/hooks/use-auth";
-import { createListing, getGames } from "@/lib/api";
+import { createListing, getGameBySlug, getGames } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { ListingType } from "@/types";
 import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
@@ -64,13 +64,6 @@ function RouteComponent() {
 	const { game: searchGame } = Route.useSearch();
 
 	useEffect(() => {
-		if (searchGame) {
-			setSelectedGame(searchGame);
-			setSuggestedGame(null);
-		}
-	}, [searchGame]);
-
-	useEffect(() => {
 		const timeout = window.setTimeout(() => {
 			setDebouncedSearch(search.trim());
 		}, 300);
@@ -98,6 +91,24 @@ function RouteComponent() {
 		});
 
 	const games = data?.pages.flat() ?? [];
+	const { data: selectedGameFromSlug } = useQuery({
+		queryKey: ["game", searchGame],
+		queryFn: ({ signal }) => getGameBySlug(searchGame ?? "", signal),
+		enabled: Boolean(searchGame),
+	});
+
+	useEffect(() => {
+		if (!searchGame) return;
+
+		const matchedGame =
+			games.find((game) => game.slug === searchGame) ?? selectedGameFromSlug;
+
+		if (matchedGame) {
+			setSelectedGame(matchedGame.id);
+			setSuggestedGame(null);
+			setSearch((current) => current || matchedGame.name);
+		}
+	}, [games, searchGame, selectedGameFromSlug]);
 
 	useEffect(() => {
 		const node = loadMoreNode;
@@ -156,7 +167,10 @@ function RouteComponent() {
 				tags: value.tags,
 			});
 
-			navigate({ to: "/listings/$id", params: { id: createdListing.id } });
+			navigate({
+				to: "/listings/$slug",
+				params: { slug: createdListing.slug },
+			});
 		},
 	});
 

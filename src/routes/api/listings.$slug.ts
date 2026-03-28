@@ -3,7 +3,7 @@ import type { ListingByIdRpcRow } from "@/types";
 import { mapListingByIdRpc } from "@/utils/mappers";
 import { createSupabaseUserClient, supabase } from "@/utils/supabase";
 
-export const Route = createFileRoute("/api/listings/$id")({
+export const Route = createFileRoute("/api/listings/$slug")({
 	server: {
 		handlers: {
 			GET: async ({ params, request }) => {
@@ -12,8 +12,8 @@ export const Route = createFileRoute("/api/listings/$id")({
 					? createSupabaseUserClient(authHeader)
 					: supabase;
 				const { data, error } = await supabaseClient
-					.rpc("get_listing_by_id", {
-						p_listing_id: params.id,
+					.rpc("get_listing_by_slug", {
+						p_listing_slug: params.slug,
 					})
 					.maybeSingle();
 

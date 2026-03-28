@@ -15,7 +15,7 @@ async function getProfileByProfileFullName(
 		.from("profiles")
 		.select("*")
 		.eq("full_name", profileFullName)
-		.single();
+		.maybeSingle();
 
 	if (profileError) {
 		return {

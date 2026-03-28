@@ -26,7 +26,7 @@ export interface Listing {
 	slug: string;
 	userId: string;
 	game: Game;
-	profile: Profile;
+	profile: ProfileSummary;
 	type: ListingType;
 	title: string;
 	description?: string;
@@ -39,6 +39,13 @@ export interface Listing {
 	userLiked: boolean;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface ProfileSummary {
+	id: string;
+	username: string;
+	fullName: string;
+	avatarUrl: string;
 }
 
 export interface ListingByIdRpcRow {

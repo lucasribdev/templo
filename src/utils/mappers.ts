@@ -8,7 +8,6 @@ import type {
 export function mapListingByIdRpc(row: ListingByIdRpcRow) {
 	return {
 		id: row.id,
-		userId: row.user_id,
 		game: {
 			id: row.game_id,
 			name: row.game_name,

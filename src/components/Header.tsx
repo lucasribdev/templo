@@ -9,6 +9,8 @@ export default function Header() {
 
 	const { isSessionLoading, session, signInWithDiscord, signOut } = useAuth();
 
+	const profileFullName = session?.user.user_metadata.full_name;
+
 	const navigate = useNavigate();
 
 	const handleDiscordLogin = async () => {
@@ -62,7 +64,8 @@ export default function Header() {
 						</Link>
 						{!isSessionLoading && session && (
 							<Link
-								to="/profile"
+								to="/profile/$profileFullName"
+								params={{ profileFullName }}
 								className="text-sm font-medium hover:text-brand-primary transition-colors flex items-center gap-2"
 							>
 								<UserIcon className="w-4 h-4" /> Perfil

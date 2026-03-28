@@ -130,18 +130,18 @@ export async function getListingsByGameId(
 }
 
 export async function getListingsByUserId({
-	id,
 	signal,
 	limit,
 	offset,
+	userId,
 }: {
-	id: string;
 	signal?: AbortSignal;
 	limit?: number;
 	offset?: number;
+	userId: string;
 }): Promise<Listing[]> {
 	const url = new URL("/api/listings", window.location.origin);
-	url.searchParams.set("userId", id);
+	url.searchParams.set("userId", userId);
 
 	if (limit) {
 		url.searchParams.set("limit", String(limit));
@@ -164,18 +164,18 @@ export async function getListingsByUserId({
 }
 
 export async function getLikedListingsByUserId({
-	id,
+	userId,
 	signal,
 	limit,
 	offset,
 }: {
-	id: string;
+	userId: string;
 	signal?: AbortSignal;
 	limit?: number;
 	offset?: number;
 }): Promise<Listing[]> {
 	const url = new URL(
-		`/api/users/${encodeURIComponent(id)}/liked-listings`,
+		`/api/users/${encodeURIComponent(userId)}/liked-listings`,
 		window.location.origin,
 	);
 
@@ -215,8 +215,11 @@ export async function getListingById(
 	return response.json() as Promise<Listing>;
 }
 
-export async function getProfile(signal?: AbortSignal): Promise<Profile> {
-	const response = await fetch("/api/profile", {
+export async function getProfile(
+	profileFullName: string,
+	signal?: AbortSignal,
+): Promise<Profile> {
+	const response = await fetch(`/api/profile/${profileFullName}`, {
 		signal,
 		headers: await getAuthHeaders(),
 	});

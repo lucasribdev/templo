@@ -33,7 +33,7 @@ function ListingDetails() {
 		userLiked: false,
 	});
 	const [copied, setCopied] = useState(false);
-	const [viewsCount, setViewsCount] = useState(0);
+	const [_viewsCount, setViewsCount] = useState(0);
 
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
@@ -149,7 +149,7 @@ function ListingDetails() {
 
 			<div className="relative z-10 max-w-6xl mx-auto px-4 py-12 space-y-8">
 				<Link
-					to={`/games/$id`}
+					to="/games/$id"
 					params={{ id: listing.game.id }}
 					className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-primary transition-colors text-sm font-bold group"
 				>
@@ -260,7 +260,11 @@ function ListingDetails() {
 									</div>
 								</div>
 							) : ( */}
-							<div className="flex items-center gap-4 pb-8 border-b border-white/5">
+							<Link
+								to="/profile/$profileFullName"
+								params={{ profileFullName: listing.profile.fullName }}
+								className="flex items-center gap-4 pb-8 border-b border-white/5 transition-colors hover:text-brand-primary"
+							>
 								<div className="relative">
 									<img
 										src={listing.profile.avatarUrl}
@@ -278,7 +282,7 @@ function ListingDetails() {
 										{listing.profile.fullName}
 									</p>
 								</div>
-							</div>
+							</Link>
 							{/* )} */}
 
 							<div className="space-y-4">

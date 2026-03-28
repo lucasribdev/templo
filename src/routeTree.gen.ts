@@ -9,27 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as GamesRouteImport } from './routes/games'
 import { Route as CreateListingRouteImport } from './routes/create-listing'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GamesIndexRouteImport } from './routes/games.index'
+import { Route as ProfileProfileFullNameRouteImport } from './routes/profile.$profileFullName'
 import { Route as ListingsIdRouteImport } from './routes/listings.$id'
 import { Route as GamesIdRouteImport } from './routes/games.$id'
-import { Route as ApiProfileRouteImport } from './routes/api/profile'
 import { Route as ApiListingsRouteImport } from './routes/api/listings'
 import { Route as ApiGamesRouteImport } from './routes/api/games'
+import { Route as ApiProfileProfileFullNameRouteImport } from './routes/api/profile.$profileFullName'
 import { Route as ApiListingsIdRouteImport } from './routes/api/listings.$id'
 import { Route as ApiGamesIdRouteImport } from './routes/api/games.$id'
 import { Route as ApiUsersIdLikedListingsRouteImport } from './routes/api/users.$id.liked-listings'
 import { Route as ApiListingsIdViewsRouteImport } from './routes/api/listings.$id.views'
 import { Route as ApiListingsIdLikesRouteImport } from './routes/api/listings.$id.likes'
 
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const GamesRoute = GamesRouteImport.update({
   id: '/games',
   path: '/games',
@@ -50,6 +45,11 @@ const GamesIndexRoute = GamesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => GamesRoute,
 } as any)
+const ProfileProfileFullNameRoute = ProfileProfileFullNameRouteImport.update({
+  id: '/profile/$profileFullName',
+  path: '/profile/$profileFullName',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ListingsIdRoute = ListingsIdRouteImport.update({
   id: '/listings/$id',
   path: '/listings/$id',
@@ -59,11 +59,6 @@ const GamesIdRoute = GamesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => GamesRoute,
-} as any)
-const ApiProfileRoute = ApiProfileRouteImport.update({
-  id: '/api/profile',
-  path: '/api/profile',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiListingsRoute = ApiListingsRouteImport.update({
   id: '/api/listings',
@@ -75,6 +70,12 @@ const ApiGamesRoute = ApiGamesRouteImport.update({
   path: '/api/games',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiProfileProfileFullNameRoute =
+  ApiProfileProfileFullNameRouteImport.update({
+    id: '/api/profile/$profileFullName',
+    path: '/api/profile/$profileFullName',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiListingsIdRoute = ApiListingsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -105,15 +106,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create-listing': typeof CreateListingRoute
   '/games': typeof GamesRouteWithChildren
-  '/profile': typeof ProfileRoute
   '/api/games': typeof ApiGamesRouteWithChildren
   '/api/listings': typeof ApiListingsRouteWithChildren
-  '/api/profile': typeof ApiProfileRoute
   '/games/$id': typeof GamesIdRoute
   '/listings/$id': typeof ListingsIdRoute
+  '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
   '/games/': typeof GamesIndexRoute
   '/api/games/$id': typeof ApiGamesIdRoute
   '/api/listings/$id': typeof ApiListingsIdRouteWithChildren
+  '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/listings/$id/likes': typeof ApiListingsIdLikesRoute
   '/api/listings/$id/views': typeof ApiListingsIdViewsRoute
   '/api/users/$id/liked-listings': typeof ApiUsersIdLikedListingsRoute
@@ -121,15 +122,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-listing': typeof CreateListingRoute
-  '/profile': typeof ProfileRoute
   '/api/games': typeof ApiGamesRouteWithChildren
   '/api/listings': typeof ApiListingsRouteWithChildren
-  '/api/profile': typeof ApiProfileRoute
   '/games/$id': typeof GamesIdRoute
   '/listings/$id': typeof ListingsIdRoute
+  '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
   '/games': typeof GamesIndexRoute
   '/api/games/$id': typeof ApiGamesIdRoute
   '/api/listings/$id': typeof ApiListingsIdRouteWithChildren
+  '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/listings/$id/likes': typeof ApiListingsIdLikesRoute
   '/api/listings/$id/views': typeof ApiListingsIdViewsRoute
   '/api/users/$id/liked-listings': typeof ApiUsersIdLikedListingsRoute
@@ -139,15 +140,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/create-listing': typeof CreateListingRoute
   '/games': typeof GamesRouteWithChildren
-  '/profile': typeof ProfileRoute
   '/api/games': typeof ApiGamesRouteWithChildren
   '/api/listings': typeof ApiListingsRouteWithChildren
-  '/api/profile': typeof ApiProfileRoute
   '/games/$id': typeof GamesIdRoute
   '/listings/$id': typeof ListingsIdRoute
+  '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
   '/games/': typeof GamesIndexRoute
   '/api/games/$id': typeof ApiGamesIdRoute
   '/api/listings/$id': typeof ApiListingsIdRouteWithChildren
+  '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/listings/$id/likes': typeof ApiListingsIdLikesRoute
   '/api/listings/$id/views': typeof ApiListingsIdViewsRoute
   '/api/users/$id/liked-listings': typeof ApiUsersIdLikedListingsRoute
@@ -158,15 +159,15 @@ export interface FileRouteTypes {
     | '/'
     | '/create-listing'
     | '/games'
-    | '/profile'
     | '/api/games'
     | '/api/listings'
-    | '/api/profile'
     | '/games/$id'
     | '/listings/$id'
+    | '/profile/$profileFullName'
     | '/games/'
     | '/api/games/$id'
     | '/api/listings/$id'
+    | '/api/profile/$profileFullName'
     | '/api/listings/$id/likes'
     | '/api/listings/$id/views'
     | '/api/users/$id/liked-listings'
@@ -174,15 +175,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/create-listing'
-    | '/profile'
     | '/api/games'
     | '/api/listings'
-    | '/api/profile'
     | '/games/$id'
     | '/listings/$id'
+    | '/profile/$profileFullName'
     | '/games'
     | '/api/games/$id'
     | '/api/listings/$id'
+    | '/api/profile/$profileFullName'
     | '/api/listings/$id/likes'
     | '/api/listings/$id/views'
     | '/api/users/$id/liked-listings'
@@ -191,15 +192,15 @@ export interface FileRouteTypes {
     | '/'
     | '/create-listing'
     | '/games'
-    | '/profile'
     | '/api/games'
     | '/api/listings'
-    | '/api/profile'
     | '/games/$id'
     | '/listings/$id'
+    | '/profile/$profileFullName'
     | '/games/'
     | '/api/games/$id'
     | '/api/listings/$id'
+    | '/api/profile/$profileFullName'
     | '/api/listings/$id/likes'
     | '/api/listings/$id/views'
     | '/api/users/$id/liked-listings'
@@ -209,23 +210,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateListingRoute: typeof CreateListingRoute
   GamesRoute: typeof GamesRouteWithChildren
-  ProfileRoute: typeof ProfileRoute
   ApiGamesRoute: typeof ApiGamesRouteWithChildren
   ApiListingsRoute: typeof ApiListingsRouteWithChildren
-  ApiProfileRoute: typeof ApiProfileRoute
   ListingsIdRoute: typeof ListingsIdRoute
+  ProfileProfileFullNameRoute: typeof ProfileProfileFullNameRoute
+  ApiProfileProfileFullNameRoute: typeof ApiProfileProfileFullNameRoute
   ApiUsersIdLikedListingsRoute: typeof ApiUsersIdLikedListingsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/games': {
       id: '/games'
       path: '/games'
@@ -254,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesIndexRouteImport
       parentRoute: typeof GamesRoute
     }
+    '/profile/$profileFullName': {
+      id: '/profile/$profileFullName'
+      path: '/profile/$profileFullName'
+      fullPath: '/profile/$profileFullName'
+      preLoaderRoute: typeof ProfileProfileFullNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/listings/$id': {
       id: '/listings/$id'
       path: '/listings/$id'
@@ -268,13 +269,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesIdRouteImport
       parentRoute: typeof GamesRoute
     }
-    '/api/profile': {
-      id: '/api/profile'
-      path: '/api/profile'
-      fullPath: '/api/profile'
-      preLoaderRoute: typeof ApiProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/listings': {
       id: '/api/listings'
       path: '/api/listings'
@@ -287,6 +281,13 @@ declare module '@tanstack/react-router' {
       path: '/api/games'
       fullPath: '/api/games'
       preLoaderRoute: typeof ApiGamesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/profile/$profileFullName': {
+      id: '/api/profile/$profileFullName'
+      path: '/api/profile/$profileFullName'
+      fullPath: '/api/profile/$profileFullName'
+      preLoaderRoute: typeof ApiProfileProfileFullNameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/listings/$id': {
@@ -381,11 +382,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateListingRoute: CreateListingRoute,
   GamesRoute: GamesRouteWithChildren,
-  ProfileRoute: ProfileRoute,
   ApiGamesRoute: ApiGamesRouteWithChildren,
   ApiListingsRoute: ApiListingsRouteWithChildren,
-  ApiProfileRoute: ApiProfileRoute,
   ListingsIdRoute: ListingsIdRoute,
+  ProfileProfileFullNameRoute: ProfileProfileFullNameRoute,
+  ApiProfileProfileFullNameRoute: ApiProfileProfileFullNameRoute,
   ApiUsersIdLikedListingsRoute: ApiUsersIdLikedListingsRoute,
 }
 export const routeTree = rootRouteImport

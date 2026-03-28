@@ -82,6 +82,14 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 		likeMutation.mutate();
 	};
 
+	const handleProfileClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		navigate({
+			to: "/profile/$profileFullName",
+			params: { profileFullName: listing.profile.fullName },
+		});
+	};
+
 	return (
 		<motion.div
 			whileHover={{ y: -4 }}
@@ -145,17 +153,21 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 
 			<div className="pt-4 border-t border-border-dark flex justify-between items-center">
 				<div className="flex items-center gap-3">
-					<div className="flex items-center gap-1.5">
+					<button
+						type="button"
+						onClick={handleProfileClick}
+						className="flex items-center gap-1.5 rounded-sm transition-colors hover:text-brand-primary"
+					>
 						<img
 							src={listing?.profile.avatarUrl}
-							className="w-4 h-4 rounded-full border border-white/10"
+							className="w-4 h-4 shrink-0 rounded-full object-cover border border-white/10"
 							alt={listing?.profile.fullName}
 							referrerPolicy="no-referrer"
 						/>
 						<span className="text-[10px] text-gray-400 font-bold">
 							{listing.profile?.fullName}
 						</span>
-					</div>
+					</button>
 					<span className="text-[10px] text-gray-500 uppercase font-mono">
 						{new Date(listing.createdAt).toLocaleDateString("pt-BR")}
 					</span>

@@ -7,6 +7,7 @@ import type {
 	Profile,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
+import { getOrCreateVisitorId } from "@/utils/visitor-id";
 
 type QueryValue = string | number | null | undefined;
 
@@ -27,7 +28,7 @@ async function getAuthHeaders() {
 		? {
 				Authorization: `Bearer ${accessToken}`,
 			}
-			: undefined;
+		: undefined;
 }
 
 function createApiUrl(path: string, query?: Record<string, QueryValue>) {
@@ -238,7 +239,11 @@ export async function incrementListingViews(
 		`/api/listings/${slug}/views`,
 		{
 			method: "POST",
+			requireAuth: true,
 			signal,
+			headers: {
+				"x-visitor-id": getOrCreateVisitorId(),
+			},
 		},
 	);
 

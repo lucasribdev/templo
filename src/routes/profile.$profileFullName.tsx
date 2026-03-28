@@ -1,8 +1,8 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Heart, PlusCircle } from "lucide-react";
-import { useEffect, useRef } from "react";
 import ListingCard from "@/components/ListingCard";
+import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
 	getLikedListingsByUserId,
@@ -85,9 +85,6 @@ function ProfileSkeleton() {
 }
 
 function Profile() {
-	const listingsLoadMoreRef = useRef<HTMLDivElement | null>(null);
-	const likedListingsLoadMoreRef = useRef<HTMLDivElement | null>(null);
-
 	const { profileFullName } = Route.useLoaderData();
 
 	const { data: profile, isLoading: isProfileLoading } = useQuery({
@@ -153,44 +150,17 @@ function Profile() {
 
 	const listings = listingsData?.pages.flat() ?? [];
 	const likedListings = likedListingsData?.pages.flat() ?? [];
-
-	useEffect(() => {
-		const node = listingsLoadMoreRef.current;
-		if (!node || !hasNextListingsPage) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries[0]?.isIntersecting && !isFetchingNextListingsPage) {
-					void fetchNextListingsPage();
-				}
-			},
-			{ rootMargin: "300px" },
-		);
-
-		observer.observe(node);
-		return () => observer.disconnect();
-	}, [fetchNextListingsPage, hasNextListingsPage, isFetchingNextListingsPage]);
-
-	useEffect(() => {
-		const node = likedListingsLoadMoreRef.current;
-		if (!node || !hasNextLikedListingsPage) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries[0]?.isIntersecting && !isFetchingNextLikedListingsPage) {
-					void fetchNextLikedListingsPage();
-				}
-			},
-			{ rootMargin: "300px" },
-		);
-
-		observer.observe(node);
-		return () => observer.disconnect();
-	}, [
-		fetchNextLikedListingsPage,
-		hasNextLikedListingsPage,
-		isFetchingNextLikedListingsPage,
-	]);
+	const setListingsLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
+		hasNextPage: hasNextListingsPage,
+		isFetchingNextPage: isFetchingNextListingsPage,
+		onLoadMore: fetchNextListingsPage,
+	});
+	const setLikedListingsLoadMoreNode =
+		useInfiniteScrollTrigger<HTMLDivElement>({
+			hasNextPage: hasNextLikedListingsPage,
+			isFetchingNextPage: isFetchingNextLikedListingsPage,
+			onLoadMore: fetchNextLikedListingsPage,
+		});
 
 	const memberSince = profile?.createdAt
 		? new Intl.DateTimeFormat("pt-BR", {
@@ -281,7 +251,7 @@ function Profile() {
 								Você ainda não criou nenhum anúncio.
 							</p>
 						)}
-						<div ref={listingsLoadMoreRef} />
+						<div ref={setListingsLoadMoreNode} />
 					</div>
 				</section>
 
@@ -307,7 +277,7 @@ function Profile() {
 								Você ainda não favoritou nenhum anúncio.
 							</p>
 						)}
-						<div ref={likedListingsLoadMoreRef} />
+						<div ref={setLikedListingsLoadMoreNode} />
 					</div>
 				</section>
 			</div>

@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import TypeOption from "@/components/TypeOption";
+import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { createListing, getGameBySlug, getGames } from "@/lib/api";
@@ -89,8 +90,6 @@ function RouteComponent() {
 		return () => window.clearTimeout(timeout);
 	}, [search]);
 
-	const [loadMoreNode, setLoadMoreNode] = useState<HTMLDivElement | null>(null);
-
 	const {
 		data,
 		fetchNextPage,
@@ -132,23 +131,12 @@ function RouteComponent() {
 			setSearch((current) => current || matchedGame.name);
 		}
 	}, [games, searchGame, selectedGameFromSlug]);
-
-	useEffect(() => {
-		const node = loadMoreNode;
-		if (step !== 2 || !node || !hasNextPage) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries[0]?.isIntersecting && !isFetchingNextPage) {
-					void fetchNextPage();
-				}
-			},
-			{ rootMargin: "300px" },
-		);
-
-		observer.observe(node);
-		return () => observer.disconnect();
-	}, [fetchNextPage, hasNextPage, isFetchingNextPage, loadMoreNode, step]);
+	const setLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
+		disabled: step !== 2,
+		hasNextPage,
+		isFetchingNextPage,
+		onLoadMore: fetchNextPage,
+	});
 
 	const listingForm = useForm({
 		defaultValues: {

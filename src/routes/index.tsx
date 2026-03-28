@@ -10,9 +10,10 @@ import {
 	Users,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useDeferredValue, useState } from "react";
 import GameCard from "@/components/GameCard";
 import ListingCard from "@/components/ListingCard";
+import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getGames, getListings } from "@/lib/api";
 import type { Game, ListingSortBy, ListingType } from "@/types";
@@ -85,7 +86,6 @@ function App() {
 	const [filterGame, setFilterGame] = useState<string | "ALL">("ALL");
 	const [sortBy, setSortBy] = useState<ListingSortBy>("DATE");
 
-	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 	const deferredSearch = useDeferredValue(search.trim());
 
 	const { data: games } = useQuery({
@@ -119,23 +119,11 @@ function App() {
 	});
 
 	const listings = data?.pages.flat() ?? [];
-
-	useEffect(() => {
-		const node = loadMoreRef.current;
-		if (!node || !hasNextPage) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries[0]?.isIntersecting && !isFetchingNextPage) {
-					void fetchNextPage();
-				}
-			},
-			{ rootMargin: "300px" },
-		);
-
-		observer.observe(node);
-		return () => observer.disconnect();
-	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+	const setLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
+		hasNextPage,
+		isFetchingNextPage,
+		onLoadMore: fetchNextPage,
+	});
 
 	const handleFilterTypeChange = (
 		event: React.ChangeEvent<HTMLSelectElement>,
@@ -285,7 +273,7 @@ function App() {
 							</div>
 						)}
 				</div>
-				<div ref={loadMoreRef} />
+				<div ref={setLoadMoreNode} />
 			</section>
 		</div>
 	);

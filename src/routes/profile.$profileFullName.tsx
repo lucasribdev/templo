@@ -2,8 +2,8 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Heart, PlusCircle } from "lucide-react";
 import ListingCard from "@/components/ListingCard";
-import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import {
 	getLikedListingsByUserId,
 	getListingsByUserId,
@@ -155,12 +155,13 @@ function Profile() {
 		isFetchingNextPage: isFetchingNextListingsPage,
 		onLoadMore: fetchNextListingsPage,
 	});
-	const setLikedListingsLoadMoreNode =
-		useInfiniteScrollTrigger<HTMLDivElement>({
+	const setLikedListingsLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>(
+		{
 			hasNextPage: hasNextLikedListingsPage,
 			isFetchingNextPage: isFetchingNextLikedListingsPage,
 			onLoadMore: fetchNextLikedListingsPage,
-		});
+		},
+	);
 
 	const memberSince = profile?.createdAt
 		? new Intl.DateTimeFormat("pt-BR", {

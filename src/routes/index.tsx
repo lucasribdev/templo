@@ -13,8 +13,8 @@ import { motion } from "motion/react";
 import { useDeferredValue, useState } from "react";
 import GameCard from "@/components/GameCard";
 import ListingCard from "@/components/ListingCard";
-import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { getGames, getListings } from "@/lib/api";
 import type { Game, ListingSortBy, ListingType } from "@/types";
 

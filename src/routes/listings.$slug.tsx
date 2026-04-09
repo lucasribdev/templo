@@ -273,7 +273,7 @@ function ListingDetails() {
 								</h1>
 
 								<div className="prose prose-invert max-w-none">
-									<p className="text-gray-300 text-xl leading-relaxed font-medium">
+									<p className="text-gray-300 text-xl leading-relaxed font-medium whitespace-pre-wrap break-words">
 										{listing.description}
 									</p>
 								</div>

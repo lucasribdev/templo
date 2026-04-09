@@ -472,7 +472,9 @@ function RouteComponent() {
 									}}
 								>
 									{(field) => (
-										<div className="space-y-2">
+										<div
+											className={`space-y-2 ${type !== "SERVER" ? "col-span-2" : ""}`}
+										>
 											<label
 												htmlFor={field.name}
 												className="text-xs font-bold text-gray-500 uppercase"

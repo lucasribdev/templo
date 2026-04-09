@@ -53,7 +53,7 @@ function Games() {
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
 		useInfiniteQuery({
-			queryKey: ["games", debouncedSearch],
+			queryKey: ["games", debouncedSearch, "ALPHABETICAL"],
 			initialPageParam: 0,
 			queryFn: ({ pageParam, signal }) =>
 				getGames({
@@ -61,6 +61,7 @@ function Games() {
 					limit: pageSize,
 					offset: pageParam,
 					search: debouncedSearch,
+					sortBy: "ALPHABETICAL",
 				}),
 			getNextPageParam: (lastPage, allPages) => {
 				if (lastPage.length < pageSize) return undefined;

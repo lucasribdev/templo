@@ -10,14 +10,22 @@ export const Route = createFileRoute("/api/games")({
 				const limitParam = searchParams.get("limit");
 				const offsetParam = searchParams.get("offset");
 				const search = searchParams.get("search")?.trim();
+				const sortBy = searchParams.get("sortBy");
 
 				const limit = limitParam ? Number(limitParam) : undefined;
 				const offset = offsetParam ? Number(offsetParam) : 0;
 
 				let query = supabase
 					.from("games")
-					.select("id, slug, name, cover_url, genres, release_date, website")
-					.order("name");
+					.select(
+						"id, slug, name, cover_url, genres, release_date, website, created_at",
+					);
+
+				if (sortBy === "ALPHABETICAL") {
+					query = query.order("name");
+				} else {
+					query = query.order("created_at", { ascending: false });
+				}
 
 				if (search) {
 					query = query.ilike("name", `%${search}%`);

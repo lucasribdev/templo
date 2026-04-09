@@ -35,6 +35,7 @@ function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Listing {
 			genres: row.game_genres ?? [],
 			releaseDate: row.game_release_date ?? "",
 			website: row.game_website ?? "",
+			createdAt: row.created_at,
 		},
 		profile: mapListingProfile(row),
 		type: row.type,
@@ -69,6 +70,7 @@ export function mapGame(row: GameRow) {
 		genres: row.genres ?? [],
 		releaseDate: row.release_date,
 		website: row.website,
+		createdAt: row.created_at,
 	};
 }
 

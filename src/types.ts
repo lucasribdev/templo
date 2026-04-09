@@ -1,5 +1,6 @@
 export type ListingType = "LFG" | "SERVER" | "COMMUNITY";
 export type ListingSortBy = "DATE" | "POPULARITY" | "RELEVANCE";
+export type GameSortBy = "CREATED_AT" | "ALPHABETICAL";
 
 export interface Game {
 	id: string;
@@ -9,6 +10,7 @@ export interface Game {
 	genres: string[];
 	releaseDate: string;
 	website: string;
+	createdAt: string;
 }
 
 export interface GameRow {
@@ -19,6 +21,7 @@ export interface GameRow {
 	genres: string[];
 	release_date: string;
 	website: string;
+	created_at: string;
 }
 
 export interface Listing {
@@ -165,6 +168,7 @@ export interface GetGamesParams {
 	limit?: number;
 	offset?: number;
 	search?: string;
+	sortBy?: GameSortBy;
 }
 
 export interface GetListingsParams {

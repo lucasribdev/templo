@@ -111,6 +111,7 @@ export async function getGames({
 	limit,
 	offset,
 	search,
+	sortBy,
 }: GetGamesParams): Promise<Game[]> {
 	return apiRequest<Game[]>("/api/games", {
 		signal,
@@ -118,6 +119,7 @@ export async function getGames({
 			limit,
 			offset,
 			search,
+			sortBy,
 		},
 	});
 }

@@ -154,7 +154,7 @@ function App() {
 			<section className="hidden sm:block space-y-6">
 				<div className="flex justify-between items-end">
 					<h2 className="text-2xl font-bold flex items-center gap-2">
-						<Gamepad2 className="text-brand-primary" /> Jogos Populares
+						<Gamepad2 className="text-brand-primary" /> Últimos Jogos
 					</h2>
 					<Link
 						to="/games"

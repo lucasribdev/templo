@@ -159,7 +159,7 @@ function RouteComponent() {
 			}
 
 			if (!session?.user?.id) {
-				alert("Faça login para publicar um chamado.");
+				alert("Faça login para publicar um anúncio.");
 				return;
 			}
 
@@ -200,9 +200,9 @@ function RouteComponent() {
 		return (
 			<div className="max-w-3xl mx-auto px-4 py-12">
 				<div className="glass-panel p-10 text-center space-y-4">
-					<h1 className="text-3xl font-bold tracking-tight">Criar chamado</h1>
+					<h1 className="text-3xl font-bold tracking-tight">Criar anúncio</h1>
 					<p className="text-gray-400">
-						Você precisa estar autenticado para criar um chamado.
+						Você precisa estar autenticado para criar um anúncio.
 					</p>
 					<button
 						type="button"
@@ -220,7 +220,7 @@ function RouteComponent() {
 		<div className="max-w-3xl mx-auto px-4 py-12">
 			<div className="mb-12 space-y-4 text-center">
 				<h1 className="text-4xl font-bold tracking-tight">
-					Criar novo chamado
+					Criar novo anúncio
 				</h1>
 				<div className="flex justify-center gap-4">
 					{[1, 2, 3].map((s) => (
@@ -626,7 +626,7 @@ function RouteComponent() {
 												"opacity-60 cursor-not-allowed",
 										)}
 									>
-										{isSubmitting ? "Publicando..." : "Publicar Chamado"}
+										{isSubmitting ? "Publicando..." : "Publicar anúncio"}
 									</button>
 								)}
 							</listingForm.Subscribe>

@@ -159,7 +159,7 @@ function GameDetails() {
 							search={{ game: game.slug }}
 							className="btn-primary flex items-center gap-2"
 						>
-							<PlusCircle className="w-5 h-5" /> Criar Chamado
+							<PlusCircle className="w-5 h-5" /> Criar anúncio
 						</Link>
 					</div>
 				</div>

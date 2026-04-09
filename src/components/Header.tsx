@@ -100,7 +100,7 @@ export default function Header() {
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />
-									<span className="hidden sm:inline">Criar Chamado</span>
+									<span className="hidden sm:inline">Criar anúncio</span>
 								</Link>
 							</>
 						)}

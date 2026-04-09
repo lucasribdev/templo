@@ -176,7 +176,7 @@ function App() {
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-1">
 						<h2 className="text-3xl font-bold flex items-center gap-3">
-							<Filter className="text-brand-primary w-7 h-7" /> Chamados
+							<Filter className="text-brand-primary w-7 h-7" /> Anúncios
 						</h2>
 						<p className="text-sm text-gray-500">
 							Filtre e encontre exatamente o que você procura

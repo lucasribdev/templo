@@ -34,8 +34,6 @@ const homeGameSkeletonIds = [
 	"home-game-2",
 	"home-game-3",
 	"home-game-4",
-	"home-game-5",
-	"home-game-6",
 ];
 const homeListingSkeletonIds = Array.from(
 	{ length: pageSize },
@@ -159,7 +157,7 @@ function App() {
 				</p>
 			</section>
 
-			<section className="hidden sm:block space-y-6">
+			<section className="block space-y-6">
 				<div className="flex justify-between items-end">
 					<h2 className="text-2xl font-bold flex items-center gap-2">
 						<Gamepad2 className="text-brand-primary" /> Últimos Jogos
@@ -171,10 +169,10 @@ function App() {
 						Ver todos
 					</Link>
 				</div>
-				<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 					{games
 						? games
-								.slice(0, 6)
+								.slice(0, 4)
 								.map((game: Game) => <GameCard key={game.id} game={game} />)
 						: homeGameSkeletonIds.map((id) => <GameCardSkeleton key={id} />)}
 				</div>

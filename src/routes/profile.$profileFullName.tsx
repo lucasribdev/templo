@@ -71,8 +71,20 @@ function ListingCardSkeleton() {
 				<Skeleton className="h-4 w-full" />
 				<Skeleton className="h-4 w-5/6" />
 			</div>
-			<div className="pt-4 border-t border-border-dark flex justify-between items-center">
-				<Skeleton className="h-4 w-24" />
+			<div className="flex gap-2">
+				<Skeleton className="h-5 w-14 rounded-full" />
+				<Skeleton className="h-5 w-16 rounded-full" />
+				<Skeleton className="h-5 w-12 rounded-full" />
+			</div>
+			<div className="pt-4 border-t border-border-dark flex justify-between items-center gap-3">
+				<div className="flex items-center gap-3">
+					<div className="flex items-center gap-1.5">
+						<Skeleton className="h-4 w-4 rounded-full" />
+						<Skeleton className="h-3 w-24" />
+					</div>
+					<Skeleton className="h-3 w-16" />
+					<Skeleton className="h-3 w-10" />
+				</div>
 				<Skeleton className="h-4 w-20" />
 			</div>
 		</div>

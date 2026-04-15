@@ -32,14 +32,16 @@ const gameSkeletonIds = [
 
 function GameCardSkeleton() {
 	return (
-		<div className="relative aspect-video rounded-xl overflow-hidden border border-border-dark bg-card-dark">
-			<Skeleton className="h-full w-full rounded-none" />
-			<div className="absolute inset-x-0 bottom-0 space-y-3 p-4">
-				<Skeleton className="h-6 w-2/3" />
-				<div className="flex gap-2">
-					<Skeleton className="h-4 w-12 rounded-full" />
-					<Skeleton className="h-4 w-16 rounded-full" />
+		<div>
+			<div className="relative aspect-video rounded-t-xl overflow-hidden border-t border-l border-r border-border-dark bg-card-dark">
+				<Skeleton className="h-full w-full rounded-none" />
+				<div className="absolute inset-0 flex flex-col justify-end p-3 pb-2">
+					<Skeleton className="h-4 w-2/3" />
 				</div>
+			</div>
+			<div className="flex gap-2 border-b border-l border-r border-border-dark rounded-b-xl p-3 pt-0 bg-card-dark">
+				<Skeleton className="h-5 w-14 rounded-md" />
+				<Skeleton className="h-5 w-16 rounded-md" />
 			</div>
 		</div>
 	);

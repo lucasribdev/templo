@@ -35,6 +35,8 @@ const homeGameSkeletonIds = [
 	"home-game-2",
 	"home-game-3",
 	"home-game-4",
+	"home-game-5",
+	"home-game-6",
 ];
 const homeListingSkeletonIds = Array.from(
 	{ length: pageSize },
@@ -43,14 +45,16 @@ const homeListingSkeletonIds = Array.from(
 
 function GameCardSkeleton() {
 	return (
-		<div className="relative aspect-video rounded-xl overflow-hidden border border-border-dark bg-card-dark">
-			<Skeleton className="h-full w-full rounded-none" />
-			<div className="absolute inset-x-0 bottom-0 space-y-3 p-4">
-				<Skeleton className="h-6 w-2/3" />
-				<div className="flex gap-2">
-					<Skeleton className="h-4 w-12 rounded-full" />
-					<Skeleton className="h-4 w-16 rounded-full" />
+		<div className="border border-border-dark rounded-xl bg-card-dark">
+			<div className="relative aspect-video rounded-t-xl overflow-hidden bg-card-dark">
+				<Skeleton className="h-full w-full rounded-none" />
+				<div className="absolute inset-0 flex flex-col justify-end p-3 pb-2">
+					<Skeleton className="h-4 w-2/3" />
 				</div>
+			</div>
+			<div className="flex gap-2 p-3 pt-0">
+				<Skeleton className="h-5 w-14 rounded-md" />
+				<Skeleton className="h-5 w-16 rounded-md" />
 			</div>
 		</div>
 	);
@@ -76,10 +80,14 @@ function ListingCardSkeleton() {
 				<Skeleton className="h-5 w-16 rounded-full" />
 				<Skeleton className="h-5 w-12 rounded-full" />
 			</div>
-			<div className="pt-4 border-t border-border-dark flex justify-between items-center">
+			<div className="pt-4 border-t border-border-dark flex justify-between items-center gap-3">
 				<div className="flex items-center gap-3">
-					<Skeleton className="h-4 w-24" />
-					<Skeleton className="h-4 w-20" />
+					<div className="flex items-center gap-1.5">
+						<Skeleton className="h-4 w-4 rounded-full" />
+						<Skeleton className="h-3 w-24" />
+					</div>
+					<Skeleton className="h-3 w-16" />
+					<Skeleton className="h-3 w-10" />
 				</div>
 				<Skeleton className="h-4 w-20" />
 			</div>
@@ -170,10 +178,10 @@ function App() {
 						Ver todos
 					</Link>
 				</div>
-				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 					{games
 						? games
-								.slice(0, 4)
+								.slice(0, 6)
 								.map((game: Game) => <GameCard key={game.id} game={game} />)
 						: homeGameSkeletonIds.map((id) => <GameCardSkeleton key={id} />)}
 				</div>

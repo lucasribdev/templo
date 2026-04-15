@@ -11,7 +11,11 @@ import type {
 function mapListingProfile(
 	row: Pick<
 		ListingByIdRpcRow | ListingsRpcRow,
-		"profile_avatar_url" | "profile_full_name" | "profile_username" | "user_id"
+		| "profile_avatar_url"
+		| "profile_full_name"
+		| "profile_username"
+		| "profile_created_at"
+		| "user_id"
 	>,
 ): ProfileSummary {
 	return {
@@ -19,6 +23,7 @@ function mapListingProfile(
 		username: row.profile_username,
 		fullName: row.profile_full_name,
 		avatarUrl: row.profile_avatar_url,
+		createdAt: row.profile_created_at,
 	};
 }
 

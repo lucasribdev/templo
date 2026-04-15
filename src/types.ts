@@ -44,13 +44,6 @@ export interface Listing {
 	updatedAt: string;
 }
 
-export interface ProfileSummary {
-	id: string;
-	username: string;
-	fullName: string;
-	avatarUrl: string;
-}
-
 export interface ListingByIdRpcRow {
 	id: string;
 	slug: string;
@@ -77,6 +70,7 @@ export interface ListingByIdRpcRow {
 	profile_username: string;
 	profile_full_name: string;
 	profile_avatar_url: string;
+	profile_created_at: string;
 }
 
 export interface ListingsRpcRow {
@@ -105,6 +99,15 @@ export interface ListingsRpcRow {
 	profile_username: string;
 	profile_full_name: string;
 	profile_avatar_url: string;
+	profile_created_at: string;
+}
+
+export interface ProfileSummary {
+	id: string;
+	username: string;
+	fullName: string;
+	avatarUrl: string;
+	createdAt: string;
 }
 
 export interface Profile {

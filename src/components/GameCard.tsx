@@ -12,12 +12,14 @@ export default function GameCard({ game }: { game: Game }) {
 					className="transition-transform duration-500 group-hover:scale-110"
 				/>
 				<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
-					<h3 className="text-xl font-bold text-white">{game.name}</h3>
+					<h3 className="text-md font-bold text-white tracking-wide">
+						{game.name}
+					</h3>
 					<div className="flex gap-2 mt-2">
 						{game.genres?.slice(0, 2).map((genre) => (
 							<span
 								key={genre}
-								className="text-[10px] bg-brand-primary/20 backdrop-blur-sm text-brand-primary px-2 py-0.5 rounded border border-brand-primary/30"
+								className="text-[10px] bg-brand-primary/20 backdrop-blur-sm text-brand-primary px-2 py-0.5 rounded-md border border-brand-primary/30"
 							>
 								{genre}
 							</span>

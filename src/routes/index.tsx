@@ -3,10 +3,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
 	ArrowUpDown,
 	ChevronRight,
-	Filter,
+	Flame,
 	Gamepad2,
 	Info,
 	Search,
+	Sparkles,
 	Users,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -146,21 +147,21 @@ function App() {
 				<motion.h1
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					className="text-5xl md:text-7xl font-bold tracking-tighter"
+					className="text-5xl md:text-6xl font-bold tracking-tighter"
 				>
 					Onde os <span className="text-brand-primary">jogadores</span> se
 					encontram.
 				</motion.h1>
 				<p className="text-gray-400 text-lg max-w-2xl mx-auto">
-					Encontre servidores, comunidades e grupos para os seus jogos favoritos
-					de PC. Tudo em um só lugar.
+					Descubra servidores, clãs, guildas e comunidades para jogar.
+					Conecte-se com jogadores que compartilham sua paixão.
 				</p>
 			</section>
 
 			<section className="hidden md:block space-y-6">
 				<div className="flex justify-between items-end">
-					<h2 className="text-2xl font-bold flex items-center gap-2">
-						<Gamepad2 className="text-brand-primary" /> Últimos Jogos
+					<h2 className="text-lg font-bold flex items-center gap-2">
+						<Flame className="text-brand-primary w-5 h-5" /> Jogos em Destaque
 					</h2>
 					<Link
 						to="/games"
@@ -181,12 +182,9 @@ function App() {
 			<section className="space-y-8">
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-1">
-						<h2 className="text-3xl font-bold flex items-center gap-3">
-							<Filter className="text-brand-primary w-7 h-7" /> Anúncios
+						<h2 className="text-lg font-bold flex items-center gap-3">
+							<Sparkles className="text-brand-primary w-5 h-5" /> Anúncios
 						</h2>
-						<p className="text-sm text-gray-500">
-							Filtre e encontre exatamente o que você procura
-						</p>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -255,7 +253,7 @@ function App() {
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					{isListingsLoading
 						? homeListingSkeletonIds.map((id) => (
 								<ListingCardSkeleton key={id} />

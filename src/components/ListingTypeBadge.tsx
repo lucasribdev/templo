@@ -6,7 +6,7 @@ export default function ListingTypeBadge({ type }: { type: Listing["type"] }) {
 	return (
 		<div
 			className={cn(
-				"px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider",
+				"px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase tracking-wider",
 				getTypeStyles(type),
 			)}
 		>

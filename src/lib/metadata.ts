@@ -1,7 +1,7 @@
 const APP_NAME = "Templo";
 const DEFAULT_TITLE = "Templo - Encontre outros jogadores facilmente";
 const DEFAULT_DESCRIPTION =
-	"Encontre servidores, comunidades e grupos para os seus jogos favoritos de PC. Tudo em um só lugar.";
+	"Descubra servidores, clãs, guildas e comunidades para jogar. Conecte-se com jogadores que compartilham sua paixão.";
 const DEFAULT_IMAGE_PATH = "/logo512.png";
 
 type BuildMetadataInput = {

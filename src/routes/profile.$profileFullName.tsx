@@ -11,6 +11,7 @@ import {
 } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getProfilePageData } from "@/lib/page-data";
+import { memberSince } from "@/utils/profile";
 
 export const Route = createFileRoute("/profile/$profileFullName")({
 	loader: async ({ params }) => {
@@ -194,13 +195,6 @@ function Profile() {
 		},
 	);
 
-	const memberSince = profile?.createdAt
-		? new Intl.DateTimeFormat("pt-BR", {
-				month: "long",
-				year: "numeric",
-			}).format(new Date(profile.createdAt))
-		: null;
-
 	if (isProfileLoading) {
 		return <ProfileSkeleton />;
 	}
@@ -235,11 +229,11 @@ function Profile() {
 					<h1 className="text-4xl font-bold tracking-tight">
 						{profile.fullName}
 					</h1>
-					{memberSince && (
-						<p className="text-gray-500">Membro desde {memberSince}</p>
+					{memberSince(profile) && (
+						<p className="text-gray-500">Membro desde {memberSince(profile)}</p>
 					)}
 
-					<div className="flex gap-4 pt-4">
+					<div className="flex gap-4 pt-4 justify-center md:justify-start">
 						<div className="text-center">
 							<p className="text-2xl font-bold text-brand-primary">
 								{isListingsLoading ? "—" : (listings?.length ?? 0)}

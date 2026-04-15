@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { toggleListingLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { Listing } from "@/types";
-import { getTypeStyles, getTypeText } from "@/utils/listing-type";
 import ListingTypeBadge from "./ListingTypeBadge";
 
 export default function ListingCard({ listing }: { listing: Listing }) {
@@ -120,7 +119,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 				{listing?.tags?.slice(0, 3).map((tag) => (
 					<span
 						key={tag}
-						className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-gray-400"
+						className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-gray-400"
 					>
 						#{tag}
 					</span>

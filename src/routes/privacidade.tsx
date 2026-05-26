@@ -122,10 +122,12 @@ function PrivacyPolicy() {
 						<p>
 							Usamos cookies, armazenamento local e identificadores semelhantes
 							para manter sua sessão ativa, lembrar preferências, proteger a
-							plataforma e entender o uso do serviço. Cookies e identificadores
-							de analytics, como Google Analytics, só são ativados após seu
-							consentimento no banner de cookies. Você pode ajustar permissões
-							no navegador, mas alguns recursos podem deixar de funcionar.
+							plataforma e entender o uso do serviço. A tag do Google Analytics
+							pode ser carregada com armazenamento de analytics desativado por
+							padrão, e cookies ou identificadores de analytics só são liberados
+							após seu consentimento no banner de cookies. Você pode ajustar
+							permissões no navegador, mas alguns recursos podem deixar de
+							funcionar.
 						</p>
 					</section>
 

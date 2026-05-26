@@ -1,5 +1,5 @@
 import { useRouterState } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const GA_CONSENT_STORAGE_KEY = "templo:analytics-consent";
 const GA_SCRIPT_ID = "google-analytics-script";
@@ -31,8 +31,8 @@ function getMeasurementId() {
 	return import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
 }
 
-function loadGoogleAnalytics(measurementId: string) {
-	if (!measurementId || document.getElementById(GA_SCRIPT_ID)) return;
+function initGoogleAnalytics(measurementId: string) {
+	if (!measurementId) return;
 
 	window.dataLayer = window.dataLayer ?? [];
 	window.gtag =
@@ -41,6 +41,14 @@ function loadGoogleAnalytics(measurementId: string) {
 			window.dataLayer?.push(args);
 		};
 
+	if (document.getElementById(GA_SCRIPT_ID)) return;
+
+	window.gtag("consent", "default", {
+		ad_storage: "denied",
+		ad_user_data: "denied",
+		ad_personalization: "denied",
+		analytics_storage: "denied",
+	});
 	window.gtag("js", new Date());
 
 	const script = document.createElement("script");
@@ -52,16 +60,31 @@ function loadGoogleAnalytics(measurementId: string) {
 	document.head.appendChild(script);
 }
 
+function updateGoogleAnalyticsConsent(consent: AnalyticsConsent | null) {
+	window.gtag?.("consent", "update", {
+		analytics_storage: consent === "accepted" ? "granted" : "denied",
+	});
+}
+
+function trackPageView(measurementId: string, pagePath: string) {
+	window.gtag?.("config", measurementId, {
+		page_path: pagePath,
+		page_title: document.title,
+		send_page_view: true,
+	});
+}
+
 export function Analytics() {
 	const measurementId = getMeasurementId();
 	const [consent, setConsent] = useState<AnalyticsConsent | null>(null);
 	const location = useRouterState({ select: (state) => state.location });
-	const pagePath = useMemo(
-		() => `${location.pathname}${location.searchStr}`,
-		[location.pathname, location.searchStr],
-	);
+	const pagePath = `${location.pathname}${location.searchStr}`;
 
 	useEffect(() => {
+		if (!measurementId) return;
+
+		initGoogleAnalytics(measurementId);
+
 		const syncConsent = () => setConsent(getAnalyticsConsent());
 
 		syncConsent();
@@ -73,17 +96,15 @@ export function Analytics() {
 				syncConsent,
 			);
 		};
-	}, []);
+	}, [measurementId]);
 
 	useEffect(() => {
-		if (!measurementId || consent !== "accepted") return;
+		if (!measurementId) return;
 
-		loadGoogleAnalytics(measurementId);
-		window.gtag?.("config", measurementId, {
-			page_path: pagePath,
-			page_title: document.title,
-			send_page_view: true,
-		});
+		updateGoogleAnalyticsConsent(consent);
+		if (consent !== "accepted") return;
+
+		trackPageView(measurementId, pagePath);
 	}, [measurementId, pagePath, consent]);
 
 	return null;

@@ -43,12 +43,6 @@ function initGoogleAnalytics(measurementId: string) {
 
 	if (document.getElementById(GA_SCRIPT_ID)) return;
 
-	window.gtag("consent", "default", {
-		ad_storage: "denied",
-		ad_user_data: "denied",
-		ad_personalization: "denied",
-		analytics_storage: "denied",
-	});
 	window.gtag("js", new Date());
 	window.gtag("config", measurementId, {
 		send_page_view: false,
@@ -61,12 +55,6 @@ function initGoogleAnalytics(measurementId: string) {
 		measurementId,
 	)}`;
 	document.head.appendChild(script);
-}
-
-function updateGoogleAnalyticsConsent(consent: AnalyticsConsent | null) {
-	window.gtag?.("consent", "update", {
-		analytics_storage: consent === "accepted" ? "granted" : "denied",
-	});
 }
 
 function trackPageView(measurementId: string, pagePath: string) {
@@ -87,8 +75,6 @@ export function Analytics() {
 	useEffect(() => {
 		if (!measurementId) return;
 
-		initGoogleAnalytics(measurementId);
-
 		const syncConsent = () => setConsent(getAnalyticsConsent());
 
 		syncConsent();
@@ -104,10 +90,9 @@ export function Analytics() {
 
 	useEffect(() => {
 		if (!measurementId) return;
-
-		updateGoogleAnalyticsConsent(consent);
 		if (consent !== "accepted") return;
 
+		initGoogleAnalytics(measurementId);
 		trackPageView(measurementId, pagePath);
 	}, [measurementId, pagePath, consent]);
 

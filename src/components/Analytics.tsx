@@ -50,6 +50,9 @@ function initGoogleAnalytics(measurementId: string) {
 		analytics_storage: "denied",
 	});
 	window.gtag("js", new Date());
+	window.gtag("config", measurementId, {
+		send_page_view: false,
+	});
 
 	const script = document.createElement("script");
 	script.id = GA_SCRIPT_ID;
@@ -67,10 +70,11 @@ function updateGoogleAnalyticsConsent(consent: AnalyticsConsent | null) {
 }
 
 function trackPageView(measurementId: string, pagePath: string) {
-	window.gtag?.("config", measurementId, {
+	window.gtag?.("event", "page_view", {
+		send_to: measurementId,
 		page_path: pagePath,
+		page_location: window.location.href,
 		page_title: document.title,
-		send_page_view: true,
 	});
 }
 

@@ -144,10 +144,10 @@ function NotFound() {
 					404
 				</p>
 				<h1 className="text-3xl font-bold tracking-tight">
-					Pagina nao encontrada
+					Página não encontrada
 				</h1>
 				<p className="text-gray-400">
-					O link pode estar incorreto ou o conteudo nao existe mais.
+					O link pode estar incorreto ou o conteúdo não existe mais.
 				</p>
 				<div>
 					<Link to="/" className="btn-primary inline-flex">

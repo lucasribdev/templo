@@ -54,12 +54,12 @@ export function CookieConsentBanner({
 			<div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
 				<div className="max-w-3xl space-y-1">
 					<p className="text-sm font-bold text-white">
-						Preferencias de cookies
+						Preferências de cookies
 					</p>
 					<p className="text-sm leading-6 text-gray-400">
 						Usamos cookies e armazenamento local essenciais para manter a
-						plataforma funcionando. Cookies de analise, como Google Analytics,
-						so serao ativados se voce aceitar.
+						plataforma funcionando. Cookies de análise, como Google Analytics,
+						só serão ativados se você aceitar.
 					</p>
 				</div>
 				<div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -74,14 +74,14 @@ export function CookieConsentBanner({
 						onClick={() => setConsent("rejected")}
 						className="btn-secondary inline-flex items-center justify-center text-sm"
 					>
-						Recusar analise
+						Recusar análise
 					</button>
 					<button
 						type="button"
 						onClick={() => setConsent("accepted")}
 						className="btn-primary inline-flex items-center justify-center text-sm"
 					>
-						Aceitar analise
+						Aceitar análise
 					</button>
 				</div>
 			</div>

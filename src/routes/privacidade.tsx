@@ -122,14 +122,9 @@ function PrivacyPolicy() {
 						<p>
 							Usamos cookies, armazenamento local e identificadores semelhantes
 							para manter sua sessão ativa, lembrar preferências, proteger a
-							plataforma e registrar sua escolha sobre cookies. O Google
-							Analytics só é carregado após seu consentimento no banner de
-							cookies. Se você aceitar, podemos coletar dados agregados de uso,
-							como páginas acessadas, origem da visita, dispositivo, navegador e
-							interações básicas, para entender o uso do serviço e melhorar a
-							experiência. Se você recusar, não carregamos a tag do Google
-							Analytics. Você pode ajustar permissões no navegador, mas alguns
-							recursos podem deixar de funcionar.
+							plataforma e registrar preferências essenciais. Você pode ajustar
+							permissões no navegador, mas alguns recursos podem deixar de
+							funcionar.
 						</p>
 					</section>
 

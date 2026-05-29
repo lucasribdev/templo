@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Gamepad2 } from "lucide-react";
-import { Analytics, CookieConsentBanner } from "@/components/Analytics";
 import { AuthPromptProvider } from "@/components/AuthPromptModal";
 import BackToTop from "@/components/BackToTop";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
@@ -57,7 +57,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					<AuthProvider>
 						<AuthPromptProvider>
 							<div className="min-h-screen flex flex-col">
-								<Analytics />
 								<Header />
 								<main className="flex-grow">{children}</main>
 								<BackToTop />

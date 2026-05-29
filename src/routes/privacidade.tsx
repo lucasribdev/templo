@@ -24,7 +24,7 @@ function PrivacyPolicy() {
 						Política de Privacidade
 					</h1>
 					<p className="text-gray-400">
-						Última atualização: 28 de maio de 2026
+						Última atualização: 29 de maio de 2026
 					</p>
 				</header>
 
@@ -55,7 +55,9 @@ function PrivacyPolicy() {
 							</li>
 							<li>
 								dados de uso da plataforma, como visualizações, curtidas,
-								interações com anúncios e páginas acessadas;
+								interações com anúncios e páginas acessadas, quando necessários
+								para funcionamento ou quando você consentir com cookies de
+								análise;
 							</li>
 							<li>
 								dados técnicos necessários para segurança e funcionamento, como
@@ -85,6 +87,10 @@ function PrivacyPolicy() {
 								técnicos;
 							</li>
 							<li>
+								quando houver consentimento, entender de forma agregada como a
+								plataforma é usada para melhorar navegação, conteúdo e recursos;
+							</li>
+							<li>
 								cumprir obrigações legais ou responder a solicitações válidas.
 							</li>
 						</ul>
@@ -109,9 +115,10 @@ function PrivacyPolicy() {
 						<p>
 							Podemos compartilhar dados com provedores necessários para operar
 							o Templo, incluindo serviços de autenticação, banco de dados,
-							hospedagem, análise técnica e prevenção de abuso. Também podemos
-							compartilhar dados quando exigido por lei ou para proteger
-							direitos, segurança e integridade da plataforma.
+							hospedagem, análise técnica, medição de audiência mediante
+							consentimento e prevenção de abuso. Também podemos compartilhar
+							dados quando exigido por lei ou para proteger direitos, segurança
+							e integridade da plataforma.
 						</p>
 					</section>
 
@@ -122,9 +129,20 @@ function PrivacyPolicy() {
 						<p>
 							Usamos cookies, armazenamento local e identificadores semelhantes
 							para manter sua sessão ativa, lembrar preferências, proteger a
-							plataforma e registrar preferências essenciais. Você pode ajustar
-							permissões no navegador, mas alguns recursos podem deixar de
-							funcionar.
+							plataforma e registrar escolhas essenciais. Esses recursos
+							necessários podem ser usados sem consentimento adicional porque
+							sustentam o funcionamento do serviço.
+						</p>
+						<p>
+							Cookies e scripts de análise, incluindo Google Analytics, só são
+							carregados depois que você aceita essa finalidade no banner de
+							cookies. Se você recusar, o Templo não injeta o Google Analytics
+							no seu navegador para medir sua navegação.
+						</p>
+						<p>
+							Você pode bloquear ou apagar cookies pelo navegador. Ao limpar o
+							armazenamento local do site, o banner poderá aparecer novamente
+							para que você registre uma nova escolha.
 						</p>
 					</section>
 
@@ -146,7 +164,10 @@ function PrivacyPolicy() {
 							Dependendo da legislação aplicável, você pode solicitar acesso,
 							correção, exclusão, portabilidade ou limitação do tratamento dos
 							seus dados. Também pode encerrar sua sessão e deixar de publicar
-							conteúdo na plataforma.
+							conteúdo na plataforma. Quando o tratamento depender de
+							consentimento, você pode recusar ou retirar esse consentimento a
+							qualquer momento pelos controles do navegador ou limpando a
+							preferência de cookies armazenada no site.
 						</p>
 					</section>
 
@@ -155,10 +176,12 @@ function PrivacyPolicy() {
 							9. Serviços de terceiros
 						</h2>
 						<p>
-							O Templo pode conter links para Discord, servidores de jogos e
-							outros serviços externos. Esses serviços têm suas próprias
-							políticas, e não controlamos como terceiros tratam dados fora da
-							plataforma.
+							O Templo pode conter links para Discord, servidores de jogos,
+							Google Analytics e outros serviços externos. Esses serviços têm
+							suas próprias políticas, e não controlamos como terceiros tratam
+							dados fora da plataforma. O Google Analytics, quando autorizado,
+							pode processar identificadores, dados técnicos e eventos de
+							navegação conforme as configurações do serviço.
 						</p>
 					</section>
 

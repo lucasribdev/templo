@@ -8,10 +8,14 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Gamepad2 } from "lucide-react";
-import { GoogleAnalytics } from "#/components/GoogleAnalytics.tsx";
+import { useEffect, useState } from "react";
+import { GoogleAnalytics } from "tanstack-router-ga4";
 import { AuthPromptProvider } from "@/components/AuthPromptModal";
 import BackToTop from "@/components/BackToTop";
-import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import {
+	CookieConsentBanner,
+	hasAcceptedAnalyticsCookies,
+} from "@/components/CookieConsentBanner";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
@@ -23,6 +27,8 @@ import appCss from "../styles.css?url";
 interface MyRouterContext {
 	queryClient: QueryClient;
 }
+
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	head: () => ({
@@ -48,6 +54,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	const [canLoadAnalytics, setCanLoadAnalytics] = useState(false);
+
+	useEffect(() => {
+		setCanLoadAnalytics(hasAcceptedAnalyticsCookies());
+	}, []);
+
 	return (
 		<html lang="pt-BR">
 			<head>
@@ -62,7 +74,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 								<main className="flex-grow">{children}</main>
 								<BackToTop />
 								<Toaster />
-								<CookieConsentBanner />
+								<CookieConsentBanner
+									onConsentChange={(status) =>
+										setCanLoadAnalytics(status === "accepted")
+									}
+								/>
 								<footer className="border-t border-border-dark py-12 mt-20">
 									<div className="max-w-7xl mx-auto px-4 text-center space-y-4">
 										<div className="flex items-center justify-center gap-2">
@@ -111,7 +127,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						]}
 					/>
 				</TanStackQueryProvider>
-				<GoogleAnalytics />
+				{GA_MEASUREMENT_ID && canLoadAnalytics && (
+					<GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+				)}
 				<Scripts />
 			</body>
 		</html>

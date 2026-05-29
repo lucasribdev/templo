@@ -24,7 +24,7 @@ function TermsOfUse() {
 						Termos de Uso
 					</h1>
 					<p className="text-gray-400">
-						Última atualização: 14 de maio de 2026
+						Última atualização: 29 de maio de 2026
 					</p>
 				</header>
 
@@ -121,7 +121,26 @@ function TermsOfUse() {
 
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">
-							7. Serviços e links de terceiros
+							7. Privacidade e cookies
+						</h2>
+						<p>
+							O uso do Templo também é regido pela nossa{" "}
+							<Link
+								to="/privacidade"
+								className="text-brand-primary hover:underline"
+							>
+								Política de Privacidade
+							</Link>
+							. Usamos recursos essenciais para manter login, segurança,
+							preferências e funcionamento da plataforma. Recursos opcionais de
+							análise, incluindo Google Analytics, só são ativados depois do seu
+							consentimento no banner de cookies.
+						</p>
+					</section>
+
+					<section className="space-y-3">
+						<h2 className="text-xl font-bold text-white">
+							8. Serviços e links de terceiros
 						</h2>
 						<p>
 							Anúncios podem direcionar para Discord, servidores de jogos e
@@ -133,7 +152,7 @@ function TermsOfUse() {
 					</section>
 
 					<section className="space-y-3">
-						<h2 className="text-xl font-bold text-white">8. Disponibilidade</h2>
+						<h2 className="text-xl font-bold text-white">9. Disponibilidade</h2>
 						<p>
 							Buscamos manter o serviço disponível e funcional, mas não
 							garantimos operação ininterrupta, livre de erros ou compatível com
@@ -144,7 +163,7 @@ function TermsOfUse() {
 
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">
-							9. Limitação de responsabilidade
+							10. Limitação de responsabilidade
 						</h2>
 						<p>
 							O Templo é fornecido no estado em que se encontra. Na máxima
@@ -156,7 +175,7 @@ function TermsOfUse() {
 
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">
-							10. Alterações dos termos
+							11. Alterações dos termos
 						</h2>
 						<p>
 							Podemos atualizar estes termos para refletir mudanças no serviço,
@@ -166,7 +185,7 @@ function TermsOfUse() {
 					</section>
 
 					<section className="space-y-3">
-						<h2 className="text-xl font-bold text-white">11. Contato</h2>
+						<h2 className="text-xl font-bold text-white">12. Contato</h2>
 						<p>
 							Para dúvidas, denúncias ou solicitações relacionadas a estes
 							termos, entre em contato pelos canais indicados na plataforma.

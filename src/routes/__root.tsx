@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Gamepad2 } from "lucide-react";
+import { GoogleAnalytics } from "#/components/GoogleAnalytics.tsx";
 import { AuthPromptProvider } from "@/components/AuthPromptModal";
 import BackToTop from "@/components/BackToTop";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
@@ -110,6 +111,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						]}
 					/>
 				</TanStackQueryProvider>
+				<GoogleAnalytics />
 				<Scripts />
 			</body>
 		</html>

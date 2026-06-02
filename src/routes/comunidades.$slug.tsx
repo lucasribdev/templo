@@ -4,7 +4,7 @@ import { ArrowLeft, Check, Copy, ExternalLink, Eye, Heart } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
-import GameArtwork from "@/components/GameArtwork";
+import CategoryArtwork from "@/components/CategoryArtwork";
 import UserAvatar from "@/components/UserAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
@@ -47,10 +47,10 @@ export const Route = createFileRoute("/comunidades/$slug")({
 			description: loaderData.initialCommunity
 				? truncateDescription(
 						loaderData.initialCommunity.description ||
-							`Comunidade de ${loaderData.initialCommunity.game.name} criada por ${loaderData.initialCommunity.profile.fullName}.`,
+							`Comunidade de ${loaderData.initialCommunity.category.name} criada por ${loaderData.initialCommunity.profile.fullName}.`,
 					)
 				: "Veja os detalhes desta comunidade no Templo.",
-			image: loaderData.initialCommunity?.game.coverUrl || undefined,
+			image: loaderData.initialCommunity?.category.coverUrl || undefined,
 		});
 	},
 	component: CommunityDetails,
@@ -285,7 +285,10 @@ function CommunityDetails() {
 			return;
 		}
 
-		navigate({ to: "/games/$slug", params: { slug: community.game.slug } });
+		navigate({
+			to: "/categories/$slug",
+			params: { slug: community.category.slug },
+		});
 	};
 
 	return (
@@ -309,8 +312,8 @@ function CommunityDetails() {
 							className="glass-panel space-y-8"
 						>
 							<div className="relative mb-0">
-								<GameArtwork
-									game={community.game}
+								<CategoryArtwork
+									category={community.category}
 									variant="tile"
 									className="h-40 overflow-hidden md:h-56 rounded-t-2xl"
 								/>
@@ -320,11 +323,11 @@ function CommunityDetails() {
 							<div className="p-6 space-y-6">
 								<div className="flex items-center gap-3 mb-2">
 									<Link
-										to={"/games/$slug"}
-										params={{ slug: community.game.slug }}
+										to={"/categories/$slug"}
+										params={{ slug: community.category.slug }}
 										className="text-brand-primary text-xs transition-colors hover:underline"
 									>
-										{community.game.name}
+										{community.category.name}
 									</Link>
 									<div className="h-1 w-1 rounded-full bg-gray-600" />
 									<span className="text-gray-500 text-xs">

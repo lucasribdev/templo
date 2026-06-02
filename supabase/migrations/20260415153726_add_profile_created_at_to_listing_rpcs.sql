@@ -7,13 +7,13 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   type public.type,
   title text,
   description text,
@@ -40,13 +40,13 @@ as $$
     l.id,
     l.slug,
     l.user_id,
-    l.game_id,
-    g.slug as game_slug,
-    g.name as game_name,
-    g.cover_url as game_cover_url,
-    g.genres as game_genres,
-    g.release_date as game_release_date,
-    g.website as game_website,
+    l.category_id,
+    g.slug as category_slug,
+    g.name as category_name,
+    g.cover_url as category_cover_url,
+    g.genres as category_genres,
+    g.release_date as category_release_date,
+    g.website as category_website,
     l.type,
     l.title,
     l.description,
@@ -64,7 +64,7 @@ as $$
     p.avatar_url as profile_avatar_url,
     p.created_at as profile_created_at
   from public.listings l
-  join public.games g on g.id = l.game_id
+  join public.categories g on g.id = l.category_id
   join public.profiles p on p.id = l.user_id
   left join public.listing_likes ll on ll.listing_id = l.id
   where l.id = p_listing_id
@@ -88,13 +88,13 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   type public.type,
   title text,
   description text,
@@ -129,7 +129,7 @@ as $$
 $$;
 
 create or replace function public.get_listings(
-  p_game_id uuid default null,
+  p_category_id uuid default null,
   p_user_id uuid default null,
   p_search text default null,
   p_type public.type default null,
@@ -141,9 +141,9 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
   type public.type,
   title text,
   description text,
@@ -156,10 +156,10 @@ returns table (
   user_liked boolean,
   created_at timestamptz,
   updated_at timestamptz,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   profile_username text,
   profile_full_name text,
   profile_avatar_url text,
@@ -175,9 +175,9 @@ as $$
       l.id,
       l.slug,
       l.user_id,
-      l.game_id,
-      g.slug as game_slug,
-      g.name as game_name,
+      l.category_id,
+      g.slug as category_slug,
+      g.name as category_name,
       l.type,
       l.title,
       l.description,
@@ -190,10 +190,10 @@ as $$
       coalesce(bool_or(ll.user_id = auth.uid()), false) as user_liked,
       l.created_at,
       l.updated_at,
-      g.cover_url as game_cover_url,
-      g.genres as game_genres,
-      g.release_date as game_release_date,
-      g.website as game_website,
+      g.cover_url as category_cover_url,
+      g.genres as category_genres,
+      g.release_date as category_release_date,
+      g.website as category_website,
       p.username as profile_username,
       p.full_name as profile_full_name,
       p.avatar_url as profile_avatar_url,
@@ -218,11 +218,11 @@ as $$
         end
       )::int as relevance_score
     from public.listings l
-    join public.games g on g.id = l.game_id
+    join public.categories g on g.id = l.category_id
     join public.profiles p on p.id = l.user_id
     left join public.listing_likes ll on ll.listing_id = l.id
     where l.active = true
-      and (p_game_id is null or l.game_id = p_game_id)
+      and (p_category_id is null or l.category_id = p_category_id)
       and (p_user_id is null or l.user_id = p_user_id)
       and (p_type is null or l.type = p_type)
       and (
@@ -254,9 +254,9 @@ as $$
     id,
     slug,
     user_id,
-    game_id,
-    game_slug,
-    game_name,
+    category_id,
+    category_slug,
+    category_name,
     type,
     title,
     description,
@@ -269,10 +269,10 @@ as $$
     user_liked,
     created_at,
     updated_at,
-    game_cover_url,
-    game_genres,
-    game_release_date,
-    game_website,
+    category_cover_url,
+    category_genres,
+    category_release_date,
+    category_website,
     profile_username,
     profile_full_name,
     profile_avatar_url,

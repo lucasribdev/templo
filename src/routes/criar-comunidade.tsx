@@ -10,29 +10,29 @@ import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
-import GameArtwork from "@/components/GameArtwork";
+import CategoryArtwork from "@/components/CategoryArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
-import { createCommunity, getGameBySlug, getGames } from "@/lib/api";
+import { createCommunity, getCategories, getCategoryBySlug } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
 
 type CreateCommunitySearch = {
-	game?: string;
+	category?: string;
 };
 
 const pageSize = 20;
-const gameOptionSkeletonIds = [
-	"create-game-1",
-	"create-game-2",
-	"create-game-3",
-	"create-game-4",
-	"create-game-5",
-	"create-game-6",
+const categoryOptionSkeletonIds = [
+	"create-category-1",
+	"create-category-2",
+	"create-category-3",
+	"create-category-4",
+	"create-category-5",
+	"create-category-6",
 ];
 
-function GameOptionSkeleton() {
+function CategoryOptionSkeleton() {
 	return (
 		<div className="glass-panel p-4 flex flex-col items-center gap-3">
 			<Skeleton className="h-12 w-12 rounded-lg" />
@@ -43,7 +43,7 @@ function GameOptionSkeleton() {
 
 export const Route = createFileRoute("/criar-comunidade")({
 	validateSearch: (search: CreateCommunitySearch & SearchSchemaInput) => ({
-		game: typeof search.game === "string" ? search.game : undefined,
+		category: typeof search.category === "string" ? search.category : undefined,
 	}),
 	component: RouteComponent,
 });
@@ -71,8 +71,10 @@ function isValidServerAddress(value: string) {
 
 function RouteComponent() {
 	const [step, setStep] = useState(1);
-	const [selectedGame, setSelectedGame] = useState<string | null>(null);
-	const [suggestedGame, setSuggestedGame] = useState<string | null>(null);
+	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+	const [suggestedCategory, setSuggestedCategory] = useState<string | null>(
+		null,
+	);
 	const [tagInput, setTagInput] = useState("");
 	const [search, setSearch] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -80,7 +82,7 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const { isSessionLoading, session } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
-	const { game: searchGame } = Route.useSearch();
+	const { category: searchCategory } = Route.useSearch();
 
 	useEffect(() => {
 		const timeout = window.setTimeout(() => {
@@ -95,12 +97,12 @@ function RouteComponent() {
 		fetchNextPage,
 		hasNextPage,
 		isFetchingNextPage,
-		isLoading: isGamesLoading,
+		isLoading: isCategoriesLoading,
 	} = useInfiniteQuery({
-		queryKey: ["games", debouncedSearch],
+		queryKey: ["categories", debouncedSearch],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) =>
-			getGames({
+			getCategories({
 				signal,
 				limit: pageSize,
 				offset: pageParam,
@@ -112,26 +114,27 @@ function RouteComponent() {
 		},
 	});
 
-	const games = data?.pages.flat() ?? [];
-	const { data: selectedGameFromSlug } = useQuery({
-		queryKey: ["game", searchGame],
-		queryFn: ({ signal }) => getGameBySlug(searchGame ?? "", signal),
-		enabled: Boolean(searchGame),
+	const categories = data?.pages.flat() ?? [];
+	const { data: selectedCategoryFromSlug } = useQuery({
+		queryKey: ["category", searchCategory],
+		queryFn: ({ signal }) => getCategoryBySlug(searchCategory ?? "", signal),
+		enabled: Boolean(searchCategory),
 	});
 
 	useEffect(() => {
-		if (!searchGame) return;
+		if (!searchCategory) return;
 
-		const matchedGame =
-			games.find((game) => game.slug === searchGame) ?? selectedGameFromSlug;
+		const matchedCategory =
+			categories.find((category) => category.slug === searchCategory) ??
+			selectedCategoryFromSlug;
 
-		if (matchedGame) {
-			setSelectedGame(matchedGame.id);
-			setSuggestedGame(null);
-			setSearch((current) => current || matchedGame.name);
+		if (matchedCategory) {
+			setSelectedCategory(matchedCategory.id);
+			setSuggestedCategory(null);
+			setSearch((current) => current || matchedCategory.name);
 			setStep(2);
 		}
-	}, [games, searchGame, selectedGameFromSlug]);
+	}, [categories, searchCategory, selectedCategoryFromSlug]);
 	const setLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
 		disabled: step !== 1,
 		hasNextPage,
@@ -148,7 +151,7 @@ function RouteComponent() {
 			tags: [] as string[],
 		},
 		onSubmit: async ({ value }) => {
-			if (!selectedGame && !suggestedGame?.trim()) {
+			if (!selectedCategory && !suggestedCategory?.trim()) {
 				setStep(1);
 				return;
 			}
@@ -169,8 +172,8 @@ function RouteComponent() {
 			}
 
 			const createdCommunity = await createCommunity({
-				gameId: selectedGame ?? undefined,
-				suggestedGameName: suggestedGame?.trim() || undefined,
+				categoryId: selectedCategory ?? undefined,
+				suggestedCategoryName: suggestedCategory?.trim() || undefined,
 				title: value.title,
 				description: value.description,
 				discordInvite: normalizeDiscordInvite(value.discord_invite) ?? "",
@@ -241,13 +244,15 @@ function RouteComponent() {
 						exit={{ opacity: 0, x: -20 }}
 						className="space-y-6"
 					>
-						<h2 className="text-2xl font-bold text-center">Qual é o jogo?</h2>
+						<h2 className="text-2xl font-bold text-center">
+							Qual é a categoria?
+						</h2>
 
 						<div className="relative max-w-md mx-auto">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
 							<input
 								type="text"
-								placeholder="Buscar jogo..."
+								placeholder="Buscar categoria..."
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
 								className="w-full bg-bg-dark border border-border-dark rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-brand-primary"
@@ -255,53 +260,55 @@ function RouteComponent() {
 						</div>
 
 						<div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-							{isGamesLoading
-								? gameOptionSkeletonIds.map((id) => (
-										<GameOptionSkeleton key={id} />
+							{isCategoriesLoading
+								? categoryOptionSkeletonIds.map((id) => (
+										<CategoryOptionSkeleton key={id} />
 									))
-								: games?.map((game) => (
+								: categories?.map((category) => (
 										<button
 											type="button"
-											key={game.id}
+											key={category.id}
 											onClick={() => {
-												setSelectedGame(game.id);
-												setSuggestedGame(null);
+												setSelectedCategory(category.id);
+												setSuggestedCategory(null);
 												setStep(2);
 											}}
 											className={cn(
 												"glass-panel p-4 flex flex-col items-center gap-3 transition-all hover:border-brand-primary",
-												selectedGame === game.id &&
+												selectedCategory === category.id &&
 													"border-brand-primary bg-brand-primary/5",
 											)}
 										>
-											<GameArtwork
-												game={game}
+											<CategoryArtwork
+												category={category}
 												variant="thumb"
 												className="w-12 h-12 rounded-lg"
 											/>
-											<span className="font-bold text-sm">{game.name}</span>
+											<span className="font-bold text-sm">{category.name}</span>
 										</button>
 									))}
-							{!isGamesLoading && search.trim() && games?.length === 0 && (
-								<div className="col-span-full py-8 text-center space-y-4">
-									<p className="text-gray-500">
-										Não encontrou o jogo "{search}"?
-									</p>
-									<button
-										type="button"
-										onClick={() => {
-											const normalizedSuggestion = search.trim();
-											toast(`Jogo sugerido: ${normalizedSuggestion}`);
-											setSuggestedGame(normalizedSuggestion);
-											setSelectedGame(null);
-											setStep(2);
-										}}
-										className="btn-primary px-6 py-2 text-sm"
-									>
-										Sugerir e Continuar
-									</button>
-								</div>
-							)}
+							{!isCategoriesLoading &&
+								search.trim() &&
+								categories?.length === 0 && (
+									<div className="col-span-full py-8 text-center space-y-4">
+										<p className="text-gray-500">
+											Não encontrou a categoria "{search}"?
+										</p>
+										<button
+											type="button"
+											onClick={() => {
+												const normalizedSuggestion = search.trim();
+												toast(`Categoria sugerida: ${normalizedSuggestion}`);
+												setSuggestedCategory(normalizedSuggestion);
+												setSelectedCategory(null);
+												setStep(2);
+											}}
+											className="btn-primary px-6 py-2 text-sm"
+										>
+											Sugerir e Continuar
+										</button>
+									</div>
+								)}
 						</div>
 						<div ref={setLoadMoreNode} className="h-1 w-full" />
 					</motion.div>

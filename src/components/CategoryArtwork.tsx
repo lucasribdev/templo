@@ -1,17 +1,17 @@
 import { cn } from "@/lib/utils";
-import type { Game } from "@/types";
+import type { Category } from "@/types";
 
-type GameArtworkVariant = "hero" | "card" | "tile" | "thumb";
+type CategoryArtworkVariant = "hero" | "card" | "tile" | "thumb";
 
-interface GameArtworkProps {
-	game: Pick<Game, "name" | "coverUrl">;
-	variant?: GameArtworkVariant;
+interface CategoryArtworkProps {
+	category: Pick<Category, "name" | "coverUrl">;
+	variant?: CategoryArtworkVariant;
 	className?: string;
 	overlayClassName?: string;
 }
 
 const variantStyles: Record<
-	GameArtworkVariant,
+	CategoryArtworkVariant,
 	{ container: string; initials: string; glow: string; accent: string }
 > = {
 	hero: {
@@ -48,11 +48,11 @@ const variantStyles: Record<
 	},
 };
 
-export function hasCoverUrl(game: Pick<Game, "coverUrl">) {
-	return !game.coverUrl;
+export function hasCoverUrl(category: Pick<Category, "coverUrl">) {
+	return !category.coverUrl;
 }
 
-export function getGameInitials(name: string) {
+export function getCategoryInitials(name: string) {
 	return name
 		.trim()
 		.split(/\s+/)
@@ -62,17 +62,17 @@ export function getGameInitials(name: string) {
 		.join("");
 }
 
-export default function GameArtwork({
-	game,
+export default function CategoryArtwork({
+	category,
 	variant = "card",
 	className,
 	overlayClassName,
-}: GameArtworkProps) {
-	if (!hasCoverUrl(game)) {
+}: CategoryArtworkProps) {
+	if (!hasCoverUrl(category)) {
 		return (
 			<img
-				src={game.coverUrl}
-				alt={game.name}
+				src={category.coverUrl}
+				alt={category.name}
 				className={cn("w-full h-full object-cover", className)}
 				referrerPolicy="no-referrer"
 			/>
@@ -80,12 +80,12 @@ export default function GameArtwork({
 	}
 
 	const styles = variantStyles[variant];
-	const initials = getGameInitials(game.name);
+	const initials = getCategoryInitials(category.name);
 
 	return (
 		<div
 			role="img"
-			aria-label={game.name}
+			aria-label={category.name}
 			className={cn(
 				"relative w-full h-full overflow-hidden border border-white/10",
 				styles.container,

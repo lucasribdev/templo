@@ -1,10 +1,10 @@
 import type {
+	Category,
 	Community,
 	CreateCommunityInput,
 	DiscordInviteStats,
-	Game,
+	GetCategoriesParams,
 	GetCommunitiesParams,
-	GetGamesParams,
 	Profile,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
@@ -80,14 +80,14 @@ async function apiRequest<T>(
 }
 
 function getCommunitiesQuery({
-	gameId,
+	categoryId,
 	limit,
 	offset,
 	search,
 	sortBy,
 	userId,
 }: {
-	gameId?: string;
+	categoryId?: string;
 	limit?: number;
 	offset?: number;
 	search?: string;
@@ -95,7 +95,7 @@ function getCommunitiesQuery({
 	userId?: string;
 }) {
 	return {
-		gameId,
+		categoryId,
 		limit,
 		offset,
 		search,
@@ -104,14 +104,14 @@ function getCommunitiesQuery({
 	};
 }
 
-export async function getGames({
+export async function getCategories({
 	signal,
 	limit,
 	offset,
 	search,
 	sortBy,
-}: GetGamesParams): Promise<Game[]> {
-	return apiRequest<Game[]>("/api/games", {
+}: GetCategoriesParams): Promise<Category[]> {
+	return apiRequest<Category[]>("/api/categories", {
 		signal,
 		query: {
 			limit,
@@ -122,18 +122,18 @@ export async function getGames({
 	});
 }
 
-export async function getGameBySlug(
+export async function getCategoryBySlug(
 	slug: string,
 	signal?: AbortSignal,
-): Promise<Game> {
-	return apiRequest<Game>(`/api/games/${slug}`, { signal });
+): Promise<Category> {
+	return apiRequest<Category>(`/api/categories/${slug}`, { signal });
 }
 
 export async function getCommunities({
 	signal,
 	limit,
 	offset,
-	gameId,
+	categoryId,
 	userId,
 	search,
 	sortBy,
@@ -144,7 +144,7 @@ export async function getCommunities({
 		query: getCommunitiesQuery({
 			limit,
 			offset,
-			gameId,
+			categoryId,
 			userId,
 			search,
 			sortBy,
@@ -152,14 +152,14 @@ export async function getCommunities({
 	});
 }
 
-export async function getCommunitiesByGameId(
+export async function getCommunitiesByCategoryId(
 	id: string,
 	signal?: AbortSignal,
 ): Promise<Community[]> {
 	return apiRequest<Community[]>("/api/communities", {
 		signal,
 		requireAuth: true,
-		query: getCommunitiesQuery({ gameId: id }),
+		query: getCommunitiesQuery({ categoryId: id }),
 	});
 }
 

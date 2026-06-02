@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Clock, Eye, Gamepad2, Heart } from "lucide-react";
+import { Clock, Eye, Heart, Tags } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
@@ -99,7 +99,7 @@ export default function CommunityCard({
 		>
 			<div className="flex justify-between items-start">
 				<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-					<Gamepad2 className="w-3 h-3" /> {community.game.name}
+					<Tags className="w-3 h-3" /> {community.category.name}
 				</p>
 				<button
 					type="button"

@@ -11,19 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
-import { Route as GamesRouteImport } from './routes/games'
 import { Route as CriarComunidadeRouteImport } from './routes/criar-comunidade'
+import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as GamesIndexRouteImport } from './routes/games.index'
+import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
 import { Route as ProfileProfileFullNameRouteImport } from './routes/profile.$profileFullName'
-import { Route as GamesSlugRouteImport } from './routes/games.$slug'
 import { Route as ComunidadesSlugRouteImport } from './routes/comunidades.$slug'
-import { Route as ApiGamesRouteImport } from './routes/api/games'
+import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as ApiDiscordInviteStatsRouteImport } from './routes/api/discord-invite-stats'
 import { Route as ApiCommunitiesRouteImport } from './routes/api/communities'
+import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
 import { Route as ApiProfileProfileFullNameRouteImport } from './routes/api/profile.$profileFullName'
-import { Route as ApiGamesSlugRouteImport } from './routes/api/games.$slug'
 import { Route as ApiCommunitiesSlugRouteImport } from './routes/api/communities.$slug'
+import { Route as ApiCategoriesSlugRouteImport } from './routes/api/categories.$slug'
 import { Route as ApiUsersIdLikedCommunitiesRouteImport } from './routes/api/users.$id.liked-communities'
 import { Route as ApiCommunitiesSlugViewsRouteImport } from './routes/api/communities.$slug.views'
 import { Route as ApiCommunitiesSlugLikesRouteImport } from './routes/api/communities.$slug.likes'
@@ -38,14 +38,14 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GamesRoute = GamesRouteImport.update({
-  id: '/games',
-  path: '/games',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CriarComunidadeRoute = CriarComunidadeRouteImport.update({
   id: '/criar-comunidade',
   path: '/criar-comunidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -53,30 +53,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GamesIndexRoute = GamesIndexRouteImport.update({
+const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => GamesRoute,
+  getParentRoute: () => CategoriesRoute,
 } as any)
 const ProfileProfileFullNameRoute = ProfileProfileFullNameRouteImport.update({
   id: '/profile/$profileFullName',
   path: '/profile/$profileFullName',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GamesSlugRoute = GamesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => GamesRoute,
-} as any)
 const ComunidadesSlugRoute = ComunidadesSlugRouteImport.update({
   id: '/comunidades/$slug',
   path: '/comunidades/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiGamesRoute = ApiGamesRouteImport.update({
-  id: '/api/games',
-  path: '/api/games',
-  getParentRoute: () => rootRouteImport,
+const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CategoriesRoute,
 } as any)
 const ApiDiscordInviteStatsRoute = ApiDiscordInviteStatsRouteImport.update({
   id: '/api/discord-invite-stats',
@@ -88,21 +83,26 @@ const ApiCommunitiesRoute = ApiCommunitiesRouteImport.update({
   path: '/api/communities',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
+  id: '/api/categories',
+  path: '/api/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiProfileProfileFullNameRoute =
   ApiProfileProfileFullNameRouteImport.update({
     id: '/api/profile/$profileFullName',
     path: '/api/profile/$profileFullName',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiGamesSlugRoute = ApiGamesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ApiGamesRoute,
-} as any)
 const ApiCommunitiesSlugRoute = ApiCommunitiesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ApiCommunitiesRoute,
+} as any)
+const ApiCategoriesSlugRoute = ApiCategoriesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ApiCategoriesRoute,
 } as any)
 const ApiUsersIdLikedCommunitiesRoute =
   ApiUsersIdLikedCommunitiesRouteImport.update({
@@ -123,19 +123,19 @@ const ApiCommunitiesSlugLikesRoute = ApiCommunitiesSlugLikesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRouteWithChildren
   '/criar-comunidade': typeof CriarComunidadeRoute
-  '/games': typeof GamesRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
-  '/api/games': typeof ApiGamesRouteWithChildren
+  '/categories/$slug': typeof CategoriesSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/games/$slug': typeof GamesSlugRoute
   '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
-  '/games/': typeof GamesIndexRoute
+  '/categories/': typeof CategoriesIndexRoute
+  '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
-  '/api/games/$slug': typeof ApiGamesSlugRoute
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
@@ -146,15 +146,15 @@ export interface FileRoutesByTo {
   '/criar-comunidade': typeof CriarComunidadeRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
-  '/api/games': typeof ApiGamesRouteWithChildren
+  '/categories/$slug': typeof CategoriesSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/games/$slug': typeof GamesSlugRoute
   '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
-  '/games': typeof GamesIndexRoute
+  '/categories': typeof CategoriesIndexRoute
+  '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
-  '/api/games/$slug': typeof ApiGamesSlugRoute
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
@@ -163,19 +163,19 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRouteWithChildren
   '/criar-comunidade': typeof CriarComunidadeRoute
-  '/games': typeof GamesRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
-  '/api/games': typeof ApiGamesRouteWithChildren
+  '/categories/$slug': typeof CategoriesSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/games/$slug': typeof GamesSlugRoute
   '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
-  '/games/': typeof GamesIndexRoute
+  '/categories/': typeof CategoriesIndexRoute
+  '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
-  '/api/games/$slug': typeof ApiGamesSlugRoute
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
@@ -185,19 +185,19 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/categories'
     | '/criar-comunidade'
-    | '/games'
     | '/privacidade'
     | '/termos-de-uso'
+    | '/api/categories'
     | '/api/communities'
     | '/api/discord-invite-stats'
-    | '/api/games'
+    | '/categories/$slug'
     | '/comunidades/$slug'
-    | '/games/$slug'
     | '/profile/$profileFullName'
-    | '/games/'
+    | '/categories/'
+    | '/api/categories/$slug'
     | '/api/communities/$slug'
-    | '/api/games/$slug'
     | '/api/profile/$profileFullName'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
@@ -208,15 +208,15 @@ export interface FileRouteTypes {
     | '/criar-comunidade'
     | '/privacidade'
     | '/termos-de-uso'
+    | '/api/categories'
     | '/api/communities'
     | '/api/discord-invite-stats'
-    | '/api/games'
+    | '/categories/$slug'
     | '/comunidades/$slug'
-    | '/games/$slug'
     | '/profile/$profileFullName'
-    | '/games'
+    | '/categories'
+    | '/api/categories/$slug'
     | '/api/communities/$slug'
-    | '/api/games/$slug'
     | '/api/profile/$profileFullName'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
@@ -224,19 +224,19 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/categories'
     | '/criar-comunidade'
-    | '/games'
     | '/privacidade'
     | '/termos-de-uso'
+    | '/api/categories'
     | '/api/communities'
     | '/api/discord-invite-stats'
-    | '/api/games'
+    | '/categories/$slug'
     | '/comunidades/$slug'
-    | '/games/$slug'
     | '/profile/$profileFullName'
-    | '/games/'
+    | '/categories/'
+    | '/api/categories/$slug'
     | '/api/communities/$slug'
-    | '/api/games/$slug'
     | '/api/profile/$profileFullName'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
@@ -245,13 +245,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoriesRoute: typeof CategoriesRouteWithChildren
   CriarComunidadeRoute: typeof CriarComunidadeRoute
-  GamesRoute: typeof GamesRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
   TermosDeUsoRoute: typeof TermosDeUsoRoute
+  ApiCategoriesRoute: typeof ApiCategoriesRouteWithChildren
   ApiCommunitiesRoute: typeof ApiCommunitiesRouteWithChildren
   ApiDiscordInviteStatsRoute: typeof ApiDiscordInviteStatsRoute
-  ApiGamesRoute: typeof ApiGamesRouteWithChildren
   ComunidadesSlugRoute: typeof ComunidadesSlugRoute
   ProfileProfileFullNameRoute: typeof ProfileProfileFullNameRoute
   ApiProfileProfileFullNameRoute: typeof ApiProfileProfileFullNameRoute
@@ -274,18 +274,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/games': {
-      id: '/games'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof GamesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/criar-comunidade': {
       id: '/criar-comunidade'
       path: '/criar-comunidade'
       fullPath: '/criar-comunidade'
       preLoaderRoute: typeof CriarComunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -295,12 +295,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/games/': {
-      id: '/games/'
+    '/categories/': {
+      id: '/categories/'
       path: '/'
-      fullPath: '/games/'
-      preLoaderRoute: typeof GamesIndexRouteImport
-      parentRoute: typeof GamesRoute
+      fullPath: '/categories/'
+      preLoaderRoute: typeof CategoriesIndexRouteImport
+      parentRoute: typeof CategoriesRoute
     }
     '/profile/$profileFullName': {
       id: '/profile/$profileFullName'
@@ -309,13 +309,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileFullNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/games/$slug': {
-      id: '/games/$slug'
-      path: '/$slug'
-      fullPath: '/games/$slug'
-      preLoaderRoute: typeof GamesSlugRouteImport
-      parentRoute: typeof GamesRoute
-    }
     '/comunidades/$slug': {
       id: '/comunidades/$slug'
       path: '/comunidades/$slug'
@@ -323,12 +316,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComunidadesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/games': {
-      id: '/api/games'
-      path: '/api/games'
-      fullPath: '/api/games'
-      preLoaderRoute: typeof ApiGamesRouteImport
-      parentRoute: typeof rootRouteImport
+    '/categories/$slug': {
+      id: '/categories/$slug'
+      path: '/$slug'
+      fullPath: '/categories/$slug'
+      preLoaderRoute: typeof CategoriesSlugRouteImport
+      parentRoute: typeof CategoriesRoute
     }
     '/api/discord-invite-stats': {
       id: '/api/discord-invite-stats'
@@ -344,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCommunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/categories': {
+      id: '/api/categories'
+      path: '/api/categories'
+      fullPath: '/api/categories'
+      preLoaderRoute: typeof ApiCategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/profile/$profileFullName': {
       id: '/api/profile/$profileFullName'
       path: '/api/profile/$profileFullName'
@@ -351,19 +351,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiProfileProfileFullNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/games/$slug': {
-      id: '/api/games/$slug'
-      path: '/$slug'
-      fullPath: '/api/games/$slug'
-      preLoaderRoute: typeof ApiGamesSlugRouteImport
-      parentRoute: typeof ApiGamesRoute
-    }
     '/api/communities/$slug': {
       id: '/api/communities/$slug'
       path: '/$slug'
       fullPath: '/api/communities/$slug'
       preLoaderRoute: typeof ApiCommunitiesSlugRouteImport
       parentRoute: typeof ApiCommunitiesRoute
+    }
+    '/api/categories/$slug': {
+      id: '/api/categories/$slug'
+      path: '/$slug'
+      fullPath: '/api/categories/$slug'
+      preLoaderRoute: typeof ApiCategoriesSlugRouteImport
+      parentRoute: typeof ApiCategoriesRoute
     }
     '/api/users/$id/liked-communities': {
       id: '/api/users/$id/liked-communities'
@@ -389,17 +389,31 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface GamesRouteChildren {
-  GamesSlugRoute: typeof GamesSlugRoute
-  GamesIndexRoute: typeof GamesIndexRoute
+interface CategoriesRouteChildren {
+  CategoriesSlugRoute: typeof CategoriesSlugRoute
+  CategoriesIndexRoute: typeof CategoriesIndexRoute
 }
 
-const GamesRouteChildren: GamesRouteChildren = {
-  GamesSlugRoute: GamesSlugRoute,
-  GamesIndexRoute: GamesIndexRoute,
+const CategoriesRouteChildren: CategoriesRouteChildren = {
+  CategoriesSlugRoute: CategoriesSlugRoute,
+  CategoriesIndexRoute: CategoriesIndexRoute,
 }
 
-const GamesRouteWithChildren = GamesRoute._addFileChildren(GamesRouteChildren)
+const CategoriesRouteWithChildren = CategoriesRoute._addFileChildren(
+  CategoriesRouteChildren,
+)
+
+interface ApiCategoriesRouteChildren {
+  ApiCategoriesSlugRoute: typeof ApiCategoriesSlugRoute
+}
+
+const ApiCategoriesRouteChildren: ApiCategoriesRouteChildren = {
+  ApiCategoriesSlugRoute: ApiCategoriesSlugRoute,
+}
+
+const ApiCategoriesRouteWithChildren = ApiCategoriesRoute._addFileChildren(
+  ApiCategoriesRouteChildren,
+)
 
 interface ApiCommunitiesSlugRouteChildren {
   ApiCommunitiesSlugLikesRoute: typeof ApiCommunitiesSlugLikesRoute
@@ -426,27 +440,15 @@ const ApiCommunitiesRouteWithChildren = ApiCommunitiesRoute._addFileChildren(
   ApiCommunitiesRouteChildren,
 )
 
-interface ApiGamesRouteChildren {
-  ApiGamesSlugRoute: typeof ApiGamesSlugRoute
-}
-
-const ApiGamesRouteChildren: ApiGamesRouteChildren = {
-  ApiGamesSlugRoute: ApiGamesSlugRoute,
-}
-
-const ApiGamesRouteWithChildren = ApiGamesRoute._addFileChildren(
-  ApiGamesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoriesRoute: CategoriesRouteWithChildren,
   CriarComunidadeRoute: CriarComunidadeRoute,
-  GamesRoute: GamesRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
   TermosDeUsoRoute: TermosDeUsoRoute,
+  ApiCategoriesRoute: ApiCategoriesRouteWithChildren,
   ApiCommunitiesRoute: ApiCommunitiesRouteWithChildren,
   ApiDiscordInviteStatsRoute: ApiDiscordInviteStatsRoute,
-  ApiGamesRoute: ApiGamesRouteWithChildren,
   ComunidadesSlugRoute: ComunidadesSlugRoute,
   ProfileProfileFullNameRoute: ProfileProfileFullNameRoute,
   ApiProfileProfileFullNameRoute: ApiProfileProfileFullNameRoute,

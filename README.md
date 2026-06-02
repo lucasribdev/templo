@@ -39,10 +39,13 @@ Notes:
 - `supabase/migrations/20260602183000_rename_listings_to_communities.sql`
   - Renames backend database objects from listings to communities without deleting data.
   - Keeps the backend API and RPC surface on the communities naming only.
+- `supabase/migrations/20260602220000_rename_games_to_categories.sql`
+  - Renames backend database objects from games to categories without deleting data.
+  - Required for existing production databases before deploying code that reads `categories` and `category_id`.
 
 Seed data:
 
-- Creates local sample users, profiles, games, communities and likes.
+- Creates local sample users, profiles, categories, communities and likes.
 - Gives enough data to test list/detail pages and like counts locally.
 - Apply migrations and seed together with:
 

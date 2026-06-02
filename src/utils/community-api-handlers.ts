@@ -23,7 +23,7 @@ function normalizeVisitorId(value: string | null) {
 export async function getCommunitiesHandler({ request }: { request: Request }) {
 	const url = new URL(request.url);
 
-	const gameId = url.searchParams.get("gameId");
+	const categoryId = url.searchParams.get("categoryId");
 	const userId = url.searchParams.get("userId");
 	const search = url.searchParams.get("search")?.trim();
 	const sortBy = url.searchParams.get("sortBy")?.trim().toUpperCase();
@@ -36,7 +36,7 @@ export async function getCommunitiesHandler({ request }: { request: Request }) {
 		? createSupabaseUserClient(authHeader)
 		: supabase;
 	const { data, error } = await supabaseClient.rpc("get_communities", {
-		p_game_id: gameId,
+		p_category_id: categoryId,
 		p_user_id: userId,
 		p_search: search || null,
 		p_sort_by: sortBy || "DATE",
@@ -71,7 +71,7 @@ export async function createCommunityHandler({
 
 	const body = await request.json();
 	const discordInvite = normalizeDiscordInvite(body.discordInvite ?? "");
-	const suggestedGameName = String(body.suggestedGameName ?? "").trim();
+	const suggestedCategoryName = String(body.suggestedCategoryName ?? "").trim();
 
 	if (!discordInvite) {
 		return Response.json(
@@ -80,8 +80,8 @@ export async function createCommunityHandler({
 		);
 	}
 
-	if (!body.gameId && !suggestedGameName) {
-		return Response.json({ error: "Game is required" }, { status: 400 });
+	if (!body.categoryId && !suggestedCategoryName) {
+		return Response.json({ error: "Category is required" }, { status: 400 });
 	}
 
 	const supabaseUser = createSupabaseUserClient(authHeader);
@@ -91,32 +91,32 @@ export async function createCommunityHandler({
 		return Response.json({ error: "Unauthorized" }, { status: 401 });
 	}
 
-	let gameId = String(body.gameId ?? "").trim();
+	let categoryId = String(body.categoryId ?? "").trim();
 
-	if (!gameId && suggestedGameName) {
-		const { data: resolvedGameId, error: resolvedGameError } =
-			await supabaseUser.rpc("get_or_create_manual_game", {
-				p_name: suggestedGameName,
+	if (!categoryId && suggestedCategoryName) {
+		const { data: resolvedCategoryId, error: resolvedCategoryError } =
+			await supabaseUser.rpc("get_or_create_manual_category", {
+				p_name: suggestedCategoryName,
 			});
 
-		if (resolvedGameError || !resolvedGameId) {
+		if (resolvedCategoryError || !resolvedCategoryId) {
 			return Response.json(
 				{
-					error: "Failed to resolve suggested game",
-					message: resolvedGameError?.message,
+					error: "Failed to resolve suggested category",
+					message: resolvedCategoryError?.message,
 				},
 				{ status: 500 },
 			);
 		}
 
-		gameId = resolvedGameId;
+		categoryId = resolvedCategoryId;
 	}
 
 	const { data, error } = await supabaseUser
 		.from("communities")
 		.insert({
 			user_id: authData.user.id,
-			game_id: gameId,
+			category_id: categoryId,
 			title: body.title,
 			description: body.description,
 			tags: body.tags,

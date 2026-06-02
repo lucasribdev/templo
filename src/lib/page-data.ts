@@ -1,15 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { CommunityByIdRpcRow } from "@/types";
-import { mapCommunityByIdRpc, mapGame, mapProfile } from "@/utils/mappers";
+import { mapCategory, mapCommunityByIdRpc, mapProfile } from "@/utils/mappers";
 import { supabase } from "@/utils/supabase";
 
-export const getGamePageData = createServerFn({
+export const getCategoryPageData = createServerFn({
 	method: "GET",
 })
 	.inputValidator((slug: string) => slug.trim())
 	.handler(async ({ data: slug }) => {
 		const { data, error } = await supabase
-			.from("games")
+			.from("categories")
 			.select("*")
 			.eq("slug", slug)
 			.maybeSingle();
@@ -18,7 +18,7 @@ export const getGamePageData = createServerFn({
 			return null;
 		}
 
-		return mapGame(data);
+		return mapCategory(data);
 	});
 
 export const getCommunityPageData = createServerFn({

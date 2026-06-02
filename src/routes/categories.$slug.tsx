@@ -2,55 +2,55 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, Globe, PlusCircle } from "lucide-react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
+import CategoryArtwork from "@/components/CategoryArtwork";
 import CommunityCard from "@/components/CommunityCard";
-import GameArtwork from "@/components/GameArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
-import { getCommunitiesByGameId, getGameBySlug } from "@/lib/api";
+import { getCategoryBySlug, getCommunitiesByCategoryId } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
-import { getGamePageData } from "@/lib/page-data";
+import { getCategoryPageData } from "@/lib/page-data";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
-export const Route = createFileRoute("/games/$slug")({
+export const Route = createFileRoute("/categories/$slug")({
 	loader: async ({ params }) => {
 		const slug = params?.slug;
 		return {
 			slug,
-			initialGame: await getGamePageData({ data: slug }),
+			initialCategory: await getCategoryPageData({ data: slug }),
 		};
 	},
 	head: ({ loaderData }) => {
 		if (!loaderData) {
 			return buildPageHead({
-				path: "/games",
-				title: "Jogo | Templo",
-				description: "Encontre comunidades para este jogo no Templo.",
+				path: "/categories",
+				title: "Categoria | Templo",
+				description: "Encontre comunidades para esta categoria no Templo.",
 			});
 		}
 
 		return buildPageHead({
-			path: `/games/${loaderData.slug}`,
-			title: loaderData.initialGame
-				? `${loaderData.initialGame.name} | Templo`
-				: "Jogo | Templo",
-			description: loaderData.initialGame
+			path: `/categories/${loaderData.slug}`,
+			title: loaderData.initialCategory
+				? `${loaderData.initialCategory.name} | Templo`
+				: "Categoria | Templo",
+			description: loaderData.initialCategory
 				? truncateDescription(
-						`Encontre comunidades ativas de ${loaderData.initialGame.name} no Templo.`,
+						`Encontre comunidades ativas de ${loaderData.initialCategory.name} no Templo.`,
 					)
-				: "Encontre comunidades para este jogo no Templo.",
-			image: loaderData.initialGame?.coverUrl || undefined,
+				: "Encontre comunidades para esta categoria no Templo.",
+			image: loaderData.initialCategory?.coverUrl || undefined,
 		});
 	},
-	component: GameDetails,
+	component: CategoryDetails,
 });
-const gameDetailsCommunitySkeletonIds = [
-	"game-details-community-1",
-	"game-details-community-2",
-	"game-details-community-3",
-	"game-details-community-4",
-	"game-details-community-5",
-	"game-details-community-6",
+const categoryDetailsCommunitySkeletonIds = [
+	"category-details-community-1",
+	"category-details-community-2",
+	"category-details-community-3",
+	"category-details-community-4",
+	"category-details-community-5",
+	"category-details-community-6",
 ];
 
 function CommunityCardSkeleton() {
@@ -88,7 +88,7 @@ function CommunityCardSkeleton() {
 	);
 }
 
-function GameDetailsSkeleton() {
+function CategoryDetailsSkeleton() {
 	return (
 		<div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
 			<div className="relative h-[300px] rounded-3xl overflow-hidden border border-border-dark">
@@ -118,7 +118,7 @@ function GameDetailsSkeleton() {
 					<Skeleton className="h-5 w-32" />
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-					{gameDetailsCommunitySkeletonIds.map((id) => (
+					{categoryDetailsCommunitySkeletonIds.map((id) => (
 						<CommunityCardSkeleton key={id} />
 					))}
 				</div>
@@ -127,32 +127,33 @@ function GameDetailsSkeleton() {
 	);
 }
 
-function GameDetails() {
+function CategoryDetails() {
 	const { session, isSessionLoading } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
 
-	const { slug, initialGame } = Route.useLoaderData();
+	const { slug, initialCategory } = Route.useLoaderData();
 
-	const { data: game, isLoading: isGameLoading } = useQuery({
-		queryKey: ["game", slug],
-		queryFn: ({ signal }) => getGameBySlug(slug, signal),
-		initialData: initialGame,
+	const { data: category, isLoading: isCategoryLoading } = useQuery({
+		queryKey: ["category", slug],
+		queryFn: ({ signal }) => getCategoryBySlug(slug, signal),
+		initialData: initialCategory,
 	});
 
 	const { data: communitiesData, isLoading: isCommunitiesLoading } = useQuery({
-		queryKey: ["communities", slug, game?.id],
-		queryFn: ({ signal }) => getCommunitiesByGameId(game?.id ?? "", signal),
-		enabled: Boolean(game?.id),
+		queryKey: ["communities", slug, category?.id],
+		queryFn: ({ signal }) =>
+			getCommunitiesByCategoryId(category?.id ?? "", signal),
+		enabled: Boolean(category?.id),
 	});
-	const communities = game ? (communitiesData ?? []) : [];
+	const communities = category ? (communitiesData ?? []) : [];
 	const { data: discordStatsByCode } = useDiscordInviteStats(communities ?? []);
 
-	if (isGameLoading) {
-		return <GameDetailsSkeleton />;
+	if (isCategoryLoading) {
+		return <CategoryDetailsSkeleton />;
 	}
 
-	if (!game)
-		return <div className="p-20 text-center">Jogo não encontrado.</div>;
+	if (!category)
+		return <div className="p-20 text-center">Categoria não encontrada.</div>;
 
 	const handleCreateCommunity = () => {
 		if (isSessionLoading) return;
@@ -161,7 +162,7 @@ function GameDetails() {
 				title: "Cadastrar comunidade",
 				description:
 					"Você precisa estar autenticado para cadastrar uma comunidade.",
-				redirectTo: `/criar-comunidade?game=${game.slug}`,
+				redirectTo: `/criar-comunidade?category=${category.slug}`,
 			});
 		}
 	};
@@ -169,25 +170,29 @@ function GameDetails() {
 	return (
 		<div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
 			<div className="relative h-[300px] rounded-3xl overflow-hidden border border-border-dark">
-				<GameArtwork game={game} variant="hero" className="opacity-80" />
+				<CategoryArtwork
+					category={category}
+					variant="hero"
+					className="opacity-80"
+				/>
 				<div className="absolute inset-0 bg-gradient-to-t from-bg-dark flex flex-col justify-end p-8">
 					<div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
 						<div className="space-y-2">
 							<h1 className="text-5xl font-bold tracking-tighter">
-								{game.name}
+								{category.name}
 							</h1>
 							<div className="flex flex-wrap gap-4 text-sm text-gray-500">
-								{game.releaseDate && (
+								{category.releaseDate && (
 									<div className="flex items-center gap-1">
 										<Calendar className="w-4 h-4" />
 										<span>
-											Lançamento: {new Date(game.releaseDate).getFullYear()}
+											Lançamento: {new Date(category.releaseDate).getFullYear()}
 										</span>
 									</div>
 								)}
-								{game.website && (
+								{category.website && (
 									<a
-										href={game.website}
+										href={category.website}
 										target="_blank"
 										rel="noopener noreferrer"
 										className="flex items-center gap-1 hover:text-brand-primary transition-colors"
@@ -198,7 +203,7 @@ function GameDetails() {
 								)}
 							</div>
 							<div className="flex gap-2">
-								{game.genres?.map((genre) => (
+								{category.genres?.map((genre) => (
 									<span
 										key={genre}
 										className="text-xs bg-white/5 px-3 py-1 rounded-full border border-white/10 text-gray-300"
@@ -210,8 +215,8 @@ function GameDetails() {
 						</div>
 						{session ? (
 							<Link
-								to={`/criar-comunidade`}
-								search={{ game: game.slug }}
+								to={"/criar-comunidade"}
+								search={{ category: category.slug }}
 								className="btn-primary flex items-center gap-2"
 							>
 								<PlusCircle className="w-5 h-5" /> Cadastrar Comunidade
@@ -233,7 +238,7 @@ function GameDetails() {
 			<div className="space-y-6">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{isCommunitiesLoading
-						? gameDetailsCommunitySkeletonIds.map((id) => (
+						? categoryDetailsCommunitySkeletonIds.map((id) => (
 								<CommunityCardSkeleton key={id} />
 							))
 						: communities?.map((community) => (
@@ -250,7 +255,7 @@ function GameDetails() {
 					{!isCommunitiesLoading && communities?.length === 0 && (
 						<div className="col-span-full py-20 text-center glass-panel">
 							<p className="text-gray-500">
-								Ainda não há comunidades para {game.name}.
+								Ainda não há comunidades para {category.name}.
 							</p>
 						</div>
 					)}

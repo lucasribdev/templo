@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { mapGame } from "@/utils/mappers";
+import { mapCategory } from "@/utils/mappers";
 import { supabase } from "@/utils/supabase";
 
-export const Route = createFileRoute("/api/games")({
+export const Route = createFileRoute("/api/categories")({
 	server: {
 		handlers: {
 			GET: async ({ request }) => {
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/api/games")({
 				const offset = offsetParam ? Number(offsetParam) : 0;
 
 				let query = supabase
-					.from("games")
+					.from("categories")
 					.select(
 						"id, slug, name, cover_url, genres, release_date, website, created_at",
 					);
@@ -39,12 +39,12 @@ export const Route = createFileRoute("/api/games")({
 
 				if (error) {
 					return Response.json(
-						{ error: "Failed to fetch games" },
+						{ error: "Failed to fetch categories" },
 						{ status: 500 },
 					);
 				}
 
-				return Response.json(data.map(mapGame));
+				return Response.json(data.map(mapCategory));
 			},
 		},
 	},

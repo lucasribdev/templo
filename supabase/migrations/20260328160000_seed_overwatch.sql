@@ -1,4 +1,4 @@
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -14,7 +14,7 @@ values (
   'overwatch',
   'Overwatch',
   'https://playoverwatch.com',
-  'https://media.rawg.io/media/games/4ea/4ea507ceebeabb43edbc09468f5aaac6.jpg',
+  'https://media.rawg.io/media/categories/4ea/4ea507ceebeabb43edbc09468f5aaac6.jpg',
   array['Ação', 'Tiro', 'Casual'],
   '2016-05-24'
 )
@@ -29,7 +29,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -60,7 +60,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -91,7 +91,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -122,7 +122,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -138,7 +138,7 @@ values (
   'league-of-legends',
   'League of Legends',
   'http://www.leagueoflegends.com',
-  'https://media.rawg.io/media/games/78b/78bc81e247fc7e77af700cbd632a9297.jpg',
+  'https://media.rawg.io/media/categories/78b/78bc81e247fc7e77af700cbd632a9297.jpg',
   array['Ação', 'RPG', 'Estratégia'],
   '2009-10-27'
 )
@@ -153,7 +153,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -169,7 +169,7 @@ values (
   'minecraft',
   'Minecraft',
   'https://classic.minecraft.net/',
-  'https://media.rawg.io/media/games/b4e/b4e4c73d5aa4ec66bbf75375c4847a2b.jpg',
+  'https://media.rawg.io/media/categories/b4e/b4e4c73d5aa4ec66bbf75375c4847a2b.jpg',
   array['Ação', 'Simulação', 'Arcade', 'Indie'],
   '2009-05-10'
 )
@@ -184,7 +184,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -200,7 +200,7 @@ values (
   'grand-theft-auto-v',
   'Grand Theft Auto V',
   'http://www.rockstargames.com/V/',
-  'https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg',
+  'https://media.rawg.io/media/categories/20a/20aa03a10cda45239fe22d035c0ebe64.jpg',
   array['Ação'],
   '2013-09-17'
 )
@@ -215,7 +215,7 @@ set
   release_date = excluded.release_date,
   updated_at = now();
 
-insert into public.games (
+insert into public.categories (
   rawg_id,
   source,
   slug,
@@ -231,7 +231,7 @@ values (
   'dota-2',
   'Dota 2',
   'http://www.dota2.com/',
-  'https://media.rawg.io/media/games/6fc/6fcf4cd3b17c288821388e6085bb0fc9.jpg',
+  'https://media.rawg.io/media/categories/6fc/6fcf4cd3b17c288821388e6085bb0fc9.jpg',
   array['Ação', 'MOBA'],
   '2013-07-09'
 )

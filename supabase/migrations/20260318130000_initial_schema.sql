@@ -14,7 +14,7 @@ begin
   end if;
 end $$;
 
-create table if not exists public.games (
+create table if not exists public.categories (
   id uuid primary key default gen_random_uuid(),
   rawg_id integer unique,
   source text not null default 'manual',
@@ -28,9 +28,9 @@ create table if not exists public.games (
   updated_at timestamptz not null default now()
 );
 
-create index if not exists games_name_idx on public.games using gin (to_tsvector('simple', name));
-create index if not exists games_source_idx on public.games (source);
-create index if not exists games_rawg_id_idx on public.games (rawg_id);
+create index if not exists categories_name_idx on public.categories using gin (to_tsvector('simple', name));
+create index if not exists categories_source_idx on public.categories (source);
+create index if not exists categories_rawg_id_idx on public.categories (rawg_id);
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -48,7 +48,7 @@ create index if not exists profiles_username_idx on public.profiles (username);
 create table if not exists public.listings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
-  game_id uuid not null references public.games(id) on delete restrict,
+  category_id uuid not null references public.categories(id) on delete restrict,
   slug text not null unique,
   type public.type not null default 'LFG',
   title text not null,
@@ -63,7 +63,7 @@ create table if not exists public.listings (
 );
 
 create index if not exists listings_user_id_idx on public.listings (user_id);
-create index if not exists listings_game_id_idx on public.listings (game_id);
+create index if not exists listings_category_id_idx on public.listings (category_id);
 create index if not exists listings_active_idx on public.listings (active);
 create index if not exists listings_created_at_idx on public.listings (created_at desc);
 create index if not exists listings_title_idx on public.listings using gin (to_tsvector('simple', title));
@@ -98,13 +98,13 @@ begin
 end;
 $$;
 
-drop trigger if exists set_games_updated_at on public.games;
-create trigger set_games_updated_at
-before update on public.games
+drop trigger if exists set_categories_updated_at on public.categories;
+create trigger set_categories_updated_at
+before update on public.categories
 for each row
 execute procedure public.set_updated_at();
 
-create or replace function public.set_game_slug()
+create or replace function public.set_category_slug()
 returns trigger
 language plpgsql
 as $$
@@ -116,7 +116,7 @@ begin
   base_slug := nullif(public.slugify(new.name), '');
 
   if base_slug is null then
-    base_slug := 'game';
+    base_slug := 'category';
   end if;
 
   candidate_slug := base_slug;
@@ -124,7 +124,7 @@ begin
   if tg_op = 'INSERT' or new.name is distinct from old.name or coalesce(trim(new.slug), '') = '' then
     while exists (
       select 1
-      from public.games g
+      from public.categories g
       where g.slug = candidate_slug
         and g.id <> coalesce(new.id, '00000000-0000-0000-0000-000000000000'::uuid)
     ) loop
@@ -139,11 +139,11 @@ begin
 end;
 $$;
 
-drop trigger if exists set_game_slug on public.games;
-create trigger set_game_slug
-before insert or update of name, slug on public.games
+drop trigger if exists set_category_slug on public.categories;
+create trigger set_category_slug
+before insert or update of name, slug on public.categories
 for each row
-execute procedure public.set_game_slug();
+execute procedure public.set_category_slug();
 
 drop trigger if exists set_profiles_updated_at on public.profiles;
 create trigger set_profiles_updated_at
@@ -294,13 +294,13 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   type public.type,
   title text,
   description text,
@@ -326,13 +326,13 @@ as $$
     l.id,
     l.slug,
     l.user_id,
-    l.game_id,
-    g.slug as game_slug,
-    g.name as game_name,
-    g.cover_url as game_cover_url,
-    g.genres as game_genres,
-    g.release_date as game_release_date,
-    g.website as game_website,
+    l.category_id,
+    g.slug as category_slug,
+    g.name as category_name,
+    g.cover_url as category_cover_url,
+    g.genres as category_genres,
+    g.release_date as category_release_date,
+    g.website as category_website,
     l.type,
     l.title,
     l.description,
@@ -349,7 +349,7 @@ as $$
     p.full_name as profile_full_name,
     p.avatar_url as profile_avatar_url
   from public.listings l
-  join public.games g on g.id = l.game_id
+  join public.categories g on g.id = l.category_id
   join public.profiles p on p.id = l.user_id
   left join public.listing_likes ll on ll.listing_id = l.id
   where l.id = p_listing_id
@@ -372,13 +372,13 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   type public.type,
   title text,
   description text,
@@ -411,7 +411,7 @@ as $$
   );
 $$;
 
-create or replace function public.get_or_create_manual_game(
+create or replace function public.get_or_create_manual_category(
   p_name text,
   p_cover_url text default null
 )
@@ -422,26 +422,26 @@ set search_path = public
 as $$
 declare
   normalized_slug text;
-  existing_game_id uuid;
-  created_game_id uuid;
+  existing_category_id uuid;
+  created_category_id uuid;
 begin
   normalized_slug := nullif(public.slugify(p_name), '');
 
   if normalized_slug is null then
-    raise exception 'Invalid game name';
+    raise exception 'Invalid category name';
   end if;
 
   select g.id
-  into existing_game_id
-  from public.games g
+  into existing_category_id
+  from public.categories g
   where g.slug = normalized_slug
   limit 1;
 
-  if existing_game_id is not null then
-    return existing_game_id;
+  if existing_category_id is not null then
+    return existing_category_id;
   end if;
 
-  insert into public.games (
+  insert into public.categories (
     name,
     source,
     cover_url
@@ -451,14 +451,14 @@ begin
     'manual',
     p_cover_url
   )
-  returning id into created_game_id;
+  returning id into created_category_id;
 
-  return created_game_id;
+  return created_category_id;
 end;
 $$;
 
 create or replace function public.get_listings(
-  p_game_id uuid default null,
+  p_category_id uuid default null,
   p_user_id uuid default null,
   p_search text default null,
   p_type public.type default null,
@@ -470,9 +470,9 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
   type public.type,
   title text,
   description text,
@@ -485,10 +485,10 @@ returns table (
   user_liked boolean,
   created_at timestamptz,
   updated_at timestamptz,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   profile_username text,
   profile_full_name text,
   profile_avatar_url text
@@ -503,9 +503,9 @@ as $$
       l.id,
       l.slug,
       l.user_id,
-      l.game_id,
-      g.slug as game_slug,
-      g.name as game_name,
+      l.category_id,
+      g.slug as category_slug,
+      g.name as category_name,
       l.type,
       l.title,
       l.description,
@@ -518,10 +518,10 @@ as $$
       coalesce(bool_or(ll.user_id = auth.uid()), false) as user_liked,
       l.created_at,
       l.updated_at,
-      g.cover_url as game_cover_url,
-      g.genres as game_genres,
-      g.release_date as game_release_date,
-      g.website as game_website,
+      g.cover_url as category_cover_url,
+      g.genres as category_genres,
+      g.release_date as category_release_date,
+      g.website as category_website,
       p.username as profile_username,
       p.full_name as profile_full_name,
       p.avatar_url as profile_avatar_url,
@@ -545,11 +545,11 @@ as $$
         end
       )::int as relevance_score
     from public.listings l
-    join public.games g on g.id = l.game_id
+    join public.categories g on g.id = l.category_id
     join public.profiles p on p.id = l.user_id
     left join public.listing_likes ll on ll.listing_id = l.id
     where l.active = true
-      and (p_game_id is null or l.game_id = p_game_id)
+      and (p_category_id is null or l.category_id = p_category_id)
       and (p_user_id is null or l.user_id = p_user_id)
       and (p_type is null or l.type = p_type)
       and (
@@ -580,9 +580,9 @@ as $$
     id,
     slug,
     user_id,
-    game_id,
-    game_slug,
-    game_name,
+    category_id,
+    category_slug,
+    category_name,
     type,
     title,
     description,
@@ -595,10 +595,10 @@ as $$
     user_liked,
     created_at,
     updated_at,
-    game_cover_url,
-    game_genres,
-    game_release_date,
-    game_website,
+    category_cover_url,
+    category_genres,
+    category_release_date,
+    category_website,
     profile_username,
     profile_full_name,
     profile_avatar_url
@@ -611,14 +611,14 @@ as $$
   offset p_offset;
 $$;
 
-alter table public.games enable row level security;
+alter table public.categories enable row level security;
 alter table public.profiles enable row level security;
 alter table public.listings enable row level security;
 alter table public.listing_likes enable row level security;
 
-drop policy if exists "Public can read games" on public.games;
-create policy "Public can read games"
-on public.games
+drop policy if exists "Public can read categories" on public.categories;
+create policy "Public can read categories"
+on public.categories
 for select
 to anon, authenticated
 using (true);
@@ -686,5 +686,5 @@ grant execute on function public.increment_listing_views(uuid) to anon, authenti
 grant execute on function public.toggle_listing_like(uuid) to authenticated;
 grant execute on function public.get_listing_by_id(uuid) to anon, authenticated;
 grant execute on function public.get_listing_by_slug(text) to anon, authenticated;
-grant execute on function public.get_or_create_manual_game(text, text) to authenticated;
+grant execute on function public.get_or_create_manual_category(text, text) to authenticated;
 grant execute on function public.get_listings(uuid, uuid, text, public.type, text, integer, integer) to anon, authenticated;

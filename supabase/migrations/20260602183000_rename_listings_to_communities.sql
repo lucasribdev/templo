@@ -43,7 +43,7 @@ $$;
 alter index if exists listings_pkey rename to communities_pkey;
 alter index if exists listings_slug_key rename to communities_slug_key;
 alter index if exists listings_user_id_idx rename to communities_user_id_idx;
-alter index if exists listings_game_id_idx rename to communities_game_id_idx;
+alter index if exists listings_category_id_idx rename to communities_category_id_idx;
 alter index if exists listings_active_idx rename to communities_active_idx;
 alter index if exists listings_created_at_idx rename to communities_created_at_idx;
 alter index if exists listings_title_idx rename to communities_title_idx;
@@ -64,8 +64,8 @@ begin
   if exists (select 1 from pg_constraint where conname = 'listings_user_id_fkey') then
     alter table public.communities rename constraint listings_user_id_fkey to communities_user_id_fkey;
   end if;
-  if exists (select 1 from pg_constraint where conname = 'listings_game_id_fkey') then
-    alter table public.communities rename constraint listings_game_id_fkey to communities_game_id_fkey;
+  if exists (select 1 from pg_constraint where conname = 'listings_category_id_fkey') then
+    alter table public.communities rename constraint listings_category_id_fkey to communities_category_id_fkey;
   end if;
   if exists (select 1 from pg_constraint where conname = 'listings_views_check') then
     alter table public.communities rename constraint listings_views_check to communities_views_check;
@@ -275,13 +275,13 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   title text,
   description text,
   ip text,
@@ -307,13 +307,13 @@ as $$
     c.id,
     c.slug,
     c.user_id,
-    c.game_id,
-    g.slug as game_slug,
-    g.name as game_name,
-    g.cover_url as game_cover_url,
-    g.genres as game_genres,
-    g.release_date as game_release_date,
-    g.website as game_website,
+    c.category_id,
+    g.slug as category_slug,
+    g.name as category_name,
+    g.cover_url as category_cover_url,
+    g.genres as category_genres,
+    g.release_date as category_release_date,
+    g.website as category_website,
     c.title,
     c.description,
     c.ip,
@@ -330,7 +330,7 @@ as $$
     p.avatar_url as profile_avatar_url,
     p.created_at as profile_created_at
   from public.communities c
-  join public.games g on g.id = c.game_id
+  join public.categories g on g.id = c.category_id
   join public.profiles p on p.id = c.user_id
   left join public.community_likes cl on cl.community_id = c.id
   where c.id = p_community_id
@@ -354,13 +354,13 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   title text,
   description text,
   ip text,
@@ -394,7 +394,7 @@ as $$
 $$;
 
 create or replace function public.get_communities(
-  p_game_id uuid default null,
+  p_category_id uuid default null,
   p_user_id uuid default null,
   p_search text default null,
   p_sort_by text default 'DATE',
@@ -405,9 +405,9 @@ returns table (
   id uuid,
   slug text,
   user_id uuid,
-  game_id uuid,
-  game_slug text,
-  game_name text,
+  category_id uuid,
+  category_slug text,
+  category_name text,
   title text,
   description text,
   ip text,
@@ -419,10 +419,10 @@ returns table (
   user_liked boolean,
   created_at timestamptz,
   updated_at timestamptz,
-  game_cover_url text,
-  game_genres text[],
-  game_release_date date,
-  game_website text,
+  category_cover_url text,
+  category_genres text[],
+  category_release_date date,
+  category_website text,
   profile_username text,
   profile_full_name text,
   profile_avatar_url text,
@@ -438,9 +438,9 @@ as $$
       c.id,
       c.slug,
       c.user_id,
-      c.game_id,
-      g.slug as game_slug,
-      g.name as game_name,
+      c.category_id,
+      g.slug as category_slug,
+      g.name as category_name,
       c.title,
       c.description,
       c.ip,
@@ -452,10 +452,10 @@ as $$
       coalesce(bool_or(cl.user_id = auth.uid()), false) as user_liked,
       c.created_at,
       c.updated_at,
-      g.cover_url as game_cover_url,
-      g.genres as game_genres,
-      g.release_date as game_release_date,
-      g.website as game_website,
+      g.cover_url as category_cover_url,
+      g.genres as category_genres,
+      g.release_date as category_release_date,
+      g.website as category_website,
       p.username as profile_username,
       p.full_name as profile_full_name,
       p.avatar_url as profile_avatar_url,
@@ -480,11 +480,11 @@ as $$
         end
       )::int as relevance_score
     from public.communities c
-    join public.games g on g.id = c.game_id
+    join public.categories g on g.id = c.category_id
     join public.profiles p on p.id = c.user_id
     left join public.community_likes cl on cl.community_id = c.id
     where c.active = true
-      and (p_game_id is null or c.game_id = p_game_id)
+      and (p_category_id is null or c.category_id = p_category_id)
       and (p_user_id is null or c.user_id = p_user_id)
       and (
         p_search is null
@@ -515,9 +515,9 @@ as $$
     id,
     slug,
     user_id,
-    game_id,
-    game_slug,
-    game_name,
+    category_id,
+    category_slug,
+    category_name,
     title,
     description,
     ip,
@@ -529,10 +529,10 @@ as $$
     user_liked,
     created_at,
     updated_at,
-    game_cover_url,
-    game_genres,
-    game_release_date,
-    game_website,
+    category_cover_url,
+    category_genres,
+    category_release_date,
+    category_website,
     profile_username,
     profile_full_name,
     profile_avatar_url,

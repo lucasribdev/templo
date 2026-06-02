@@ -1,7 +1,7 @@
 export type CommunitySortBy = "DATE" | "POPULARITY" | "RELEVANCE";
-export type GameSortBy = "CREATED_AT" | "ALPHABETICAL";
+export type CategorySortBy = "CREATED_AT" | "ALPHABETICAL";
 
-export interface Game {
+export interface Category {
 	id: string;
 	slug: string;
 	name: string;
@@ -12,7 +12,7 @@ export interface Game {
 	createdAt: string;
 }
 
-export interface GameRow {
+export interface CategoryRow {
 	id: string;
 	slug: string;
 	name: string;
@@ -27,7 +27,7 @@ export interface Community {
 	id: string;
 	slug: string;
 	userId: string;
-	game: Game;
+	category: Category;
 	profile: ProfileSummary;
 	title: string;
 	description?: string;
@@ -54,13 +54,13 @@ export interface CommunityByIdRpcRow {
 	id: string;
 	slug: string;
 	user_id: string;
-	game_id: string;
-	game_slug: string;
-	game_name: string;
-	game_cover_url?: string;
-	game_genres?: string[];
-	game_release_date?: string;
-	game_website?: string;
+	category_id: string;
+	category_slug: string;
+	category_name: string;
+	category_cover_url?: string;
+	category_genres?: string[];
+	category_release_date?: string;
+	category_website?: string;
 	title: string;
 	description?: string;
 	ip?: string;
@@ -82,9 +82,9 @@ export interface CommunitiesRpcRow {
 	id: string;
 	slug: string;
 	user_id: string;
-	game_id: string;
-	game_slug: string;
-	game_name: string;
+	category_id: string;
+	category_slug: string;
+	category_name: string;
 	title: string;
 	description?: string;
 	ip?: string;
@@ -96,10 +96,10 @@ export interface CommunitiesRpcRow {
 	user_liked: boolean;
 	created_at: string;
 	updated_at: string;
-	game_cover_url?: string;
-	game_genres?: string[];
-	game_release_date?: string;
-	game_website?: string;
+	category_cover_url?: string;
+	category_genres?: string[];
+	category_release_date?: string;
+	category_website?: string;
 	profile_username: string;
 	profile_full_name: string;
 	profile_avatar_url: string;
@@ -138,8 +138,8 @@ export interface ProfileRow {
 }
 
 export interface CreateCommunityInput {
-	gameId?: string;
-	suggestedGameName?: string;
+	categoryId?: string;
+	suggestedCategoryName?: string;
 	title: string;
 	description: string;
 	discordInvite: string;
@@ -169,19 +169,19 @@ export interface CommunityLikeUser {
 	user_id: string;
 }
 
-export interface GetGamesParams {
+export interface GetCategoriesParams {
 	signal?: AbortSignal;
 	limit?: number;
 	offset?: number;
 	search?: string;
-	sortBy?: GameSortBy;
+	sortBy?: CategorySortBy;
 }
 
 export interface GetCommunitiesParams {
 	signal?: AbortSignal;
 	limit: number;
 	offset: number;
-	gameId?: string;
+	categoryId?: string;
 	userId?: string;
 	search?: string;
 	sortBy?: CommunitySortBy;

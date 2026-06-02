@@ -2,35 +2,35 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import GameCard from "@/components/GameCard";
+import CategoryCard from "@/components/CategoryCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getGames } from "@/lib/api";
+import { getCategories } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
 
-export const Route = createFileRoute("/games/")({
+export const Route = createFileRoute("/categories/")({
 	head: () =>
 		buildPageHead({
-			path: "/games",
-			title: "Explorar Jogos | Templo",
+			path: "/categories",
+			title: "Explorar Categorias | Templo",
 			description:
-				"Explore jogos e encontre comunidades, servidores e grupos ativos para jogar junto.",
+				"Explore categorias e encontre comunidades, servidores e grupos ativos para jogar junto.",
 		}),
-	component: Games,
+	component: Categories,
 });
 
 const pageSize = 20;
-const gameSkeletonIds = [
-	"games-index-1",
-	"games-index-2",
-	"games-index-3",
-	"games-index-4",
-	"games-index-5",
-	"games-index-6",
-	"games-index-7",
-	"games-index-8",
+const categorySkeletonIds = [
+	"categories-index-1",
+	"categories-index-2",
+	"categories-index-3",
+	"categories-index-4",
+	"categories-index-5",
+	"categories-index-6",
+	"categories-index-7",
+	"categories-index-8",
 ];
 
-function GameCardSkeleton() {
+function CategoryCardSkeleton() {
 	return (
 		<div className="relative aspect-video rounded-xl overflow-hidden bg-card-dark">
 			<Skeleton className="h-full w-full rounded-none" />
@@ -45,7 +45,7 @@ function GameCardSkeleton() {
 	);
 }
 
-function Games() {
+function Categories() {
 	const [search, setSearch] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -61,10 +61,10 @@ function Games() {
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
 		useInfiniteQuery({
-			queryKey: ["games", debouncedSearch, "ALPHABETICAL"],
+			queryKey: ["categories", debouncedSearch, "ALPHABETICAL"],
 			initialPageParam: 0,
 			queryFn: ({ pageParam, signal }) =>
-				getGames({
+				getCategories({
 					signal,
 					limit: pageSize,
 					offset: pageParam,
@@ -77,7 +77,7 @@ function Games() {
 			},
 		});
 
-	const games = data?.pages.flat() ?? [];
+	const categories = data?.pages.flat() ?? [];
 
 	useEffect(() => {
 		const node = loadMoreRef.current;
@@ -100,9 +100,11 @@ function Games() {
 		<div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 				<div className="space-y-1">
-					<h1 className="text-4xl font-bold tracking-tight">Explorar Jogos</h1>
+					<h1 className="text-4xl font-bold tracking-tight">
+						Explorar Categorias
+					</h1>
 					<p className="text-gray-500">
-						Encontre comunidades para seus títulos favoritos
+						Encontre comunidades para suas categorias favoritas
 					</p>
 				</div>
 
@@ -110,7 +112,7 @@ function Games() {
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
 					<input
 						type="text"
-						placeholder="Filtrar jogos ou tags..."
+						placeholder="Filtrar categorias ou tags..."
 						className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all"
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
@@ -119,8 +121,10 @@ function Games() {
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
 				{isLoading
-					? gameSkeletonIds.map((id) => <GameCardSkeleton key={id} />)
-					: games?.map((game) => <GameCard key={game.id} game={game} />)}
+					? categorySkeletonIds.map((id) => <CategoryCardSkeleton key={id} />)
+					: categories?.map((category) => (
+							<CategoryCard key={category.id} category={category} />
+						))}
 			</div>
 			<div ref={loadMoreRef} />
 		</div>

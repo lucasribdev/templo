@@ -1,8 +1,8 @@
 import type {
+	CategoryRow,
 	CommunitiesRpcRow,
 	Community,
 	CommunityByIdRpcRow,
-	GameRow,
 	Profile,
 	ProfileRow,
 	ProfileSummary,
@@ -34,14 +34,14 @@ function mapCommunityRpcBase(
 		id: row.id,
 		slug: row.slug,
 		userId: row.user_id,
-		game: {
-			id: row.game_id,
-			slug: row.game_slug,
-			name: row.game_name,
-			coverUrl: row.game_cover_url ?? "",
-			genres: row.game_genres ?? [],
-			releaseDate: row.game_release_date ?? "",
-			website: row.game_website ?? "",
+		category: {
+			id: row.category_id,
+			slug: row.category_slug,
+			name: row.category_name,
+			coverUrl: row.category_cover_url ?? "",
+			genres: row.category_genres ?? [],
+			releaseDate: row.category_release_date ?? "",
+			website: row.category_website ?? "",
 			createdAt: row.created_at,
 		},
 		profile: mapCommunityProfile(row),
@@ -67,7 +67,7 @@ export function mapCommunitiesRpc(row: CommunitiesRpcRow): Community {
 	return mapCommunityRpcBase(row);
 }
 
-export function mapGame(row: GameRow) {
+export function mapCategory(row: CategoryRow) {
 	return {
 		id: row.id,
 		slug: row.slug,

@@ -4,21 +4,21 @@ import {
 	ArrowUpDown,
 	ChevronRight,
 	Flame,
-	Gamepad2,
 	Info,
 	Search,
 	Sparkles,
+	Tags,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useDeferredValue, useState } from "react";
+import CategoryCard from "@/components/CategoryCard";
 import CommunityCard from "@/components/CommunityCard";
-import GameCard from "@/components/GameCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
-import { getCommunities, getGames } from "@/lib/api";
+import { getCategories, getCommunities } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
-import type { CommunitySortBy, Game } from "@/types";
+import type { Category, CommunitySortBy } from "@/types";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
 export const Route = createFileRoute("/")({
@@ -31,20 +31,20 @@ export const Route = createFileRoute("/")({
 });
 
 const pageSize = 12;
-const homeGameSkeletonIds = [
-	"home-game-1",
-	"home-game-2",
-	"home-game-3",
-	"home-game-4",
-	"home-game-5",
-	"home-game-6",
+const homeCategorySkeletonIds = [
+	"home-category-1",
+	"home-category-2",
+	"home-category-3",
+	"home-category-4",
+	"home-category-5",
+	"home-category-6",
 ];
 const homeCommunitySkeletonIds = Array.from(
 	{ length: pageSize },
 	(_, index) => `home-community-${index + 1}`,
 );
 
-function GameCardSkeleton() {
+function CategoryCardSkeleton() {
 	return (
 		<div className="relative aspect-video rounded-xl overflow-hidden bg-card-dark">
 			<Skeleton className="h-full w-full rounded-none" />
@@ -96,14 +96,14 @@ function CommunityCardSkeleton() {
 
 function App() {
 	const [search, setSearch] = useState("");
-	const [filterGame, setFilterGame] = useState<string | "ALL">("ALL");
+	const [filterCategory, setFilterCategory] = useState<string | "ALL">("ALL");
 	const [sortBy, setSortBy] = useState<CommunitySortBy>("DATE");
 
 	const deferredSearch = useDeferredValue(search.trim());
 
-	const { data: games } = useQuery({
-		queryKey: ["games"],
-		queryFn: ({ signal }) => getGames({ signal }),
+	const { data: categories } = useQuery({
+		queryKey: ["categories"],
+		queryFn: ({ signal }) => getCategories({ signal }),
 	});
 
 	const {
@@ -113,7 +113,7 @@ function App() {
 		isFetchingNextPage,
 		isLoading: isCommunitiesLoading,
 	} = useInfiniteQuery({
-		queryKey: ["communities", deferredSearch, filterGame, sortBy],
+		queryKey: ["communities", deferredSearch, filterCategory, sortBy],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) =>
 			getCommunities({
@@ -121,7 +121,7 @@ function App() {
 				limit: pageSize,
 				offset: pageParam,
 				search: deferredSearch || undefined,
-				gameId: filterGame === "ALL" ? undefined : filterGame,
+				categoryId: filterCategory === "ALL" ? undefined : filterCategory,
 				sortBy,
 			}),
 		getNextPageParam: (lastPage, allPages) => {
@@ -162,21 +162,26 @@ function App() {
 			<section className="hidden md:block space-y-6">
 				<div className="flex justify-between items-end">
 					<h2 className="text-lg font-bold flex items-center gap-2">
-						<Flame className="text-brand-primary w-5 h-5" /> Jogos em Destaque
+						<Flame className="text-brand-primary w-5 h-5" /> Categorias em
+						Destaque
 					</h2>
 					<Link
-						to="/games"
+						to="/categories"
 						className="text-sm text-brand-primary hover:underline"
 					>
 						Ver todos
 					</Link>
 				</div>
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-					{games
-						? games
+					{categories
+						? categories
 								.slice(0, 6)
-								.map((game: Game) => <GameCard key={game.id} game={game} />)
-						: homeGameSkeletonIds.map((id) => <GameCardSkeleton key={id} />)}
+								.map((category: Category) => (
+									<CategoryCard key={category.id} category={category} />
+								))
+						: homeCategorySkeletonIds.map((id) => (
+								<CategoryCardSkeleton key={id} />
+							))}
 				</div>
 			</section>
 
@@ -201,16 +206,16 @@ function App() {
 						</div>
 
 						<div className="relative group">
-							<Gamepad2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors pointer-events-none" />
+							<Tags className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors pointer-events-none" />
 							<select
-								value={filterGame}
-								onChange={(e) => setFilterGame(e.target.value)}
+								value={filterCategory}
+								onChange={(e) => setFilterCategory(e.target.value)}
 								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all appearance-none cursor-pointer"
 							>
-								<option value="ALL">Todos os Jogos</option>
-								{games?.map((game) => (
-									<option key={game.id} value={game.id}>
-										{game.name}
+								<option value="ALL">Todas as categorias</option>
+								{categories?.map((category) => (
+									<option key={category.id} value={category.id}>
+										{category.name}
 									</option>
 								))}
 							</select>

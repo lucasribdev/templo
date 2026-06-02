@@ -169,7 +169,7 @@ function App() {
 						to="/categories"
 						className="text-sm text-brand-primary hover:underline"
 					>
-						Ver todos
+						Ver todas
 					</Link>
 				</div>
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">

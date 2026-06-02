@@ -47,7 +47,6 @@ function mapCommunityRpcBase(
 		profile: mapCommunityProfile(row),
 		title: row.title,
 		description: row.description,
-		ip: row.ip,
 		tags: row.tags,
 		discordInvite: row.discord_invite,
 		views: row.views,

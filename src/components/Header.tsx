@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogIn, PlusCircle, Tags, UserIcon } from "lucide-react";
+import { Gamepad2, LogIn, PlusCircle, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import { useAuth } from "@/hooks/use-auth";
@@ -44,7 +44,7 @@ export default function Header() {
 				<div className="flex justify-between h-16 items-center">
 					<Link to="/" className="flex items-center gap-2">
 						<div className="w-8 h-8 flex items-center justify-center">
-							<Tags className="text-brand-primary w-7 h-7" />
+							<Gamepad2 className="text-brand-primary w-7 h-7" />
 						</div>
 						<span className="font-display text-xl font-bold tracking-wider text-white">
 							Templo

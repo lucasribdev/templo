@@ -121,7 +121,6 @@ export async function createCommunityHandler({
 			description: body.description,
 			tags: body.tags,
 			discord_invite: discordInvite,
-			ip: body.ip,
 			active: true,
 		})
 		.select()

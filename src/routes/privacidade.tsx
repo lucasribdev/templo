@@ -51,7 +51,7 @@ function PrivacyPolicy() {
 							</li>
 							<li>
 								informações publicadas por você, como título, descrição, jogo,
-								tags, convite do Discord e endereço de servidor;
+								tags e convite do Discord;
 							</li>
 							<li>
 								dados de uso da plataforma, como visualizações, curtidas,
@@ -102,9 +102,9 @@ function PrivacyPolicy() {
 						</h2>
 						<p>
 							Comunidades, perfis públicos, links de convite, tags, descrições e
-							endereços de servidor podem ficar visíveis para outros usuários e
-							visitantes. Evite publicar dados pessoais sensíveis ou informações
-							que você não deseja tornar públicas.
+							outros conteúdos publicados podem ficar visíveis para outros
+							usuários e visitantes. Evite publicar dados pessoais sensíveis ou
+							informações que você não deseja tornar públicas.
 						</p>
 					</section>
 

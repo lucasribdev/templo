@@ -112,7 +112,7 @@ function Categories() {
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
 					<input
 						type="text"
-						placeholder="Filtrar categorias ou tags..."
+						placeholder="Filtrar categorias..."
 						className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all"
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}

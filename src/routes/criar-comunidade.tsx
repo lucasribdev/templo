@@ -48,27 +48,6 @@ export const Route = createFileRoute("/criar-comunidade")({
 	component: RouteComponent,
 });
 
-function isValidServerAddress(value: string) {
-	const addressParts = value.trim().split(":");
-	if (addressParts.length > 2) return false;
-
-	const [host, port] = addressParts;
-	if (!host) return false;
-
-	if (port) {
-		if (!/^\d+$/.test(port)) return false;
-		const portNumber = Number(port);
-		if (portNumber < 1 || portNumber > 65535) return false;
-	}
-
-	const ipv4Pattern =
-		/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/;
-	const hostnamePattern =
-		/^(localhost|[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)$/;
-
-	return ipv4Pattern.test(host) || hostnamePattern.test(host);
-}
-
 function RouteComponent() {
 	const [step, setStep] = useState(1);
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -147,7 +126,6 @@ function RouteComponent() {
 			title: "",
 			description: "",
 			discord_invite: "",
-			ip: "",
 			tags: [] as string[],
 		},
 		onSubmit: async ({ value }) => {
@@ -177,7 +155,6 @@ function RouteComponent() {
 				title: value.title,
 				description: value.description,
 				discordInvite: normalizeDiscordInvite(value.discord_invite) ?? "",
-				ip: value.ip || undefined,
 				tags: value.tags,
 			});
 
@@ -409,85 +386,45 @@ function RouteComponent() {
 								)}
 							</communityForm.Field>
 
-							<div className="grid grid-cols-2 gap-4">
-								<communityForm.Field
-									name="discord_invite"
-									validators={{
-										onChange: ({ value }) => {
-											if (!value.trim()) return "Discord é obrigatório";
-											if (!isValidDiscordInvite(value)) {
-												return "Use um link válido do Discord";
-											}
-											return undefined;
-										},
-									}}
-								>
-									{(field) => (
-										<div className="space-y-2">
-											<label
-												htmlFor={field.name}
-												className="text-xs font-bold text-gray-500 uppercase"
-											>
-												Link do Discord
-											</label>
-											<input
-												id={field.name}
-												name={field.name}
-												type="text"
-												value={field.state.value}
-												onBlur={field.handleBlur}
-												onChange={(e) => field.handleChange(e.target.value)}
-												placeholder="https://discord.gg/..."
-												className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
-											/>
-											{field.state.meta.isTouched &&
-												field.state.meta.errors.length > 0 && (
-													<p className="text-xs text-red-400">
-														{String(field.state.meta.errors[0])}
-													</p>
-												)}
-										</div>
-									)}
-								</communityForm.Field>
-
-								<communityForm.Field
-									name="ip"
-									validators={{
-										onChange: ({ value }) => {
-											if (value.trim() && !isValidServerAddress(value.trim()))
-												return "Use um IP/host válido (ex: 192.168.0.10:2456)";
-											return undefined;
-										},
-									}}
-								>
-									{(field) => (
-										<div className="space-y-2">
-											<label
-												htmlFor={field.name}
-												className="text-xs font-bold text-gray-500 uppercase"
-											>
-												IP do Servidor
-											</label>
-											<input
-												id={field.name}
-												name={field.name}
-												type="text"
-												value={field.state.value}
-												onBlur={field.handleBlur}
-												onChange={(e) => field.handleChange(e.target.value)}
-												placeholder="Ex: 192.168.1.1:2456"
-												className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
-											/>
-											{field.state.meta.isTouched &&
-												field.state.meta.errors.length > 0 && (
-													<p className="text-xs text-red-400">
-														{String(field.state.meta.errors[0])}
-													</p>
-												)}
-										</div>
-									)}
-								</communityForm.Field>
-							</div>
+							<communityForm.Field
+								name="discord_invite"
+								validators={{
+									onChange: ({ value }) => {
+										if (!value.trim()) return "Discord é obrigatório";
+										if (!isValidDiscordInvite(value)) {
+											return "Use um link válido do Discord";
+										}
+										return undefined;
+									},
+								}}
+							>
+								{(field) => (
+									<div className="space-y-2">
+										<label
+											htmlFor={field.name}
+											className="text-xs font-bold text-gray-500 uppercase"
+										>
+											Link do Discord
+										</label>
+										<input
+											id={field.name}
+											name={field.name}
+											type="text"
+											value={field.state.value}
+											onBlur={field.handleBlur}
+											onChange={(e) => field.handleChange(e.target.value)}
+											placeholder="https://discord.gg/..."
+											className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
+										/>
+										{field.state.meta.isTouched &&
+											field.state.meta.errors.length > 0 && (
+												<p className="text-xs text-red-400">
+													{String(field.state.meta.errors[0])}
+												</p>
+											)}
+									</div>
+								)}
+							</communityForm.Field>
 							<communityForm.Field name="tags">
 								{(field) => {
 									const handleAddTag = (

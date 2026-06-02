@@ -31,7 +31,6 @@ export interface Community {
 	profile: ProfileSummary;
 	title: string;
 	description?: string;
-	ip?: string;
 	tags?: string[];
 	discordInvite?: string;
 	views: number;
@@ -63,7 +62,6 @@ export interface CommunityByIdRpcRow {
 	category_website?: string;
 	title: string;
 	description?: string;
-	ip?: string;
 	tags?: string[];
 	discord_invite?: string;
 	views: number;
@@ -87,7 +85,6 @@ export interface CommunitiesRpcRow {
 	category_name: string;
 	title: string;
 	description?: string;
-	ip?: string;
 	tags?: string[];
 	discord_invite?: string;
 	views: number;
@@ -143,7 +140,6 @@ export interface CreateCommunityInput {
 	title: string;
 	description: string;
 	discordInvite: string;
-	ip?: string;
 	tags: string[];
 }
 

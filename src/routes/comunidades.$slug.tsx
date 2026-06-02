@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Check, Copy, ExternalLink, Eye, Heart } from "lucide-react";
+import { ArrowLeft, ExternalLink, Eye, Heart } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import CategoryArtwork from "@/components/CategoryArtwork";
 import UserAvatar from "@/components/UserAvatar";
@@ -118,9 +118,7 @@ function CommunityDetailsSkeleton() {
 }
 
 function CommunityDetails() {
-	const [copied, setCopied] = useState(false);
 	const [viewsCount, setViewsCount] = useState<number | null>(null);
-	const copiedTimeoutRef = useRef<number | null>(null);
 
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -155,14 +153,6 @@ function CommunityDetails() {
 			isMounted = false;
 		};
 	}, [community?.slug, community?.views]);
-
-	useEffect(() => {
-		return () => {
-			if (copiedTimeoutRef.current) {
-				window.clearTimeout(copiedTimeoutRef.current);
-			}
-		};
-	}, []);
 
 	const likeMutation = useMutation({
 		mutationFn: () => {
@@ -243,25 +233,6 @@ function CommunityDetails() {
 		? Object.values(discordStatsByCode ?? {})[0]
 		: undefined;
 	const displayedViewsCount = viewsCount ?? community.views;
-
-	const handleCopyIP = async () => {
-		if ("ip" in community && community.ip) {
-			if (copiedTimeoutRef.current) {
-				window.clearTimeout(copiedTimeoutRef.current);
-			}
-
-			try {
-				await navigator.clipboard.writeText(community.ip);
-				setCopied(true);
-				copiedTimeoutRef.current = window.setTimeout(() => {
-					setCopied(false);
-					copiedTimeoutRef.current = null;
-				}, 2000);
-			} catch {
-				setCopied(false);
-			}
-		}
-	};
 
 	const handleLike = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -412,21 +383,6 @@ function CommunityDetails() {
 											<ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform" />
 											Entrar no Discord
 										</a>
-									)}
-
-									{community.ip && (
-										<button
-											type="button"
-											onClick={handleCopyIP}
-											className="flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-bold text-sm bg-white/5 border border-white/10 text-gray-400 hover:border-brand-primary/50 hover:text-brand-primary transition-all"
-										>
-											{copied ? (
-												<Check className="w-4 h-4 text-emerald-500" />
-											) : (
-												<Copy className="w-4 h-4" />
-											)}
-											{copied ? "COPIADO" : "COPIAR IP"}
-										</button>
 									)}
 								</div>
 

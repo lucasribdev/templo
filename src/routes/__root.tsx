@@ -7,7 +7,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { Tags } from "lucide-react";
+import { Gamepad2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GoogleAnalytics } from "tanstack-router-ga4";
 import { AuthPromptProvider } from "@/components/AuthPromptModal";
@@ -83,7 +83,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 									<div className="max-w-7xl mx-auto px-4 text-center space-y-4">
 										<div className="flex items-center justify-center gap-2">
 											<div className="w-6 h-6 bg-brand-primary rounded flex items-center justify-center">
-												<Tags className="text-black w-4 h-4" />
+												<Gamepad2 className="text-black w-4 h-4" />
 											</div>
 											<span className="text-lg font-bold tracking-tighter">
 												Templo

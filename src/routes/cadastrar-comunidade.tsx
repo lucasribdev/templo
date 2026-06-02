@@ -41,7 +41,7 @@ function CategoryOptionSkeleton() {
 	);
 }
 
-export const Route = createFileRoute("/criar-comunidade")({
+export const Route = createFileRoute("/cadastrar-comunidade")({
 	validateSearch: (search: CreateCommunitySearch & SearchSchemaInput) => ({
 		category: typeof search.category === "string" ? search.category : undefined,
 	}),
@@ -139,7 +139,7 @@ function RouteComponent() {
 					title: "Cadastrar comunidade",
 					description:
 						"Você precisa estar autenticado para cadastrar uma comunidade.",
-					redirectTo: "/criar-comunidade",
+					redirectTo: "/cadastrar-comunidade",
 				});
 				return;
 			}
@@ -172,7 +172,7 @@ function RouteComponent() {
 			title: "Cadastrar comunidade",
 			description:
 				"Você precisa estar autenticado para cadastrar uma comunidade.",
-			redirectTo: "/criar-comunidade",
+			redirectTo: "/cadastrar-comunidade",
 		});
 	}, [isSessionLoading, session, openAuthPrompt]);
 

@@ -12,7 +12,7 @@ import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getCategoryPageData } from "@/lib/page-data";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
-export const Route = createFileRoute("/categories/$slug")({
+export const Route = createFileRoute("/categorias/$slug")({
 	loader: async ({ params }) => {
 		const slug = params?.slug;
 		return {
@@ -162,7 +162,7 @@ function CategoryDetails() {
 				title: "Cadastrar comunidade",
 				description:
 					"Você precisa estar autenticado para cadastrar uma comunidade.",
-				redirectTo: `/criar-comunidade?category=${category.slug}`,
+				redirectTo: `/cadastrar-comunidade?category=${category.slug}`,
 			});
 		}
 	};
@@ -215,7 +215,7 @@ function CategoryDetails() {
 						</div>
 						{session ? (
 							<Link
-								to={"/criar-comunidade"}
+								to={"/cadastrar-comunidade"}
 								search={{ category: category.slug }}
 								className="btn-primary flex items-center gap-2"
 							>

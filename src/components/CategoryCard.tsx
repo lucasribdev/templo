@@ -5,7 +5,7 @@ import type { Category } from "@/types";
 export default function CategoryCard({ category }: { category: Category }) {
 	return (
 		<Link
-			to="/categories/$slug"
+			to="/categorias/$slug"
 			params={{ slug: category.slug }}
 			className="group"
 		>

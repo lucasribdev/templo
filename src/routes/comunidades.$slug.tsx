@@ -257,7 +257,7 @@ function CommunityDetails() {
 		}
 
 		navigate({
-			to: "/categories/$slug",
+			to: "/categorias/$slug",
 			params: { slug: community.category.slug },
 		});
 	};
@@ -294,7 +294,7 @@ function CommunityDetails() {
 							<div className="p-6 space-y-6">
 								<div className="flex items-center gap-3 mb-2">
 									<Link
-										to={"/categories/$slug"}
+										to={"/categorias/$slug"}
 										params={{ slug: community.category.slug }}
 										className="text-brand-primary text-xs transition-colors hover:underline"
 									>
@@ -387,7 +387,7 @@ function CommunityDetails() {
 								</div>
 
 								<Link
-									to="/profile/$profileFullName"
+									to="/perfil/$profileFullName"
 									params={{ profileFullName: community.profile.fullName }}
 									className="flex items-center gap-4 pt-6 border-t border-white/5 transition-colors hover:text-brand-primary"
 								>

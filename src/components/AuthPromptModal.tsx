@@ -25,7 +25,7 @@ type AuthPromptContextValue = {
 const defaultPrompt = {
 	title: "Cadastrar comunidade",
 	description: "Você precisa estar autenticado para cadastrar uma comunidade.",
-	redirectTo: "/criar-comunidade",
+	redirectTo: "/cadastrar-comunidade",
 };
 
 const AuthPromptContext = createContext<AuthPromptContextValue | null>(null);

@@ -11,13 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
-import { Route as CriarComunidadeRouteImport } from './routes/criar-comunidade'
-import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as CategoriasRouteImport } from './routes/categorias'
+import { Route as CadastrarComunidadeRouteImport } from './routes/cadastrar-comunidade'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
-import { Route as ProfileProfileFullNameRouteImport } from './routes/profile.$profileFullName'
+import { Route as CategoriasIndexRouteImport } from './routes/categorias.index'
+import { Route as PerfilProfileFullNameRouteImport } from './routes/perfil.$profileFullName'
 import { Route as ComunidadesSlugRouteImport } from './routes/comunidades.$slug'
-import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
+import { Route as CategoriasSlugRouteImport } from './routes/categorias.$slug'
 import { Route as ApiDiscordInviteStatsRouteImport } from './routes/api/discord-invite-stats'
 import { Route as ApiCommunitiesRouteImport } from './routes/api/communities'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
@@ -38,14 +38,14 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CriarComunidadeRoute = CriarComunidadeRouteImport.update({
-  id: '/criar-comunidade',
-  path: '/criar-comunidade',
+const CategoriasRoute = CategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CategoriesRoute = CategoriesRouteImport.update({
-  id: '/categories',
-  path: '/categories',
+const CadastrarComunidadeRoute = CadastrarComunidadeRouteImport.update({
+  id: '/cadastrar-comunidade',
+  path: '/cadastrar-comunidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -53,14 +53,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
+const CategoriasIndexRoute = CategoriasIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => CategoriesRoute,
+  getParentRoute: () => CategoriasRoute,
 } as any)
-const ProfileProfileFullNameRoute = ProfileProfileFullNameRouteImport.update({
-  id: '/profile/$profileFullName',
-  path: '/profile/$profileFullName',
+const PerfilProfileFullNameRoute = PerfilProfileFullNameRouteImport.update({
+  id: '/perfil/$profileFullName',
+  path: '/perfil/$profileFullName',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComunidadesSlugRoute = ComunidadesSlugRouteImport.update({
@@ -68,10 +68,10 @@ const ComunidadesSlugRoute = ComunidadesSlugRouteImport.update({
   path: '/comunidades/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
+const CategoriasSlugRoute = CategoriasSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
-  getParentRoute: () => CategoriesRoute,
+  getParentRoute: () => CategoriasRoute,
 } as any)
 const ApiDiscordInviteStatsRoute = ApiDiscordInviteStatsRouteImport.update({
   id: '/api/discord-invite-stats',
@@ -123,17 +123,17 @@ const ApiCommunitiesSlugLikesRoute = ApiCommunitiesSlugLikesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/categories': typeof CategoriesRouteWithChildren
-  '/criar-comunidade': typeof CriarComunidadeRoute
+  '/cadastrar-comunidade': typeof CadastrarComunidadeRoute
+  '/categorias': typeof CategoriasRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
-  '/categories/$slug': typeof CategoriesSlugRoute
+  '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
-  '/categories/': typeof CategoriesIndexRoute
+  '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
+  '/categorias/': typeof CategoriasIndexRoute
   '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
@@ -143,16 +143,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/criar-comunidade': typeof CriarComunidadeRoute
+  '/cadastrar-comunidade': typeof CadastrarComunidadeRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
-  '/categories/$slug': typeof CategoriesSlugRoute
+  '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
-  '/categories': typeof CategoriesIndexRoute
+  '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
+  '/categorias': typeof CategoriasIndexRoute
   '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
@@ -163,17 +163,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/categories': typeof CategoriesRouteWithChildren
-  '/criar-comunidade': typeof CriarComunidadeRoute
+  '/cadastrar-comunidade': typeof CadastrarComunidadeRoute
+  '/categorias': typeof CategoriasRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
-  '/categories/$slug': typeof CategoriesSlugRoute
+  '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/profile/$profileFullName': typeof ProfileProfileFullNameRoute
-  '/categories/': typeof CategoriesIndexRoute
+  '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
+  '/categorias/': typeof CategoriasIndexRoute
   '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
@@ -185,17 +185,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/categories'
-    | '/criar-comunidade'
+    | '/cadastrar-comunidade'
+    | '/categorias'
     | '/privacidade'
     | '/termos-de-uso'
     | '/api/categories'
     | '/api/communities'
     | '/api/discord-invite-stats'
-    | '/categories/$slug'
+    | '/categorias/$slug'
     | '/comunidades/$slug'
-    | '/profile/$profileFullName'
-    | '/categories/'
+    | '/perfil/$profileFullName'
+    | '/categorias/'
     | '/api/categories/$slug'
     | '/api/communities/$slug'
     | '/api/profile/$profileFullName'
@@ -205,16 +205,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/criar-comunidade'
+    | '/cadastrar-comunidade'
     | '/privacidade'
     | '/termos-de-uso'
     | '/api/categories'
     | '/api/communities'
     | '/api/discord-invite-stats'
-    | '/categories/$slug'
+    | '/categorias/$slug'
     | '/comunidades/$slug'
-    | '/profile/$profileFullName'
-    | '/categories'
+    | '/perfil/$profileFullName'
+    | '/categorias'
     | '/api/categories/$slug'
     | '/api/communities/$slug'
     | '/api/profile/$profileFullName'
@@ -224,17 +224,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/categories'
-    | '/criar-comunidade'
+    | '/cadastrar-comunidade'
+    | '/categorias'
     | '/privacidade'
     | '/termos-de-uso'
     | '/api/categories'
     | '/api/communities'
     | '/api/discord-invite-stats'
-    | '/categories/$slug'
+    | '/categorias/$slug'
     | '/comunidades/$slug'
-    | '/profile/$profileFullName'
-    | '/categories/'
+    | '/perfil/$profileFullName'
+    | '/categorias/'
     | '/api/categories/$slug'
     | '/api/communities/$slug'
     | '/api/profile/$profileFullName'
@@ -245,15 +245,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CategoriesRoute: typeof CategoriesRouteWithChildren
-  CriarComunidadeRoute: typeof CriarComunidadeRoute
+  CadastrarComunidadeRoute: typeof CadastrarComunidadeRoute
+  CategoriasRoute: typeof CategoriasRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
   TermosDeUsoRoute: typeof TermosDeUsoRoute
   ApiCategoriesRoute: typeof ApiCategoriesRouteWithChildren
   ApiCommunitiesRoute: typeof ApiCommunitiesRouteWithChildren
   ApiDiscordInviteStatsRoute: typeof ApiDiscordInviteStatsRoute
   ComunidadesSlugRoute: typeof ComunidadesSlugRoute
-  ProfileProfileFullNameRoute: typeof ProfileProfileFullNameRoute
+  PerfilProfileFullNameRoute: typeof PerfilProfileFullNameRoute
   ApiProfileProfileFullNameRoute: typeof ApiProfileProfileFullNameRoute
   ApiUsersIdLikedCommunitiesRoute: typeof ApiUsersIdLikedCommunitiesRoute
 }
@@ -274,18 +274,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/criar-comunidade': {
-      id: '/criar-comunidade'
-      path: '/criar-comunidade'
-      fullPath: '/criar-comunidade'
-      preLoaderRoute: typeof CriarComunidadeRouteImport
+    '/categorias': {
+      id: '/categorias'
+      path: '/categorias'
+      fullPath: '/categorias'
+      preLoaderRoute: typeof CategoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/categories': {
-      id: '/categories'
-      path: '/categories'
-      fullPath: '/categories'
-      preLoaderRoute: typeof CategoriesRouteImport
+    '/cadastrar-comunidade': {
+      id: '/cadastrar-comunidade'
+      path: '/cadastrar-comunidade'
+      fullPath: '/cadastrar-comunidade'
+      preLoaderRoute: typeof CadastrarComunidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -295,18 +295,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/categories/': {
-      id: '/categories/'
+    '/categorias/': {
+      id: '/categorias/'
       path: '/'
-      fullPath: '/categories/'
-      preLoaderRoute: typeof CategoriesIndexRouteImport
-      parentRoute: typeof CategoriesRoute
+      fullPath: '/categorias/'
+      preLoaderRoute: typeof CategoriasIndexRouteImport
+      parentRoute: typeof CategoriasRoute
     }
-    '/profile/$profileFullName': {
-      id: '/profile/$profileFullName'
-      path: '/profile/$profileFullName'
-      fullPath: '/profile/$profileFullName'
-      preLoaderRoute: typeof ProfileProfileFullNameRouteImport
+    '/perfil/$profileFullName': {
+      id: '/perfil/$profileFullName'
+      path: '/perfil/$profileFullName'
+      fullPath: '/perfil/$profileFullName'
+      preLoaderRoute: typeof PerfilProfileFullNameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comunidades/$slug': {
@@ -316,12 +316,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComunidadesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/categories/$slug': {
-      id: '/categories/$slug'
+    '/categorias/$slug': {
+      id: '/categorias/$slug'
       path: '/$slug'
-      fullPath: '/categories/$slug'
-      preLoaderRoute: typeof CategoriesSlugRouteImport
-      parentRoute: typeof CategoriesRoute
+      fullPath: '/categorias/$slug'
+      preLoaderRoute: typeof CategoriasSlugRouteImport
+      parentRoute: typeof CategoriasRoute
     }
     '/api/discord-invite-stats': {
       id: '/api/discord-invite-stats'
@@ -389,18 +389,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface CategoriesRouteChildren {
-  CategoriesSlugRoute: typeof CategoriesSlugRoute
-  CategoriesIndexRoute: typeof CategoriesIndexRoute
+interface CategoriasRouteChildren {
+  CategoriasSlugRoute: typeof CategoriasSlugRoute
+  CategoriasIndexRoute: typeof CategoriasIndexRoute
 }
 
-const CategoriesRouteChildren: CategoriesRouteChildren = {
-  CategoriesSlugRoute: CategoriesSlugRoute,
-  CategoriesIndexRoute: CategoriesIndexRoute,
+const CategoriasRouteChildren: CategoriasRouteChildren = {
+  CategoriasSlugRoute: CategoriasSlugRoute,
+  CategoriasIndexRoute: CategoriasIndexRoute,
 }
 
-const CategoriesRouteWithChildren = CategoriesRoute._addFileChildren(
-  CategoriesRouteChildren,
+const CategoriasRouteWithChildren = CategoriasRoute._addFileChildren(
+  CategoriasRouteChildren,
 )
 
 interface ApiCategoriesRouteChildren {
@@ -442,15 +442,15 @@ const ApiCommunitiesRouteWithChildren = ApiCommunitiesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CategoriesRoute: CategoriesRouteWithChildren,
-  CriarComunidadeRoute: CriarComunidadeRoute,
+  CadastrarComunidadeRoute: CadastrarComunidadeRoute,
+  CategoriasRoute: CategoriasRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
   TermosDeUsoRoute: TermosDeUsoRoute,
   ApiCategoriesRoute: ApiCategoriesRouteWithChildren,
   ApiCommunitiesRoute: ApiCommunitiesRouteWithChildren,
   ApiDiscordInviteStatsRoute: ApiDiscordInviteStatsRoute,
   ComunidadesSlugRoute: ComunidadesSlugRoute,
-  ProfileProfileFullNameRoute: ProfileProfileFullNameRoute,
+  PerfilProfileFullNameRoute: PerfilProfileFullNameRoute,
   ApiProfileProfileFullNameRoute: ApiProfileProfileFullNameRoute,
   ApiUsersIdLikedCommunitiesRoute: ApiUsersIdLikedCommunitiesRoute,
 }

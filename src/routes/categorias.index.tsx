@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getCategories } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
 
-export const Route = createFileRoute("/categories/")({
+export const Route = createFileRoute("/categorias/")({
 	head: () =>
 		buildPageHead({
 			path: "/categories",
@@ -42,7 +42,7 @@ function CategoryCardSkeleton() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }
 
 function Categories() {
@@ -75,7 +75,7 @@ function Categories() {
 				if (lastPage.length < pageSize) return undefined;
 				return allPages.flat().length;
 			},
-		});
+		})
 
 	const categories = data?.pages.flat() ?? [];
 
@@ -90,7 +90,7 @@ function Categories() {
 				}
 			},
 			{ rootMargin: "300px" },
-		);
+		)
 
 		observer.observe(node);
 		return () => observer.disconnect();
@@ -128,5 +128,5 @@ function Categories() {
 			</div>
 			<div ref={loadMoreRef} />
 		</div>
-	);
+	)
 }

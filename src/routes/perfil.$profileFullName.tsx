@@ -18,13 +18,13 @@ import { getProfilePageData } from "@/lib/page-data";
 import { extractDiscordInviteCode } from "@/utils/discord";
 import { memberSince } from "@/utils/profile";
 
-export const Route = createFileRoute("/profile/$profileFullName")({
+export const Route = createFileRoute("/perfil/$profileFullName")({
 	loader: async ({ params }) => {
 		const profileFullName = params?.profileFullName;
 		return {
 			profileFullName,
 			initialProfile: await getProfilePageData({ data: profileFullName }),
-		};
+		}
 	},
 	head: ({ loaderData }) => {
 		if (!loaderData) {
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/profile/$profileFullName")({
 				title: "Perfil | Templo",
 				description: "Veja este perfil no Templo.",
 				type: "profile",
-			});
+			})
 		}
 
 		return buildPageHead({
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/profile/$profileFullName")({
 				: "Veja este perfil no Templo.",
 			image: loaderData.initialProfile?.avatarUrl || undefined,
 			type: "profile",
-		});
+		})
 	},
 	component: Profile,
 });
@@ -93,7 +93,7 @@ function CommunityCardSkeleton() {
 				<Skeleton className="h-4 w-20" />
 			</div>
 		</div>
-	);
+	)
 }
 
 function ProfileSkeleton() {
@@ -129,7 +129,7 @@ function ProfileSkeleton() {
 				))}
 			</div>
 		</div>
-	);
+	)
 }
 
 function Profile() {
@@ -144,7 +144,7 @@ function Profile() {
 		queryKey: ["profile", profileFullName],
 		queryFn: ({ signal }) => getProfile(profileFullName, signal),
 		initialData: initialProfile,
-	});
+	})
 
 	const {
 		data: communitiesData,
@@ -165,14 +165,14 @@ function Profile() {
 				signal,
 				limit: pageSize,
 				offset: pageParam,
-			});
+			})
 		},
 		getNextPageParam: (lastPage, allPages) => {
 			if (lastPage.length < pageSize) return undefined;
 			return allPages.flat().length;
 		},
 		enabled: !!profile,
-	});
+	})
 
 	const {
 		data: likedCommunitiesData,
@@ -193,44 +193,44 @@ function Profile() {
 				signal,
 				limit: pageSize,
 				offset: pageParam,
-			});
+			})
 		},
 		getNextPageParam: (lastPage, allPages) => {
 			if (lastPage.length < pageSize) return undefined;
 			return allPages.flat().length;
 		},
 		enabled: !!profile,
-	});
+	})
 
 	const communities = communitiesData?.pages.flat() ?? [];
 	const likedCommunities = likedCommunitiesData?.pages.flat() ?? [];
 	const { data: discordStatsByCode } = useDiscordInviteStats([
 		...communities,
 		...likedCommunities,
-	]);
+	])
 	const isOwnProfile = Boolean(
 		session?.user?.id && profile?.id === session.user.id,
-	);
+	)
 
 	useEffect(() => {
 		return () => {
 			if (fullNameCopiedTimeoutRef.current) {
 				window.clearTimeout(fullNameCopiedTimeoutRef.current);
 			}
-		};
+		}
 	}, []);
 
 	const setCommunitiesLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
 		hasNextPage: hasNextCommunitiesPage,
 		isFetchingNextPage: isFetchingNextCommunitiesPage,
 		onLoadMore: fetchNextCommunitiesPage,
-	});
+	})
 	const setLikedCommunitiesLoadMoreNode =
 		useInfiniteScrollTrigger<HTMLDivElement>({
 			hasNextPage: hasNextLikedCommunitiesPage,
 			isFetchingNextPage: isFetchingNextLikedCommunitiesPage,
 			onLoadMore: fetchNextLikedCommunitiesPage,
-		});
+		})
 
 	if (isProfileLoading) {
 		return <ProfileSkeleton />;
@@ -244,7 +244,7 @@ function Profile() {
 					<p className="text-gray-400">Perfil não encontrado.</p>
 				</div>
 			</div>
-		);
+		)
 	}
 
 	const handleCopyFullName = async () => {
@@ -258,11 +258,11 @@ function Profile() {
 			fullNameCopiedTimeoutRef.current = window.setTimeout(() => {
 				setFullNameCopied(false);
 				fullNameCopiedTimeoutRef.current = null;
-			}, 2000);
+			}, 2000)
 		} catch {
 			setFullNameCopied(false);
 		}
-	};
+	}
 
 	const handleSignOut = async () => {
 		if (isSigningOut) return;
@@ -272,11 +272,11 @@ function Profile() {
 
 		if (!error) {
 			navigate({ to: "/" });
-			return;
+			return
 		}
 
 		setIsSigningOut(false);
-	};
+	}
 
 	return (
 		<div className="max-w-7xl mx-auto px-4 py-12 space-y-12">
@@ -413,5 +413,5 @@ function Profile() {
 				</section>
 			</div>
 		</div>
-	);
+	)
 }

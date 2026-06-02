@@ -84,7 +84,7 @@ export default function CommunityCard({
 	const handleProfileClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		navigate({
-			to: "/profile/$profileFullName",
+			to: "/perfil/$profileFullName",
 			params: { profileFullName: community.profile.fullName },
 		});
 	};

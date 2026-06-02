@@ -26,7 +26,7 @@ export default function Header() {
 
 	const handleCreateCommunity = () => {
 		if (session) {
-			navigate({ to: "/criar-comunidade" });
+			navigate({ to: "/cadastrar-comunidade" });
 			return;
 		}
 
@@ -34,7 +34,7 @@ export default function Header() {
 			title: "Cadastrar comunidade",
 			description:
 				"Você precisa estar autenticado para cadastrar uma comunidade.",
-			redirectTo: "/criar-comunidade",
+			redirectTo: "/cadastrar-comunidade",
 		});
 	};
 
@@ -85,7 +85,7 @@ export default function Header() {
 									<span className="hidden sm:inline">Cadastrar</span>
 								</button>
 								<Link
-									to="/profile/$profileFullName"
+									to="/perfil/$profileFullName"
 									params={{ profileFullName }}
 									className="text-sm font-medium text-gray-300 hover:text-brand-primary transition-colors flex items-center gap-2"
 								>

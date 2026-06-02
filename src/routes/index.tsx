@@ -166,7 +166,7 @@ function App() {
 						Destaque
 					</h2>
 					<Link
-						to="/categories"
+						to="/categorias"
 						className="text-sm text-brand-primary hover:underline"
 					>
 						Ver todas

@@ -5,19 +5,17 @@ import {
 	type SearchSchemaInput,
 	useNavigate,
 } from "@tanstack/react-router";
-import { MessageSquare, Search, Server, Users, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import GameArtwork from "@/components/GameArtwork";
-import TypeOption from "@/components/TypeOption";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { createListing, getGameBySlug, getGames } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { ListingType } from "@/types";
 import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
 
 type CreateListingSearch = {
@@ -73,7 +71,6 @@ function isValidServerAddress(value: string) {
 
 function RouteComponent() {
 	const [step, setStep] = useState(1);
-	const [type, setType] = useState<ListingType | null>(null);
 	const [selectedGame, setSelectedGame] = useState<string | null>(null);
 	const [suggestedGame, setSuggestedGame] = useState<string | null>(null);
 	const [tagInput, setTagInput] = useState("");
@@ -132,10 +129,11 @@ function RouteComponent() {
 			setSelectedGame(matchedGame.id);
 			setSuggestedGame(null);
 			setSearch((current) => current || matchedGame.name);
+			setStep(2);
 		}
 	}, [games, searchGame, selectedGameFromSlug]);
 	const setLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
-		disabled: step !== 2,
+		disabled: step !== 1,
 		hasNextPage,
 		isFetchingNextPage,
 		onLoadMore: fetchNextPage,
@@ -150,13 +148,8 @@ function RouteComponent() {
 			tags: [] as string[],
 		},
 		onSubmit: async ({ value }) => {
-			if (!type) {
-				setStep(1);
-				return;
-			}
-
 			if (!selectedGame && !suggestedGame?.trim()) {
-				setStep(2);
+				setStep(1);
 				return;
 			}
 
@@ -177,11 +170,10 @@ function RouteComponent() {
 			const createdListing = await createListing({
 				gameId: selectedGame ?? undefined,
 				suggestedGameName: suggestedGame?.trim() || undefined,
-				type,
 				title: value.title,
 				description: value.description,
 				discordInvite: normalizeDiscordInvite(value.discord_invite) ?? "",
-				ip: type === "SERVER" ? value.ip : undefined,
+				ip: value.ip || undefined,
 				tags: value.tags,
 			});
 
@@ -227,7 +219,7 @@ function RouteComponent() {
 					Criar novo anúncio
 				</h1>
 				<div className="flex justify-center gap-4">
-					{[1, 2, 3].map((s) => (
+					{[1, 2].map((s) => (
 						<div
 							key={s}
 							className={cn(
@@ -243,52 +235,6 @@ function RouteComponent() {
 				{step === 1 && (
 					<motion.div
 						key="step1"
-						initial={{ opacity: 0, x: 20 }}
-						animate={{ opacity: 1, x: 0 }}
-						exit={{ opacity: 0, x: -20 }}
-						className="space-y-6"
-					>
-						<h2 className="text-2xl font-bold text-center">
-							O que você quer anunciar?
-						</h2>
-						<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-							<TypeOption
-								icon={<Server className="w-8 h-8" />}
-								title="Servidor"
-								desc="Divulgue seu servidor multiplayer"
-								active={type === "SERVER"}
-								onClick={() => {
-									setType("SERVER");
-									setStep(2);
-								}}
-							/>
-							<TypeOption
-								icon={<Users className="w-8 h-8" />}
-								title="Comunidade"
-								desc="Encontre membros para sua guilda ou clã"
-								active={type === "COMMUNITY"}
-								onClick={() => {
-									setType("COMMUNITY");
-									setStep(2);
-								}}
-							/>
-							<TypeOption
-								icon={<MessageSquare className="w-8 h-8" />}
-								title="LFG"
-								desc="Procure um grupo para jogar agora"
-								active={type === "LFG"}
-								onClick={() => {
-									setType("LFG");
-									setStep(2);
-								}}
-							/>
-						</div>
-					</motion.div>
-				)}
-
-				{step === 2 && (
-					<motion.div
-						key="step2"
 						initial={{ opacity: 0, x: 20 }}
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: -20 }}
@@ -319,7 +265,7 @@ function RouteComponent() {
 											onClick={() => {
 												setSelectedGame(game.id);
 												setSuggestedGame(null);
-												setStep(3);
+												setStep(2);
 											}}
 											className={cn(
 												"glass-panel p-4 flex flex-col items-center gap-3 transition-all hover:border-brand-primary",
@@ -347,7 +293,7 @@ function RouteComponent() {
 											toast(`Jogo sugerido: ${normalizedSuggestion}`);
 											setSuggestedGame(normalizedSuggestion);
 											setSelectedGame(null);
-											setStep(3);
+											setStep(2);
 										}}
 										className="btn-primary px-6 py-2 text-sm"
 									>
@@ -357,19 +303,12 @@ function RouteComponent() {
 							)}
 						</div>
 						<div ref={setLoadMoreNode} className="h-1 w-full" />
-						<button
-							type="button"
-							onClick={() => setStep(1)}
-							className="text-gray-500 hover:text-white text-sm font-bold block mx-auto"
-						>
-							Voltar
-						</button>
 					</motion.div>
 				)}
 
-				{step === 3 && (
+				{step === 2 && (
 					<motion.div
-						key="step3"
+						key="step2"
 						initial={{ opacity: 0, x: 20 }}
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: -20 }}
@@ -476,9 +415,7 @@ function RouteComponent() {
 									}}
 								>
 									{(field) => (
-										<div
-											className={`space-y-2 ${type !== "SERVER" ? "col-span-2" : ""}`}
-										>
+										<div className="space-y-2">
 											<label
 												htmlFor={field.name}
 												className="text-xs font-bold text-gray-500 uppercase"
@@ -505,45 +442,43 @@ function RouteComponent() {
 									)}
 								</listingForm.Field>
 
-								{type === "SERVER" && (
-									<listingForm.Field
-										name="ip"
-										validators={{
-											onChange: ({ value }) => {
-												if (value.trim() && !isValidServerAddress(value.trim()))
-													return "Use um IP/host válido (ex: 192.168.0.10:2456)";
-												return undefined;
-											},
-										}}
-									>
-										{(field) => (
-											<div className="space-y-2">
-												<label
-													htmlFor={field.name}
-													className="text-xs font-bold text-gray-500 uppercase"
-												>
-													IP do Servidor
-												</label>
-												<input
-													id={field.name}
-													name={field.name}
-													type="text"
-													value={field.state.value}
-													onBlur={field.handleBlur}
-													onChange={(e) => field.handleChange(e.target.value)}
-													placeholder="Ex: 192.168.1.1:2456"
-													className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
-												/>
-												{field.state.meta.isTouched &&
-													field.state.meta.errors.length > 0 && (
-														<p className="text-xs text-red-400">
-															{String(field.state.meta.errors[0])}
-														</p>
-													)}
-											</div>
-										)}
-									</listingForm.Field>
-								)}
+								<listingForm.Field
+									name="ip"
+									validators={{
+										onChange: ({ value }) => {
+											if (value.trim() && !isValidServerAddress(value.trim()))
+												return "Use um IP/host válido (ex: 192.168.0.10:2456)";
+											return undefined;
+										},
+									}}
+								>
+									{(field) => (
+										<div className="space-y-2">
+											<label
+												htmlFor={field.name}
+												className="text-xs font-bold text-gray-500 uppercase"
+											>
+												IP do Servidor
+											</label>
+											<input
+												id={field.name}
+												name={field.name}
+												type="text"
+												value={field.state.value}
+												onBlur={field.handleBlur}
+												onChange={(e) => field.handleChange(e.target.value)}
+												placeholder="Ex: 192.168.1.1:2456"
+												className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
+											/>
+											{field.state.meta.isTouched &&
+												field.state.meta.errors.length > 0 && (
+													<p className="text-xs text-red-400">
+														{String(field.state.meta.errors[0])}
+													</p>
+												)}
+										</div>
+									)}
+								</listingForm.Field>
 							</div>
 							<listingForm.Field name="tags">
 								{(field) => {
@@ -637,7 +572,7 @@ function RouteComponent() {
 						</form>
 						<button
 							type="button"
-							onClick={() => setStep(2)}
+							onClick={() => setStep(1)}
 							className="text-gray-500 hover:text-white text-sm font-bold block mx-auto"
 						>
 							Voltar

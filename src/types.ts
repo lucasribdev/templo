@@ -1,4 +1,3 @@
-export type ListingType = "LFG" | "SERVER" | "COMMUNITY";
 export type ListingSortBy = "DATE" | "POPULARITY" | "RELEVANCE";
 export type GameSortBy = "CREATED_AT" | "ALPHABETICAL";
 
@@ -30,7 +29,6 @@ export interface Listing {
 	userId: string;
 	game: Game;
 	profile: ProfileSummary;
-	type: ListingType;
 	title: string;
 	description?: string;
 	ip?: string;
@@ -63,7 +61,6 @@ export interface ListingByIdRpcRow {
 	game_genres?: string[];
 	game_release_date?: string;
 	game_website?: string;
-	type: ListingType;
 	title: string;
 	description?: string;
 	ip?: string;
@@ -88,7 +85,6 @@ export interface ListingsRpcRow {
 	game_id: string;
 	game_slug: string;
 	game_name: string;
-	type: ListingType;
 	title: string;
 	description?: string;
 	ip?: string;
@@ -144,7 +140,6 @@ export interface ProfileRow {
 export interface CreateListingInput {
 	gameId?: string;
 	suggestedGameName?: string;
-	type: ListingType;
 	title: string;
 	description: string;
 	discordInvite: string;
@@ -189,6 +184,5 @@ export interface GetListingsParams {
 	gameId?: string;
 	userId?: string;
 	search?: string;
-	type?: ListingType;
 	sortBy?: ListingSortBy;
 }

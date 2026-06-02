@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, Globe, PlusCircle } from "lucide-react";
-import { motion } from "motion/react";
-import { useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import GameArtwork from "@/components/GameArtwork";
 import ListingCard from "@/components/ListingCard";
@@ -12,8 +10,6 @@ import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { getGameBySlug, getListingsByGameId } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getGamePageData } from "@/lib/page-data";
-import { cn } from "@/lib/utils";
-import type { ListingType } from "@/types";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
 export const Route = createFileRoute("/games/$slug")({
@@ -41,7 +37,7 @@ export const Route = createFileRoute("/games/$slug")({
 				: "Jogo | Templo",
 			description: loaderData.initialGame
 				? truncateDescription(
-						`Encontre servidores, comunidades e grupos ativos de ${loaderData.initialGame.name} no Templo.`,
+						`Encontre anúncios e comunidades ativas de ${loaderData.initialGame.name} no Templo.`,
 					)
 				: "Encontre comunidades e anúncios para este jogo no Templo.",
 			image: loaderData.initialGame?.coverUrl || undefined,
@@ -133,7 +129,6 @@ function GameDetailsSkeleton() {
 }
 
 function GameDetails() {
-	const [activeTab, setActiveTab] = useState<ListingType>("SERVER");
 	const { session, isSessionLoading } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
 
@@ -150,9 +145,7 @@ function GameDetails() {
 		queryFn: ({ signal }) => getListingsByGameId(game?.id ?? "", signal),
 		enabled: Boolean(game?.id),
 	});
-	const listings = game
-		? listingsData?.filter((l) => l.type === activeTab)
-		: [];
+	const listings = game ? (listingsData ?? []) : [];
 	const { data: discordStatsByCode } = useDiscordInviteStats(listings ?? []);
 
 	if (isGameLoading) {
@@ -238,34 +231,6 @@ function GameDetails() {
 			</div>
 
 			<div className="space-y-6">
-				<div className="flex border-b border-border-dark gap-8">
-					{(["SERVER", "COMMUNITY", "LFG"] as ListingType[]).map((type) => (
-						<button
-							type="button"
-							key={type}
-							onClick={() => setActiveTab(type)}
-							className={cn(
-								"pb-4 text-sm font-bold transition-all relative",
-								activeTab === type
-									? "text-brand-primary"
-									: "text-gray-500 hover:text-gray-300",
-							)}
-						>
-							{type === "SERVER"
-								? "Servidores"
-								: type === "COMMUNITY"
-									? "Comunidades"
-									: "Procurando Grupo"}
-							{activeTab === type && (
-								<motion.div
-									layoutId="tab-underline"
-									className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary"
-								/>
-							)}
-						</button>
-					))}
-				</div>
-
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{isListingsLoading
 						? gameDetailsListingSkeletonIds.map((id) => (
@@ -285,7 +250,7 @@ function GameDetails() {
 					{!isListingsLoading && listings?.length === 0 && (
 						<div className="col-span-full py-20 text-center glass-panel">
 							<p className="text-gray-500">
-								Ainda não há anúncios nesta categoria para {game.name}.
+								Ainda não há anúncios para {game.name}.
 							</p>
 						</div>
 					)}

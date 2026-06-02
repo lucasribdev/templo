@@ -13,7 +13,6 @@ export const Route = createFileRoute("/api/listings")({
 				const gameId = url.searchParams.get("gameId");
 				const userId = url.searchParams.get("userId");
 				const search = url.searchParams.get("search")?.trim();
-				const type = url.searchParams.get("type");
 				const sortBy = url.searchParams.get("sortBy")?.trim().toUpperCase();
 
 				const limit = Number(url.searchParams.get("limit") ?? 12);
@@ -27,7 +26,7 @@ export const Route = createFileRoute("/api/listings")({
 					p_game_id: gameId,
 					p_user_id: userId,
 					p_search: search || null,
-					p_type: type || null,
+					p_type: null,
 					p_sort_by: sortBy || "DATE",
 					p_limit: limit,
 					p_offset: offset,
@@ -101,7 +100,7 @@ export const Route = createFileRoute("/api/listings")({
 					.insert({
 						user_id: authData.user.id,
 						game_id: gameId,
-						type: body.type,
+						type: "LFG",
 						title: body.title,
 						description: body.description,
 						tags: body.tags,

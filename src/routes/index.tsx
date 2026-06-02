@@ -8,7 +8,6 @@ import {
 	Info,
 	Search,
 	Sparkles,
-	Users,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useDeferredValue, useState } from "react";
@@ -19,7 +18,7 @@ import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { getGames, getListings } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
-import type { Game, ListingSortBy, ListingType } from "@/types";
+import type { Game, ListingSortBy } from "@/types";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
 export const Route = createFileRoute("/")({
@@ -97,7 +96,6 @@ function ListingCardSkeleton() {
 
 function App() {
 	const [search, setSearch] = useState("");
-	const [filterType, setFilterType] = useState<ListingType | "ALL">("ALL");
 	const [filterGame, setFilterGame] = useState<string | "ALL">("ALL");
 	const [sortBy, setSortBy] = useState<ListingSortBy>("DATE");
 
@@ -115,7 +113,7 @@ function App() {
 		isFetchingNextPage,
 		isLoading: isListingsLoading,
 	} = useInfiniteQuery({
-		queryKey: ["listings", deferredSearch, filterType, filterGame, sortBy],
+		queryKey: ["listings", deferredSearch, filterGame, sortBy],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) =>
 			getListings({
@@ -123,7 +121,6 @@ function App() {
 				limit: pageSize,
 				offset: pageParam,
 				search: deferredSearch || undefined,
-				type: filterType === "ALL" ? undefined : filterType,
 				gameId: filterGame === "ALL" ? undefined : filterGame,
 				sortBy,
 			}),
@@ -141,11 +138,6 @@ function App() {
 		onLoadMore: fetchNextPage,
 	});
 
-	const handleFilterTypeChange = (
-		event: React.ChangeEvent<HTMLSelectElement>,
-	) => {
-		setFilterType(event.target.value as ListingType | "ALL");
-	};
 	const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSortBy(event.target.value as ListingSortBy);
 	};
@@ -162,8 +154,8 @@ function App() {
 					encontram.
 				</motion.h1>
 				<p className="text-gray-400 text-lg max-w-2xl mx-auto">
-					Descubra servidores, clãs, guildas e comunidades para jogar.
-					Conecte-se com jogadores que compartilham sua paixão.
+					Descubra anúncios, clãs, guildas e comunidades para jogar. Conecte-se
+					com jogadores que compartilham sua paixão.
 				</p>
 			</section>
 
@@ -196,7 +188,7 @@ function App() {
 						</h2>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<div className="relative group">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
 							<input
@@ -221,23 +213,6 @@ function App() {
 										{game.name}
 									</option>
 								))}
-							</select>
-							<div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-								<ChevronRight className="w-4 h-4 rotate-90" />
-							</div>
-						</div>
-
-						<div className="relative group">
-							<Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors pointer-events-none" />
-							<select
-								value={filterType}
-								onChange={handleFilterTypeChange}
-								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all appearance-none cursor-pointer"
-							>
-								<option value="ALL">Todos os Tipos</option>
-								<option value="LFG">Procurando Grupo</option>
-								<option value="SERVER">Servidores</option>
-								<option value="COMMUNITY">Comunidades</option>
 							</select>
 							<div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
 								<ChevronRight className="w-4 h-4 rotate-90" />

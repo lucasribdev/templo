@@ -10,7 +10,6 @@ import { toggleListingLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { DiscordInviteStats, Listing } from "@/types";
 import { formatPostedAt } from "@/utils/date";
-import ListingTypeBadge from "./ListingTypeBadge";
 
 export default function ListingCard({
 	discordStats,
@@ -96,7 +95,9 @@ export default function ListingCard({
 			}
 		>
 			<div className="flex justify-between items-start">
-				<ListingTypeBadge type={listing.type} />
+				<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+					<Gamepad2 className="w-3 h-3" /> {listing.game.name}
+				</p>
 				<button
 					type="button"
 					title={`${likeState.likesCount} ${likeState.likesCount === 1 ? "curtida" : "curtidas"}`}
@@ -120,9 +121,6 @@ export default function ListingCard({
 				<h3 className="text-lg font-bold group-hover:text-brand-primary transition-colors line-clamp-1">
 					{listing.title}
 				</h3>
-				<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-					<Gamepad2 className="w-3 h-3" /> {listing.game.name}
-				</p>
 			</div>
 
 			<p className="text-sm text-gray-400 line-clamp-2 min-h-[40px]">

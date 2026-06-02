@@ -43,7 +43,6 @@ function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Listing {
 			createdAt: row.created_at,
 		},
 		profile: mapListingProfile(row),
-		type: row.type,
 		title: row.title,
 		description: row.description,
 		ip: row.ip,

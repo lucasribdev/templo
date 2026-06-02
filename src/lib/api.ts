@@ -85,7 +85,6 @@ function getListingsQuery({
 	offset,
 	search,
 	sortBy,
-	type,
 	userId,
 }: {
 	gameId?: string;
@@ -93,7 +92,6 @@ function getListingsQuery({
 	offset?: number;
 	search?: string;
 	sortBy?: string;
-	type?: string;
 	userId?: string;
 }) {
 	return {
@@ -102,7 +100,6 @@ function getListingsQuery({
 		offset,
 		search,
 		sortBy,
-		type,
 		userId,
 	};
 }
@@ -139,7 +136,6 @@ export async function getListings({
 	gameId,
 	userId,
 	search,
-	type,
 	sortBy,
 }: GetListingsParams): Promise<Listing[]> {
 	return apiRequest<Listing[]>("/api/listings", {
@@ -151,7 +147,6 @@ export async function getListings({
 			gameId,
 			userId,
 			search,
-			type,
 			sortBy,
 		}),
 	});

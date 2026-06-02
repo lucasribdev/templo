@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import GameArtwork from "@/components/GameArtwork";
-import ListingTypeBadge from "@/components/ListingTypeBadge";
 import UserAvatar from "@/components/UserAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
@@ -21,7 +20,6 @@ import { cn } from "@/lib/utils";
 import type { Listing } from "@/types";
 import { formatPostedAt } from "@/utils/date";
 import { normalizeDiscordInvite } from "@/utils/discord";
-import { getTypeText } from "@/utils/listing-type";
 import { memberSince } from "@/utils/profile";
 
 export const Route = createFileRoute("/listings/$slug")({
@@ -49,7 +47,7 @@ export const Route = createFileRoute("/listings/$slug")({
 			description: loaderData.initialListing
 				? truncateDescription(
 						loaderData.initialListing.description ||
-							`${getTypeText(loaderData.initialListing.type)} para ${loaderData.initialListing.game.name} criado por ${loaderData.initialListing.profile.fullName}.`,
+							`Anúncio de ${loaderData.initialListing.game.name} criado por ${loaderData.initialListing.profile.fullName}.`,
 					)
 				: "Veja os detalhes deste anúncio no Templo.",
 			image: loaderData.initialListing?.game.coverUrl || undefined,
@@ -310,9 +308,6 @@ function ListingDetails() {
 									className="h-40 overflow-hidden md:h-56 rounded-t-2xl"
 								/>
 								<div className="absolute inset-0 bg-gradient-to-t from-card-dark to-transparent" />
-								<div className="absolute bottom-4 left-4">
-									<ListingTypeBadge type={listing.type} />
-								</div>
 							</div>
 
 							<div className="p-6 space-y-6">

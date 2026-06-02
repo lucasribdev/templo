@@ -1,6 +1,6 @@
 import type {
+	Community,
 	GameRow,
-	Listing,
 	ListingByIdRpcRow,
 	ListingsRpcRow,
 	Profile,
@@ -27,7 +27,7 @@ function mapListingProfile(
 	};
 }
 
-function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Listing {
+function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Community {
 	return {
 		id: row.id,
 		slug: row.slug,
@@ -57,11 +57,11 @@ function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Listing {
 	};
 }
 
-export function mapListingByIdRpc(row: ListingByIdRpcRow): Listing {
+export function mapListingByIdRpc(row: ListingByIdRpcRow): Community {
 	return mapListingRpcBase(row);
 }
 
-export function mapListingsRpc(row: ListingsRpcRow): Listing {
+export function mapListingsRpc(row: ListingsRpcRow): Community {
 	return mapListingRpcBase(row);
 }
 

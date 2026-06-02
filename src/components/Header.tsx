@@ -24,9 +24,9 @@ export default function Header() {
 		}
 	};
 
-	const handleCreateListing = () => {
+	const handleCreateCommunity = () => {
 		if (session) {
-			navigate({ to: "/create-listing" });
+			navigate({ to: "/criar-comunidade" });
 			return;
 		}
 
@@ -34,7 +34,7 @@ export default function Header() {
 			title: "Cadastrar comunidade",
 			description:
 				"Você precisa estar autenticado para cadastrar uma comunidade.",
-			redirectTo: "/create-listing",
+			redirectTo: "/criar-comunidade",
 		});
 	};
 
@@ -58,7 +58,7 @@ export default function Header() {
 							<>
 								<button
 									type="button"
-									onClick={handleCreateListing}
+									onClick={handleCreateCommunity}
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />
@@ -78,7 +78,7 @@ export default function Header() {
 							<>
 								<button
 									type="button"
-									onClick={handleCreateListing}
+									onClick={handleCreateCommunity}
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />

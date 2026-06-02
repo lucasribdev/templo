@@ -14,11 +14,11 @@ import GameArtwork from "@/components/GameArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
-import { createListing, getGameBySlug, getGames } from "@/lib/api";
+import { createCommunity, getGameBySlug, getGames } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
 
-type CreateListingSearch = {
+type CreateCommunitySearch = {
 	game?: string;
 };
 
@@ -41,8 +41,8 @@ function GameOptionSkeleton() {
 	);
 }
 
-export const Route = createFileRoute("/create-listing")({
-	validateSearch: (search: CreateListingSearch & SearchSchemaInput) => ({
+export const Route = createFileRoute("/criar-comunidade")({
+	validateSearch: (search: CreateCommunitySearch & SearchSchemaInput) => ({
 		game: typeof search.game === "string" ? search.game : undefined,
 	}),
 	component: RouteComponent,
@@ -139,7 +139,7 @@ function RouteComponent() {
 		onLoadMore: fetchNextPage,
 	});
 
-	const listingForm = useForm({
+	const communityForm = useForm({
 		defaultValues: {
 			title: "",
 			description: "",
@@ -158,7 +158,7 @@ function RouteComponent() {
 					title: "Cadastrar comunidade",
 					description:
 						"Você precisa estar autenticado para cadastrar uma comunidade.",
-					redirectTo: "/create-listing",
+					redirectTo: "/criar-comunidade",
 				});
 				return;
 			}
@@ -168,7 +168,7 @@ function RouteComponent() {
 				return;
 			}
 
-			const createdListing = await createListing({
+			const createdCommunity = await createCommunity({
 				gameId: selectedGame ?? undefined,
 				suggestedGameName: suggestedGame?.trim() || undefined,
 				title: value.title,
@@ -179,8 +179,8 @@ function RouteComponent() {
 			});
 
 			navigate({
-				to: "/listings/$slug",
-				params: { slug: createdListing.slug },
+				to: "/comunidades/$slug",
+				params: { slug: createdCommunity.slug },
 			});
 		},
 	});
@@ -192,7 +192,7 @@ function RouteComponent() {
 			title: "Cadastrar comunidade",
 			description:
 				"Você precisa estar autenticado para cadastrar uma comunidade.",
-			redirectTo: "/create-listing",
+			redirectTo: "/criar-comunidade",
 		});
 	}, [isSessionLoading, session, openAuthPrompt]);
 
@@ -232,7 +232,6 @@ function RouteComponent() {
 					))}
 				</div>
 			</div>
-
 			<AnimatePresence mode="wait">
 				{step === 1 && (
 					<motion.div
@@ -324,10 +323,10 @@ function RouteComponent() {
 							onSubmit={(e) => {
 								e.preventDefault();
 								e.stopPropagation();
-								void listingForm.handleSubmit();
+								void communityForm.handleSubmit();
 							}}
 						>
-							<listingForm.Field
+							<communityForm.Field
 								name="title"
 								validators={{
 									onChange: ({ value }) => {
@@ -363,9 +362,9 @@ function RouteComponent() {
 											)}
 									</div>
 								)}
-							</listingForm.Field>
+							</communityForm.Field>
 
-							<listingForm.Field
+							<communityForm.Field
 								name="description"
 								validators={{
 									onChange: ({ value }) => {
@@ -401,10 +400,10 @@ function RouteComponent() {
 											)}
 									</div>
 								)}
-							</listingForm.Field>
+							</communityForm.Field>
 
 							<div className="grid grid-cols-2 gap-4">
-								<listingForm.Field
+								<communityForm.Field
 									name="discord_invite"
 									validators={{
 										onChange: ({ value }) => {
@@ -442,9 +441,9 @@ function RouteComponent() {
 												)}
 										</div>
 									)}
-								</listingForm.Field>
+								</communityForm.Field>
 
-								<listingForm.Field
+								<communityForm.Field
 									name="ip"
 									validators={{
 										onChange: ({ value }) => {
@@ -480,9 +479,9 @@ function RouteComponent() {
 												)}
 										</div>
 									)}
-								</listingForm.Field>
+								</communityForm.Field>
 							</div>
-							<listingForm.Field name="tags">
+							<communityForm.Field name="tags">
 								{(field) => {
 									const handleAddTag = (
 										event: KeyboardEvent<HTMLInputElement>,
@@ -549,9 +548,9 @@ function RouteComponent() {
 										</div>
 									);
 								}}
-							</listingForm.Field>
+							</communityForm.Field>
 
-							<listingForm.Subscribe
+							<communityForm.Subscribe
 								selector={(state) => ({
 									canSubmit: state.canSubmit,
 									isSubmitting: state.isSubmitting,
@@ -570,7 +569,7 @@ function RouteComponent() {
 										{isSubmitting ? "Publicando..." : "Publicar comunidade"}
 									</button>
 								)}
-							</listingForm.Subscribe>
+							</communityForm.Subscribe>
 						</form>
 						<button
 							type="button"

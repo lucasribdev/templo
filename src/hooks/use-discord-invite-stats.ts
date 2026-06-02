@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { getDiscordInviteStats } from "@/lib/api";
-import type { DiscordInviteStats, Listing } from "@/types";
+import type { Community, DiscordInviteStats } from "@/types";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
-export function getDiscordInviteCodesFromListings(listings: Listing[]) {
+export function getDiscordInviteCodesFromCommunities(listings: Community[]) {
 	return Array.from(
 		new Set(
 			listings
@@ -14,12 +14,12 @@ export function getDiscordInviteCodesFromListings(listings: Listing[]) {
 	).sort();
 }
 
-export function useDiscordInviteStats(listings: Listing[]) {
+export function useDiscordInviteStats(listings: Community[]) {
 	const [statsByCode, setStatsByCode] = useState<
 		Record<string, DiscordInviteStats>
 	>({});
 	const inviteCodes = useMemo(
-		() => getDiscordInviteCodesFromListings(listings),
+		() => getDiscordInviteCodesFromCommunities(listings),
 		[listings],
 	);
 	const missingInviteCodes = useMemo(

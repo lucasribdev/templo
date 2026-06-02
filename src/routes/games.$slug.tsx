@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, Globe, PlusCircle } from "lucide-react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
+import CommunityCard from "@/components/CommunityCard";
 import GameArtwork from "@/components/GameArtwork";
-import ListingCard from "@/components/ListingCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
-import { getGameBySlug, getListingsByGameId } from "@/lib/api";
+import { getCommunitiesByGameId, getGameBySlug } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getGamePageData } from "@/lib/page-data";
 import { extractDiscordInviteCode } from "@/utils/discord";
@@ -53,7 +53,7 @@ const gameDetailsListingSkeletonIds = [
 	"game-details-listing-6",
 ];
 
-function ListingCardSkeleton() {
+function CommunityCardSkeleton() {
 	return (
 		<div className="glass-panel p-5 flex flex-col gap-4">
 			<div className="flex justify-between items-start">
@@ -119,7 +119,7 @@ function GameDetailsSkeleton() {
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{gameDetailsListingSkeletonIds.map((id) => (
-						<ListingCardSkeleton key={id} />
+						<CommunityCardSkeleton key={id} />
 					))}
 				</div>
 			</div>
@@ -141,7 +141,7 @@ function GameDetails() {
 
 	const { data: listingsData, isLoading: isListingsLoading } = useQuery({
 		queryKey: ["listings", slug, game?.id],
-		queryFn: ({ signal }) => getListingsByGameId(game?.id ?? "", signal),
+		queryFn: ({ signal }) => getCommunitiesByGameId(game?.id ?? "", signal),
 		enabled: Boolean(game?.id),
 	});
 	const listings = game ? (listingsData ?? []) : [];
@@ -154,14 +154,14 @@ function GameDetails() {
 	if (!game)
 		return <div className="p-20 text-center">Jogo não encontrado.</div>;
 
-	const handleCreateListing = () => {
+	const handleCreateCommunity = () => {
 		if (isSessionLoading) return;
 		if (!session) {
 			openAuthPrompt({
 				title: "Cadastrar comunidade",
 				description:
 					"Você precisa estar autenticado para cadastrar uma comunidade.",
-				redirectTo: `/create-listing?game=${game.slug}`,
+				redirectTo: `/criar-comunidade?game=${game.slug}`,
 			});
 		}
 	};
@@ -210,7 +210,7 @@ function GameDetails() {
 						</div>
 						{session ? (
 							<Link
-								to={`/create-listing`}
+								to={`/criar-comunidade`}
 								search={{ game: game.slug }}
 								className="btn-primary flex items-center gap-2"
 							>
@@ -219,7 +219,7 @@ function GameDetails() {
 						) : (
 							<button
 								type="button"
-								onClick={handleCreateListing}
+								onClick={handleCreateCommunity}
 								disabled={isSessionLoading}
 								className="btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
 							>
@@ -234,10 +234,10 @@ function GameDetails() {
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{isListingsLoading
 						? gameDetailsListingSkeletonIds.map((id) => (
-								<ListingCardSkeleton key={id} />
+								<CommunityCardSkeleton key={id} />
 							))
 						: listings?.map((listing) => (
-								<ListingCard
+								<CommunityCard
 									key={listing.id}
 									listing={listing}
 									discordStats={

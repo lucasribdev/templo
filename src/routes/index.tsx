@@ -11,14 +11,14 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useDeferredValue, useState } from "react";
+import CommunityCard from "@/components/CommunityCard";
 import GameCard from "@/components/GameCard";
-import ListingCard from "@/components/ListingCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
-import { getGames, getListings } from "@/lib/api";
+import { getCommunities, getGames } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
-import type { Game, ListingSortBy } from "@/types";
+import type { CommunitySortBy, Game } from "@/types";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
 export const Route = createFileRoute("/")({
@@ -59,7 +59,7 @@ function GameCardSkeleton() {
 	);
 }
 
-function ListingCardSkeleton() {
+function CommunityCardSkeleton() {
 	return (
 		<div className="glass-panel p-5 flex flex-col gap-4">
 			<div className="flex justify-between items-start">
@@ -97,7 +97,7 @@ function ListingCardSkeleton() {
 function App() {
 	const [search, setSearch] = useState("");
 	const [filterGame, setFilterGame] = useState<string | "ALL">("ALL");
-	const [sortBy, setSortBy] = useState<ListingSortBy>("DATE");
+	const [sortBy, setSortBy] = useState<CommunitySortBy>("DATE");
 
 	const deferredSearch = useDeferredValue(search.trim());
 
@@ -116,7 +116,7 @@ function App() {
 		queryKey: ["listings", deferredSearch, filterGame, sortBy],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) =>
-			getListings({
+			getCommunities({
 				signal,
 				limit: pageSize,
 				offset: pageParam,
@@ -139,7 +139,7 @@ function App() {
 	});
 
 	const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setSortBy(event.target.value as ListingSortBy);
+		setSortBy(event.target.value as CommunitySortBy);
 	};
 
 	return (
@@ -240,10 +240,10 @@ function App() {
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					{isListingsLoading
 						? homeListingSkeletonIds.map((id) => (
-								<ListingCardSkeleton key={id} />
+								<CommunityCardSkeleton key={id} />
 							))
 						: listings.map((listing) => (
-								<ListingCard
+								<CommunityCard
 									key={listing.id}
 									listing={listing}
 									discordStats={

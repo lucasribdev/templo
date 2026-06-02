@@ -1,10 +1,10 @@
 import type {
-	CreateListingInput,
+	Community,
+	CreateCommunityInput,
 	DiscordInviteStats,
 	Game,
+	GetCommunitiesParams,
 	GetGamesParams,
-	GetListingsParams,
-	Listing,
 	Profile,
 } from "@/types";
 import { supabase } from "@/utils/supabase";
@@ -79,7 +79,7 @@ async function apiRequest<T>(
 	return response.json() as Promise<T>;
 }
 
-function getListingsQuery({
+function getCommunitiesQuery({
 	gameId,
 	limit,
 	offset,
@@ -129,7 +129,7 @@ export async function getGameBySlug(
 	return apiRequest<Game>(`/api/games/${slug}`, { signal });
 }
 
-export async function getListings({
+export async function getCommunities({
 	signal,
 	limit,
 	offset,
@@ -137,11 +137,11 @@ export async function getListings({
 	userId,
 	search,
 	sortBy,
-}: GetListingsParams): Promise<Listing[]> {
-	return apiRequest<Listing[]>("/api/listings", {
+}: GetCommunitiesParams): Promise<Community[]> {
+	return apiRequest<Community[]>("/api/listings", {
 		signal,
 		requireAuth: true,
-		query: getListingsQuery({
+		query: getCommunitiesQuery({
 			limit,
 			offset,
 			gameId,
@@ -152,18 +152,18 @@ export async function getListings({
 	});
 }
 
-export async function getListingsByGameId(
+export async function getCommunitiesByGameId(
 	id: string,
 	signal?: AbortSignal,
-): Promise<Listing[]> {
-	return apiRequest<Listing[]>("/api/listings", {
+): Promise<Community[]> {
+	return apiRequest<Community[]>("/api/listings", {
 		signal,
 		requireAuth: true,
-		query: getListingsQuery({ gameId: id }),
+		query: getCommunitiesQuery({ gameId: id }),
 	});
 }
 
-export async function getListingsByUserId({
+export async function getCommunitiesByUserId({
 	signal,
 	limit,
 	offset,
@@ -173,11 +173,11 @@ export async function getListingsByUserId({
 	limit?: number;
 	offset?: number;
 	userId: string;
-}): Promise<Listing[]> {
-	return apiRequest<Listing[]>("/api/listings", {
+}): Promise<Community[]> {
+	return apiRequest<Community[]>("/api/listings", {
 		signal,
 		requireAuth: true,
-		query: getListingsQuery({
+		query: getCommunitiesQuery({
 			userId,
 			limit,
 			offset,
@@ -185,7 +185,7 @@ export async function getListingsByUserId({
 	});
 }
 
-export async function getLikedListingsByUserId({
+export async function getLikedCommunitiesByUserId({
 	userId,
 	signal,
 	limit,
@@ -195,8 +195,8 @@ export async function getLikedListingsByUserId({
 	signal?: AbortSignal;
 	limit?: number;
 	offset?: number;
-}): Promise<Listing[]> {
-	return apiRequest<Listing[]>(
+}): Promise<Community[]> {
+	return apiRequest<Community[]>(
 		`/api/users/${encodeURIComponent(userId)}/liked-listings`,
 		{
 			signal,
@@ -209,11 +209,11 @@ export async function getLikedListingsByUserId({
 	);
 }
 
-export async function getListingBySlug(
+export async function getCommunityBySlug(
 	slug: string,
 	signal?: AbortSignal,
-): Promise<Listing> {
-	return apiRequest<Listing>(`/api/listings/${slug}`, {
+): Promise<Community> {
+	return apiRequest<Community>(`/api/listings/${slug}`, {
 		signal,
 		requireAuth: true,
 	});
@@ -229,7 +229,7 @@ export async function getProfile(
 	});
 }
 
-export async function incrementListingViews(
+export async function incrementCommunityViews(
 	slug: string,
 	signal?: AbortSignal,
 ): Promise<number> {
@@ -248,7 +248,7 @@ export async function incrementListingViews(
 	return payload.views;
 }
 
-export async function toggleListingLike(
+export async function toggleCommunityLike(
 	slug: string,
 	signal?: AbortSignal,
 ): Promise<void> {
@@ -278,11 +278,11 @@ export async function getDiscordInviteStats(
 	);
 }
 
-export async function createListing(
-	input: CreateListingInput,
+export async function createCommunity(
+	input: CreateCommunityInput,
 	signal?: AbortSignal,
-): Promise<Listing> {
-	return apiRequest<Listing>("/api/listings", {
+): Promise<Community> {
+	return apiRequest<Community>("/api/listings", {
 		method: "POST",
 		requireAuth: true,
 		headers: {

@@ -39,6 +39,8 @@ export const getListingPageData = createServerFn({
 		return mapListingByIdRpc(data as ListingByIdRpcRow);
 	});
 
+export const getCommunityPageData = getListingPageData;
+
 export const getProfilePageData = createServerFn({
 	method: "GET",
 })

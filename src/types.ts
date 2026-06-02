@@ -1,4 +1,4 @@
-export type ListingSortBy = "DATE" | "POPULARITY" | "RELEVANCE";
+export type CommunitySortBy = "DATE" | "POPULARITY" | "RELEVANCE";
 export type GameSortBy = "CREATED_AT" | "ALPHABETICAL";
 
 export interface Game {
@@ -23,7 +23,7 @@ export interface GameRow {
 	created_at: string;
 }
 
-export interface Listing {
+export interface Community {
 	id: string;
 	slug: string;
 	userId: string;
@@ -137,7 +137,7 @@ export interface ProfileRow {
 	updated_at: string;
 }
 
-export interface CreateListingInput {
+export interface CreateCommunityInput {
 	gameId?: string;
 	suggestedGameName?: string;
 	title: string;
@@ -177,12 +177,12 @@ export interface GetGamesParams {
 	sortBy?: GameSortBy;
 }
 
-export interface GetListingsParams {
+export interface GetCommunitiesParams {
 	signal?: AbortSignal;
 	limit: number;
 	offset: number;
 	gameId?: string;
 	userId?: string;
 	search?: string;
-	sortBy?: ListingSortBy;
+	sortBy?: CommunitySortBy;
 }

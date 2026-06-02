@@ -6,17 +6,17 @@ import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/hooks/use-auth";
-import { toggleListingLike } from "@/lib/api";
+import { toggleCommunityLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { DiscordInviteStats, Listing } from "@/types";
+import type { Community, DiscordInviteStats } from "@/types";
 import { formatPostedAt } from "@/utils/date";
 
-export default function ListingCard({
+export default function CommunityCard({
 	discordStats,
 	listing,
 }: {
 	discordStats?: DiscordInviteStats;
-	listing: Listing;
+	listing: Community;
 }) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -35,7 +35,7 @@ export default function ListingCard({
 	}, [listing.likesCount, listing.userLiked]);
 
 	const likeMutation = useMutation({
-		mutationFn: () => toggleListingLike(listing.slug),
+		mutationFn: () => toggleCommunityLike(listing.slug),
 		onMutate: () => {
 			const previousState = {
 				likesCount: likeState.likesCount,
@@ -72,7 +72,7 @@ export default function ListingCard({
 				title: "Curtir comunidade",
 				description:
 					"Entre ou cadastre-se com Discord para curtir comunidades.",
-				redirectTo: `/listings/${listing.slug}`,
+				redirectTo: `/comunidades/${listing.slug}`,
 			});
 			return;
 		}
@@ -92,7 +92,7 @@ export default function ListingCard({
 			whileHover={{ y: -4 }}
 			className="glass-panel p-5 flex flex-col gap-4 cursor-pointer group"
 			onClick={() =>
-				navigate({ to: "/listings/$slug", params: { slug: listing.slug } })
+				navigate({ to: "/comunidades/$slug", params: { slug: listing.slug } })
 			}
 		>
 			<div className="flex justify-between items-start">

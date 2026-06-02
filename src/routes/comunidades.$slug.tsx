@@ -10,53 +10,53 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import {
-	getListingBySlug,
-	incrementListingViews,
-	toggleListingLike,
+	getCommunityBySlug,
+	incrementCommunityViews,
+	toggleCommunityLike,
 } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
-import { getListingPageData } from "@/lib/page-data";
+import { getCommunityPageData } from "@/lib/page-data";
 import { cn } from "@/lib/utils";
-import type { Listing } from "@/types";
+import type { Community } from "@/types";
 import { formatPostedAt } from "@/utils/date";
 import { normalizeDiscordInvite } from "@/utils/discord";
 import { memberSince } from "@/utils/profile";
 
-export const Route = createFileRoute("/listings/$slug")({
+export const Route = createFileRoute("/comunidades/$slug")({
 	loader: async ({ params }) => {
 		const slug = params?.slug;
 		return {
 			slug,
-			initialListing: await getListingPageData({ data: slug }),
+			initialCommunity: await getCommunityPageData({ data: slug }),
 		};
 	},
 	head: ({ loaderData }) => {
 		if (!loaderData) {
 			return buildPageHead({
-				path: "/listings",
+				path: "/comunidades",
 				title: "Comunidade | Templo",
 				description: "Veja os detalhes desta comunidade no Templo.",
 			});
 		}
 
 		return buildPageHead({
-			path: `/listings/${loaderData.slug}`,
-			title: loaderData.initialListing
-				? `${loaderData.initialListing.title} | Templo`
+			path: `/comunidades/${loaderData.slug}`,
+			title: loaderData.initialCommunity
+				? `${loaderData.initialCommunity.title} | Templo`
 				: "Comunidade | Templo",
-			description: loaderData.initialListing
+			description: loaderData.initialCommunity
 				? truncateDescription(
-						loaderData.initialListing.description ||
-							`Comunidade de ${loaderData.initialListing.game.name} criada por ${loaderData.initialListing.profile.fullName}.`,
+						loaderData.initialCommunity.description ||
+							`Comunidade de ${loaderData.initialCommunity.game.name} criada por ${loaderData.initialCommunity.profile.fullName}.`,
 					)
 				: "Veja os detalhes desta comunidade no Templo.",
-			image: loaderData.initialListing?.game.coverUrl || undefined,
+			image: loaderData.initialCommunity?.game.coverUrl || undefined,
 		});
 	},
-	component: ListingDetails,
+	component: CommunityDetails,
 });
 
-function ListingDetailsSkeleton() {
+function CommunityDetailsSkeleton() {
 	return (
 		<div className="min-h-screen relative">
 			<div className="relative z-10 max-w-6xl mx-auto px-4 py-12 space-y-8">
@@ -117,7 +117,7 @@ function ListingDetailsSkeleton() {
 	);
 }
 
-function ListingDetails() {
+function CommunityDetails() {
 	const [copied, setCopied] = useState(false);
 	const [viewsCount, setViewsCount] = useState<number | null>(null);
 	const copiedTimeoutRef = useRef<number | null>(null);
@@ -127,12 +127,12 @@ function ListingDetails() {
 	const { session, isSessionLoading } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
 
-	const { slug, initialListing } = Route.useLoaderData();
+	const { slug, initialCommunity } = Route.useLoaderData();
 
 	const { data: listing, isLoading } = useQuery({
 		queryKey: ["listing", slug],
-		queryFn: ({ signal }) => getListingBySlug(slug, signal),
-		initialData: initialListing,
+		queryFn: ({ signal }) => getCommunityBySlug(slug, signal),
+		initialData: initialCommunity,
 	});
 
 	useEffect(() => {
@@ -144,7 +144,7 @@ function ListingDetails() {
 		let isMounted = true;
 		setViewsCount(listing.views);
 
-		incrementListingViews(listing.slug)
+		incrementCommunityViews(listing.slug)
 			.then((updatedViews) => {
 				if (!isMounted) return;
 				setViewsCount(updatedViews);
@@ -170,7 +170,7 @@ function ListingDetails() {
 				throw new Error("Missing listing slug");
 			}
 
-			return toggleListingLike(listing.slug);
+			return toggleCommunityLike(listing.slug);
 		},
 		onMutate: async () => {
 			if (!listing?.slug) {
@@ -179,12 +179,12 @@ function ListingDetails() {
 
 			await queryClient.cancelQueries({ queryKey: ["listing", listing.slug] });
 
-			const previousListing = queryClient.getQueryData<Listing>([
+			const previousCommunity = queryClient.getQueryData<Community>([
 				"listing",
 				listing.slug,
 			]);
 
-			queryClient.setQueryData<Listing>(
+			queryClient.setQueryData<Community>(
 				["listing", listing.slug],
 				(current) => {
 					if (!current) {
@@ -199,13 +199,13 @@ function ListingDetails() {
 				},
 			);
 
-			return { previousListing };
+			return { previousCommunity };
 		},
 		onError: (_error, _variables, context) => {
-			if (listing?.slug && context?.previousListing) {
+			if (listing?.slug && context?.previousCommunity) {
 				queryClient.setQueryData(
 					["listing", listing.slug],
-					context.previousListing,
+					context.previousCommunity,
 				);
 			}
 		},
@@ -225,7 +225,7 @@ function ListingDetails() {
 	);
 
 	if (isLoading) {
-		return <ListingDetailsSkeleton />;
+		return <CommunityDetailsSkeleton />;
 	}
 
 	if (!listing) {
@@ -266,7 +266,7 @@ function ListingDetails() {
 				title: "Curtir comunidade",
 				description:
 					"Entre ou cadastre-se com Discord para curtir comunidades.",
-				redirectTo: `/listings/${listing.slug}`,
+				redirectTo: `/comunidades/${listing.slug}`,
 			});
 			return;
 		}
@@ -314,7 +314,7 @@ function ListingDetails() {
 							<div className="p-6 space-y-6">
 								<div className="flex items-center gap-3 mb-2">
 									<Link
-										to={`/games/$slug`}
+										to={"/games/$slug"}
 										params={{ slug: listing.game.slug }}
 										className="text-brand-primary text-xs transition-colors hover:underline"
 									>

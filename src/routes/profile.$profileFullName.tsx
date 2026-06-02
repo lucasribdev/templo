@@ -2,15 +2,15 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check, Copy, Heart, LogOut, PlusCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import ListingCard from "@/components/ListingCard";
+import CommunityCard from "@/components/CommunityCard";
 import UserAvatar from "@/components/UserAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import {
-	getLikedListingsByUserId,
-	getListingsByUserId,
+	getCommunitiesByUserId,
+	getLikedCommunitiesByUserId,
 	getProfile,
 } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
@@ -61,7 +61,7 @@ const profileListingSkeletonIds = [
 	"profile-listing-3",
 ];
 
-function ListingCardSkeleton() {
+function CommunityCardSkeleton() {
 	return (
 		<div className="glass-panel p-5 flex flex-col gap-4">
 			<div className="flex justify-between items-start">
@@ -122,7 +122,7 @@ function ProfileSkeleton() {
 						<Skeleton className="h-8 w-40" />
 						<div className="space-y-4">
 							{profileListingSkeletonIds.map((listingId) => (
-								<ListingCardSkeleton key={listingId} />
+								<CommunityCardSkeleton key={listingId} />
 							))}
 						</div>
 					</section>
@@ -160,7 +160,7 @@ function Profile() {
 				throw new Error("Missing profile");
 			}
 
-			return getListingsByUserId({
+			return getCommunitiesByUserId({
 				userId: profile.id,
 				signal,
 				limit: pageSize,
@@ -188,7 +188,7 @@ function Profile() {
 				throw new Error("Missing profile");
 			}
 
-			return getLikedListingsByUserId({
+			return getLikedCommunitiesByUserId({
 				userId: profile.id,
 				signal,
 				limit: pageSize,
@@ -203,10 +203,10 @@ function Profile() {
 	});
 
 	const listings = listingsData?.pages.flat() ?? [];
-	const likedListings = likedListingsData?.pages.flat() ?? [];
+	const likedCommunities = likedListingsData?.pages.flat() ?? [];
 	const { data: discordStatsByCode } = useDiscordInviteStats([
 		...listings,
-		...likedListings,
+		...likedCommunities,
 	]);
 	const isOwnProfile = Boolean(
 		session?.user?.id && profile?.id === session.user.id,
@@ -352,10 +352,10 @@ function Profile() {
 					<div className="space-y-4">
 						{isListingsLoading
 							? profileListingSkeletonIds.map((id) => (
-									<ListingCardSkeleton key={id} />
+									<CommunityCardSkeleton key={id} />
 								))
 							: listings?.map((l) => (
-									<ListingCard
+									<CommunityCard
 										key={l.id}
 										listing={l}
 										discordStats={
@@ -386,10 +386,10 @@ function Profile() {
 					<div className="space-y-4">
 						{isLikedListingsLoading
 							? profileListingSkeletonIds.map((id) => (
-									<ListingCardSkeleton key={id} />
+									<CommunityCardSkeleton key={id} />
 								))
-							: likedListings?.map((l) => (
-									<ListingCard
+							: likedCommunities?.map((l) => (
+									<CommunityCard
 										key={l.id}
 										listing={l}
 										discordStats={
@@ -404,7 +404,7 @@ function Profile() {
 								Carregando mais favoritos...
 							</p>
 						)}
-						{!isLikedListingsLoading && likedListings.length === 0 && (
+						{!isLikedListingsLoading && likedCommunities.length === 0 && (
 							<p className="text-gray-500 text-center py-10 glass-panel">
 								Você ainda não favoritou nenhuma comunidade.
 							</p>

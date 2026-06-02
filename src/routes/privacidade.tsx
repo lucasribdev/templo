@@ -35,7 +35,7 @@ function PrivacyPolicy() {
 							O Templo é uma plataforma para jogadores encontrarem servidores,
 							clãs, guildas, comunidades e outros jogadores. Esta política
 							explica como tratamos dados pessoais quando você acessa, cria uma
-							conta ou publica anúncios na plataforma.
+							conta ou publica comunidades na plataforma.
 						</p>
 					</section>
 
@@ -55,9 +55,9 @@ function PrivacyPolicy() {
 							</li>
 							<li>
 								dados de uso da plataforma, como visualizações, curtidas,
-								interações com anúncios e páginas acessadas, quando necessários
-								para funcionamento ou quando você consentir com cookies de
-								análise;
+								interações com comunidades e páginas acessadas, quando
+								necessários para funcionamento ou quando você consentir com
+								cookies de análise;
 							</li>
 							<li>
 								dados técnicos necessários para segurança e funcionamento, como
@@ -74,7 +74,7 @@ function PrivacyPolicy() {
 						<p>Usamos os dados para:</p>
 						<ul className="list-disc pl-6 space-y-2">
 							<li>
-								permitir login, criação de perfil e publicação de anúncios;
+								permitir login, criação de perfil e publicação de comunidades;
 							</li>
 							<li>
 								exibir, organizar e recomendar conteúdos dentro da plataforma;
@@ -101,7 +101,7 @@ function PrivacyPolicy() {
 							4. Conteúdo público
 						</h2>
 						<p>
-							Anúncios, perfis públicos, links de convite, tags, descrições e
+							Comunidades, perfis públicos, links de convite, tags, descrições e
 							endereços de servidor podem ficar visíveis para outros usuários e
 							visitantes. Evite publicar dados pessoais sensíveis ou informações
 							que você não deseja tornar públicas.

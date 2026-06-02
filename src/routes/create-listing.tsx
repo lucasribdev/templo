@@ -155,8 +155,9 @@ function RouteComponent() {
 
 			if (!session?.user?.id) {
 				openAuthPrompt({
-					title: "Criar anúncio",
-					description: "Você precisa estar autenticado para criar um anúncio.",
+					title: "Cadastrar comunidade",
+					description:
+						"Você precisa estar autenticado para cadastrar uma comunidade.",
 					redirectTo: "/create-listing",
 				});
 				return;
@@ -188,8 +189,9 @@ function RouteComponent() {
 		if (isSessionLoading || session) return;
 
 		openAuthPrompt({
-			title: "Criar anúncio",
-			description: "Você precisa estar autenticado para criar um anúncio.",
+			title: "Cadastrar comunidade",
+			description:
+				"Você precisa estar autenticado para cadastrar uma comunidade.",
 			redirectTo: "/create-listing",
 		});
 	}, [isSessionLoading, session, openAuthPrompt]);
@@ -216,7 +218,7 @@ function RouteComponent() {
 		<div className="max-w-3xl mx-auto px-4 py-12">
 			<div className="mb-12 space-y-4 text-center">
 				<h1 className="text-4xl font-bold tracking-tight">
-					Criar novo anúncio
+					Cadastrar nova comunidade
 				</h1>
 				<div className="flex justify-center gap-4">
 					{[1, 2].map((s) => (
@@ -341,7 +343,7 @@ function RouteComponent() {
 											htmlFor={field.name}
 											className="text-xs font-bold text-gray-500 uppercase"
 										>
-											Título do anúncio
+											Título da comunidade
 										</label>
 										<input
 											id={field.name}
@@ -565,7 +567,7 @@ function RouteComponent() {
 												"opacity-60 cursor-not-allowed",
 										)}
 									>
-										{isSubmitting ? "Publicando..." : "Publicar anúncio"}
+										{isSubmitting ? "Publicando..." : "Publicar comunidade"}
 									</button>
 								)}
 							</listingForm.Subscribe>

@@ -69,8 +69,9 @@ export default function ListingCard({
 		if (isSessionLoading || likeMutation.isPending) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Curtir anúncio",
-				description: "Entre ou cadastre-se com Discord para curtir anúncios.",
+				title: "Curtir comunidade",
+				description:
+					"Entre ou cadastre-se com Discord para curtir comunidades.",
 				redirectTo: `/listings/${listing.slug}`,
 			});
 			return;

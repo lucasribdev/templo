@@ -154,8 +154,8 @@ function App() {
 					encontram.
 				</motion.h1>
 				<p className="text-gray-400 text-lg max-w-2xl mx-auto">
-					Descubra anúncios, clãs, guildas e comunidades para jogar. Conecte-se
-					com jogadores que compartilham sua paixão.
+					Descubra comunidades, clãs e guildas para jogar. Conecte-se com
+					jogadores que compartilham sua paixão.
 				</p>
 			</section>
 
@@ -184,7 +184,7 @@ function App() {
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-1">
 						<h2 className="text-lg font-bold flex items-center gap-3">
-							<Sparkles className="text-brand-primary w-5 h-5" /> Anúncios
+							<Sparkles className="text-brand-primary w-5 h-5" /> Comunidades
 						</h2>
 					</div>
 
@@ -255,7 +255,7 @@ function App() {
 							))}
 					{isFetchingNextPage && (
 						<div className="col-span-full text-center text-sm text-gray-400 py-4">
-							Carregando mais anúncios...
+							Carregando mais comunidades...
 						</div>
 					)}
 					{!isListingsLoading &&
@@ -264,7 +264,7 @@ function App() {
 							<div className="col-span-full py-20 text-center glass-panel">
 								<Info className="w-12 h-12 text-gray-600 mx-auto mb-4" />
 								<p className="text-gray-400">
-									Nenhum anúncio encontrado para sua busca.
+									Nenhuma comunidade encontrada para sua busca.
 								</p>
 							</div>
 						)}

@@ -34,8 +34,8 @@ export const Route = createFileRoute("/listings/$slug")({
 		if (!loaderData) {
 			return buildPageHead({
 				path: "/listings",
-				title: "Anúncio | Templo",
-				description: "Veja os detalhes deste anúncio no Templo.",
+				title: "Comunidade | Templo",
+				description: "Veja os detalhes desta comunidade no Templo.",
 			});
 		}
 
@@ -43,13 +43,13 @@ export const Route = createFileRoute("/listings/$slug")({
 			path: `/listings/${loaderData.slug}`,
 			title: loaderData.initialListing
 				? `${loaderData.initialListing.title} | Templo`
-				: "Anúncio | Templo",
+				: "Comunidade | Templo",
 			description: loaderData.initialListing
 				? truncateDescription(
 						loaderData.initialListing.description ||
-							`Anúncio de ${loaderData.initialListing.game.name} criado por ${loaderData.initialListing.profile.fullName}.`,
+							`Comunidade de ${loaderData.initialListing.game.name} criada por ${loaderData.initialListing.profile.fullName}.`,
 					)
-				: "Veja os detalhes deste anúncio no Templo.",
+				: "Veja os detalhes desta comunidade no Templo.",
 			image: loaderData.initialListing?.game.coverUrl || undefined,
 		});
 	},
@@ -229,7 +229,7 @@ function ListingDetails() {
 	}
 
 	if (!listing) {
-		return <div className="p-20 text-center">Anúncio não encontrado.</div>;
+		return <div className="p-20 text-center">Comunidade não encontrada.</div>;
 	}
 
 	const discordInviteUrl = normalizeDiscordInvite(listing.discordInvite ?? "");
@@ -263,8 +263,9 @@ function ListingDetails() {
 		if (isSessionLoading || likeMutation.isPending) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Curtir anúncio",
-				description: "Entre ou cadastre-se com Discord para curtir anúncios.",
+				title: "Curtir comunidade",
+				description:
+					"Entre ou cadastre-se com Discord para curtir comunidades.",
 				redirectTo: `/listings/${listing.slug}`,
 			});
 			return;

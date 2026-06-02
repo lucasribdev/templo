@@ -25,8 +25,7 @@ export const Route = createFileRoute("/games/$slug")({
 			return buildPageHead({
 				path: "/games",
 				title: "Jogo | Templo",
-				description:
-					"Encontre comunidades e anúncios para este jogo no Templo.",
+				description: "Encontre comunidades para este jogo no Templo.",
 			});
 		}
 
@@ -37,9 +36,9 @@ export const Route = createFileRoute("/games/$slug")({
 				: "Jogo | Templo",
 			description: loaderData.initialGame
 				? truncateDescription(
-						`Encontre anúncios e comunidades ativas de ${loaderData.initialGame.name} no Templo.`,
+						`Encontre comunidades ativas de ${loaderData.initialGame.name} no Templo.`,
 					)
-				: "Encontre comunidades e anúncios para este jogo no Templo.",
+				: "Encontre comunidades para este jogo no Templo.",
 			image: loaderData.initialGame?.coverUrl || undefined,
 		});
 	},
@@ -159,8 +158,9 @@ function GameDetails() {
 		if (isSessionLoading) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Criar anúncio",
-				description: "Você precisa estar autenticado para criar um anúncio.",
+				title: "Cadastrar comunidade",
+				description:
+					"Você precisa estar autenticado para cadastrar uma comunidade.",
 				redirectTo: `/create-listing?game=${game.slug}`,
 			});
 		}
@@ -214,7 +214,7 @@ function GameDetails() {
 								search={{ game: game.slug }}
 								className="btn-primary flex items-center gap-2"
 							>
-								<PlusCircle className="w-5 h-5" /> Criar Anúncio
+								<PlusCircle className="w-5 h-5" /> Cadastrar Comunidade
 							</Link>
 						) : (
 							<button
@@ -223,7 +223,7 @@ function GameDetails() {
 								disabled={isSessionLoading}
 								className="btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
 							>
-								<PlusCircle className="w-5 h-5" /> Criar Anúncio
+								<PlusCircle className="w-5 h-5" /> Cadastrar Comunidade
 							</button>
 						)}
 					</div>
@@ -250,7 +250,7 @@ function GameDetails() {
 					{!isListingsLoading && listings?.length === 0 && (
 						<div className="col-span-full py-20 text-center glass-panel">
 							<p className="text-gray-500">
-								Ainda não há anúncios para {game.name}.
+								Ainda não há comunidades para {game.name}.
 							</p>
 						</div>
 					)}

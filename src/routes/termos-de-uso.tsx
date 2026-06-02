@@ -7,7 +7,7 @@ export const Route = createFileRoute("/termos-de-uso")({
 			path: "/termos-de-uso",
 			title: "Termos de Uso - Templo",
 			description:
-				"Conheça as regras para usar o Templo, publicar anúncios e interagir com outros jogadores.",
+				"Conheça as regras para usar o Templo, publicar comunidades e interagir com outros jogadores.",
 		}),
 	component: TermsOfUse,
 });
@@ -47,10 +47,10 @@ function TermsOfUse() {
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">2. O serviço</h2>
 						<p>
-							O Templo permite descobrir, publicar e acessar anúncios
-							relacionados a servidores, clãs, guildas, comunidades e grupos de
-							jogadores. A plataforma atua como espaço de divulgação e conexão
-							entre usuários.
+							O Templo permite descobrir, publicar e acessar comunidades
+							relacionadas a servidores, clãs, guildas e grupos de jogadores. A
+							plataforma atua como espaço de divulgação e conexão entre
+							usuários.
 						</p>
 					</section>
 
@@ -96,7 +96,7 @@ function TermsOfUse() {
 
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">
-							5. Anúncios e conteúdo do usuário
+							5. Comunidades e conteúdo do usuário
 						</h2>
 						<p>
 							Você mantém seus direitos sobre o conteúdo que publica, mas
@@ -112,9 +112,9 @@ function TermsOfUse() {
 							6. Moderação e remoção
 						</h2>
 						<p>
-							Podemos remover, ocultar, limitar ou desativar anúncios, perfis ou
-							contas que violem estes termos, prejudiquem outros usuários, gerem
-							risco à plataforma ou estejam em desacordo com a proposta do
+							Podemos remover, ocultar, limitar ou desativar comunidades, perfis
+							ou contas que violem estes termos, prejudiquem outros usuários,
+							gerem risco à plataforma ou estejam em desacordo com a proposta do
 							Templo.
 						</p>
 					</section>
@@ -143,7 +143,7 @@ function TermsOfUse() {
 							8. Serviços e links de terceiros
 						</h2>
 						<p>
-							Anúncios podem direcionar para Discord, servidores de jogos e
+							Comunidades podem direcionar para Discord, servidores de jogos e
 							outros serviços externos. O Templo não controla esses ambientes e
 							não se responsabiliza por regras, disponibilidade, segurança,
 							pagamentos, conteúdos ou interações que ocorram fora da

@@ -31,8 +31,9 @@ export default function Header() {
 		}
 
 		openAuthPrompt({
-			title: "Criar anúncio",
-			description: "Você precisa estar autenticado para criar um anúncio.",
+			title: "Cadastrar comunidade",
+			description:
+				"Você precisa estar autenticado para cadastrar uma comunidade.",
 			redirectTo: "/create-listing",
 		});
 	};
@@ -46,7 +47,7 @@ export default function Header() {
 							<Gamepad2 className="text-brand-primary w-7 h-7" />
 						</div>
 						<span className="font-display text-xl font-bold tracking-wider text-white">
-							TEMPLO
+							Templo
 						</span>
 					</Link>
 
@@ -61,7 +62,7 @@ export default function Header() {
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />
-									<span className="hidden sm:inline">Criar Anúncio</span>
+									<span className="hidden sm:inline">Cadastrar</span>
 								</button>
 								<button
 									type="button"
@@ -81,7 +82,7 @@ export default function Header() {
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />
-									<span className="hidden sm:inline">Criar Anúncio</span>
+									<span className="hidden sm:inline">Cadastrar</span>
 								</button>
 								<Link
 									to="/profile/$profileFullName"

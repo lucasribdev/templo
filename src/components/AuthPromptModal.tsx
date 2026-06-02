@@ -23,8 +23,8 @@ type AuthPromptContextValue = {
 };
 
 const defaultPrompt = {
-	title: "Criar anúncio",
-	description: "Você precisa estar autenticado para criar um anúncio.",
+	title: "Cadastrar comunidade",
+	description: "Você precisa estar autenticado para cadastrar uma comunidade.",
 	redirectTo: "/create-listing",
 };
 

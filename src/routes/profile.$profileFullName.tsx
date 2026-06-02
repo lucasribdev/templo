@@ -43,7 +43,7 @@ export const Route = createFileRoute("/profile/$profileFullName")({
 				: "Perfil | Templo",
 			description: loaderData.initialProfile
 				? truncateDescription(
-						`${loaderData.initialProfile.fullName} está no Templo. Veja anúncios publicados, curtidas e jogos em comum.`,
+						`${loaderData.initialProfile.fullName} está no Templo. Veja comunidades publicadas, curtidas e jogos em comum.`,
 					)
 				: "Veja este perfil no Templo.",
 			image: loaderData.initialProfile?.avatarUrl || undefined,
@@ -316,7 +316,7 @@ function Profile() {
 								{isListingsLoading ? "—" : (listings?.length ?? 0)}
 							</p>
 							<p className="text-[10px] text-gray-500 uppercase font-bold">
-								Anúncios
+								Comunidades
 							</p>
 						</div>
 						<div className="text-center">
@@ -347,7 +347,7 @@ function Profile() {
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 				<section className="space-y-6">
 					<h2 className="text-2xl font-bold flex items-center gap-2">
-						<PlusCircle className="text-brand-primary" /> Meus Anúncios
+						<PlusCircle className="text-brand-primary" /> Minhas Comunidades
 					</h2>
 					<div className="space-y-4">
 						{isListingsLoading
@@ -367,12 +367,12 @@ function Profile() {
 								))}
 						{isFetchingNextListingsPage && (
 							<p className="text-sm text-gray-400 text-center py-4">
-								Carregando mais anúncios...
+								Carregando mais comunidades...
 							</p>
 						)}
 						{!isListingsLoading && listings.length === 0 && (
 							<p className="text-gray-500 text-center py-10 glass-panel">
-								Você ainda não criou nenhum anúncio.
+								Você ainda não criou nenhuma comunidade.
 							</p>
 						)}
 						<div ref={setListingsLoadMoreNode} />
@@ -406,7 +406,7 @@ function Profile() {
 						)}
 						{!isLikedListingsLoading && likedListings.length === 0 && (
 							<p className="text-gray-500 text-center py-10 glass-panel">
-								Você ainda não favoritou nenhum anúncio.
+								Você ainda não favoritou nenhuma comunidade.
 							</p>
 						)}
 						<div ref={setLikedListingsLoadMoreNode} />

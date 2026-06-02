@@ -26,7 +26,6 @@ export const Route = createFileRoute("/api/listings")({
 					p_game_id: gameId,
 					p_user_id: userId,
 					p_search: search || null,
-					p_type: null,
 					p_sort_by: sortBy || "DATE",
 					p_limit: limit,
 					p_offset: offset,
@@ -100,7 +99,6 @@ export const Route = createFileRoute("/api/listings")({
 					.insert({
 						user_id: authData.user.id,
 						game_id: gameId,
-						type: "LFG",
 						title: body.title,
 						description: body.description,
 						tags: body.tags,

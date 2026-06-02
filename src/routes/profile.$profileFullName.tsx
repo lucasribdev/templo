@@ -55,10 +55,10 @@ export const Route = createFileRoute("/profile/$profileFullName")({
 
 const pageSize = 6;
 const profileSectionSkeletonIds = ["profile-owned", "profile-liked"];
-const profileListingSkeletonIds = [
-	"profile-listing-1",
-	"profile-listing-2",
-	"profile-listing-3",
+const profileCommunitySkeletonIds = [
+	"profile-community-1",
+	"profile-community-2",
+	"profile-community-3",
 ];
 
 function CommunityCardSkeleton() {
@@ -121,8 +121,8 @@ function ProfileSkeleton() {
 					<section className="space-y-6" key={sectionId}>
 						<Skeleton className="h-8 w-40" />
 						<div className="space-y-4">
-							{profileListingSkeletonIds.map((listingId) => (
-								<CommunityCardSkeleton key={listingId} />
+							{profileCommunitySkeletonIds.map((communityId) => (
+								<CommunityCardSkeleton key={communityId} />
 							))}
 						</div>
 					</section>
@@ -147,13 +147,13 @@ function Profile() {
 	});
 
 	const {
-		data: listingsData,
-		isLoading: isListingsLoading,
-		fetchNextPage: fetchNextListingsPage,
-		hasNextPage: hasNextListingsPage,
-		isFetchingNextPage: isFetchingNextListingsPage,
+		data: communitiesData,
+		isLoading: isCommunitiesLoading,
+		fetchNextPage: fetchNextCommunitiesPage,
+		hasNextPage: hasNextCommunitiesPage,
+		isFetchingNextPage: isFetchingNextCommunitiesPage,
 	} = useInfiniteQuery({
-		queryKey: ["listings", profile?.id],
+		queryKey: ["communities", profile?.id],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) => {
 			if (!profile) {
@@ -175,13 +175,13 @@ function Profile() {
 	});
 
 	const {
-		data: likedListingsData,
-		isLoading: isLikedListingsLoading,
-		fetchNextPage: fetchNextLikedListingsPage,
-		hasNextPage: hasNextLikedListingsPage,
-		isFetchingNextPage: isFetchingNextLikedListingsPage,
+		data: likedCommunitiesData,
+		isLoading: isLikedCommunitiesLoading,
+		fetchNextPage: fetchNextLikedCommunitiesPage,
+		hasNextPage: hasNextLikedCommunitiesPage,
+		isFetchingNextPage: isFetchingNextLikedCommunitiesPage,
 	} = useInfiniteQuery({
-		queryKey: ["favorite-listings", profile?.id],
+		queryKey: ["favorite-communities", profile?.id],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) => {
 			if (!profile) {
@@ -202,10 +202,10 @@ function Profile() {
 		enabled: !!profile,
 	});
 
-	const listings = listingsData?.pages.flat() ?? [];
-	const likedCommunities = likedListingsData?.pages.flat() ?? [];
+	const communities = communitiesData?.pages.flat() ?? [];
+	const likedCommunities = likedCommunitiesData?.pages.flat() ?? [];
 	const { data: discordStatsByCode } = useDiscordInviteStats([
-		...listings,
+		...communities,
 		...likedCommunities,
 	]);
 	const isOwnProfile = Boolean(
@@ -220,18 +220,17 @@ function Profile() {
 		};
 	}, []);
 
-	const setListingsLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
-		hasNextPage: hasNextListingsPage,
-		isFetchingNextPage: isFetchingNextListingsPage,
-		onLoadMore: fetchNextListingsPage,
+	const setCommunitiesLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
+		hasNextPage: hasNextCommunitiesPage,
+		isFetchingNextPage: isFetchingNextCommunitiesPage,
+		onLoadMore: fetchNextCommunitiesPage,
 	});
-	const setLikedListingsLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>(
-		{
-			hasNextPage: hasNextLikedListingsPage,
-			isFetchingNextPage: isFetchingNextLikedListingsPage,
-			onLoadMore: fetchNextLikedListingsPage,
-		},
-	);
+	const setLikedCommunitiesLoadMoreNode =
+		useInfiniteScrollTrigger<HTMLDivElement>({
+			hasNextPage: hasNextLikedCommunitiesPage,
+			isFetchingNextPage: isFetchingNextLikedCommunitiesPage,
+			onLoadMore: fetchNextLikedCommunitiesPage,
+		});
 
 	if (isProfileLoading) {
 		return <ProfileSkeleton />;
@@ -313,7 +312,7 @@ function Profile() {
 					<div className="flex gap-4 pt-4 justify-center md:justify-start">
 						<div className="text-center">
 							<p className="text-2xl font-bold text-brand-primary">
-								{isListingsLoading ? "—" : (listings?.length ?? 0)}
+								{isCommunitiesLoading ? "—" : (communities?.length ?? 0)}
 							</p>
 							<p className="text-[10px] text-gray-500 uppercase font-bold">
 								Comunidades
@@ -321,7 +320,7 @@ function Profile() {
 						</div>
 						<div className="text-center">
 							<p className="text-2xl font-bold text-brand-primary">
-								{isProfileLoading || isLikedListingsLoading
+								{isProfileLoading || isLikedCommunitiesLoading
 									? "—"
 									: profile.likesCount}
 							</p>
@@ -350,14 +349,14 @@ function Profile() {
 						<PlusCircle className="text-brand-primary" /> Minhas Comunidades
 					</h2>
 					<div className="space-y-4">
-						{isListingsLoading
-							? profileListingSkeletonIds.map((id) => (
+						{isCommunitiesLoading
+							? profileCommunitySkeletonIds.map((id) => (
 									<CommunityCardSkeleton key={id} />
 								))
-							: listings?.map((l) => (
+							: communities?.map((l) => (
 									<CommunityCard
 										key={l.id}
-										listing={l}
+										community={l}
 										discordStats={
 											discordStatsByCode?.[
 												extractDiscordInviteCode(l.discordInvite) ?? ""
@@ -365,17 +364,17 @@ function Profile() {
 										}
 									/>
 								))}
-						{isFetchingNextListingsPage && (
+						{isFetchingNextCommunitiesPage && (
 							<p className="text-sm text-gray-400 text-center py-4">
 								Carregando mais comunidades...
 							</p>
 						)}
-						{!isListingsLoading && listings.length === 0 && (
+						{!isCommunitiesLoading && communities.length === 0 && (
 							<p className="text-gray-500 text-center py-10 glass-panel">
 								Você ainda não criou nenhuma comunidade.
 							</p>
 						)}
-						<div ref={setListingsLoadMoreNode} />
+						<div ref={setCommunitiesLoadMoreNode} />
 					</div>
 				</section>
 
@@ -384,14 +383,14 @@ function Profile() {
 						<Heart className="text-red-500" /> Favoritos
 					</h2>
 					<div className="space-y-4">
-						{isLikedListingsLoading
-							? profileListingSkeletonIds.map((id) => (
+						{isLikedCommunitiesLoading
+							? profileCommunitySkeletonIds.map((id) => (
 									<CommunityCardSkeleton key={id} />
 								))
 							: likedCommunities?.map((l) => (
 									<CommunityCard
 										key={l.id}
-										listing={l}
+										community={l}
 										discordStats={
 											discordStatsByCode?.[
 												extractDiscordInviteCode(l.discordInvite) ?? ""
@@ -399,17 +398,17 @@ function Profile() {
 										}
 									/>
 								))}
-						{isFetchingNextLikedListingsPage && (
+						{isFetchingNextLikedCommunitiesPage && (
 							<p className="text-sm text-gray-400 text-center py-4">
 								Carregando mais favoritos...
 							</p>
 						)}
-						{!isLikedListingsLoading && likedCommunities.length === 0 && (
+						{!isLikedCommunitiesLoading && likedCommunities.length === 0 && (
 							<p className="text-gray-500 text-center py-10 glass-panel">
 								Você ainda não favoritou nenhuma comunidade.
 							</p>
 						)}
-						<div ref={setLikedListingsLoadMoreNode} />
+						<div ref={setLikedCommunitiesLoadMoreNode} />
 					</div>
 				</section>
 			</div>

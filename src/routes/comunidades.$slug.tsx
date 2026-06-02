@@ -129,22 +129,22 @@ function CommunityDetails() {
 
 	const { slug, initialCommunity } = Route.useLoaderData();
 
-	const { data: listing, isLoading } = useQuery({
-		queryKey: ["listing", slug],
+	const { data: community, isLoading } = useQuery({
+		queryKey: ["community", slug],
 		queryFn: ({ signal }) => getCommunityBySlug(slug, signal),
 		initialData: initialCommunity,
 	});
 
 	useEffect(() => {
-		if (!listing?.slug) {
+		if (!community?.slug) {
 			setViewsCount(null);
 			return;
 		}
 
 		let isMounted = true;
-		setViewsCount(listing.views);
+		setViewsCount(community.views);
 
-		incrementCommunityViews(listing.slug)
+		incrementCommunityViews(community.slug)
 			.then((updatedViews) => {
 				if (!isMounted) return;
 				setViewsCount(updatedViews);
@@ -154,7 +154,7 @@ function CommunityDetails() {
 		return () => {
 			isMounted = false;
 		};
-	}, [listing?.slug, listing?.views]);
+	}, [community?.slug, community?.views]);
 
 	useEffect(() => {
 		return () => {
@@ -166,26 +166,28 @@ function CommunityDetails() {
 
 	const likeMutation = useMutation({
 		mutationFn: () => {
-			if (!listing?.slug) {
-				throw new Error("Missing listing slug");
+			if (!community?.slug) {
+				throw new Error("Missing community slug");
 			}
 
-			return toggleCommunityLike(listing.slug);
+			return toggleCommunityLike(community.slug);
 		},
 		onMutate: async () => {
-			if (!listing?.slug) {
+			if (!community?.slug) {
 				return {};
 			}
 
-			await queryClient.cancelQueries({ queryKey: ["listing", listing.slug] });
+			await queryClient.cancelQueries({
+				queryKey: ["community", community.slug],
+			});
 
 			const previousCommunity = queryClient.getQueryData<Community>([
-				"listing",
-				listing.slug,
+				"community",
+				community.slug,
 			]);
 
 			queryClient.setQueryData<Community>(
-				["listing", listing.slug],
+				["community", community.slug],
 				(current) => {
 					if (!current) {
 						return current;
@@ -202,50 +204,54 @@ function CommunityDetails() {
 			return { previousCommunity };
 		},
 		onError: (_error, _variables, context) => {
-			if (listing?.slug && context?.previousCommunity) {
+			if (community?.slug && context?.previousCommunity) {
 				queryClient.setQueryData(
-					["listing", listing.slug],
+					["community", community.slug],
 					context.previousCommunity,
 				);
 			}
 		},
 		onSettled: async () => {
-			if (!listing?.slug) return;
+			if (!community?.slug) return;
 
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ["listing", listing.slug] }),
-				queryClient.invalidateQueries({ queryKey: ["listings"] }),
+				queryClient.invalidateQueries({
+					queryKey: ["community", community.slug],
+				}),
+				queryClient.invalidateQueries({ queryKey: ["communities"] }),
 				queryClient.invalidateQueries({ queryKey: ["profile"] }),
-				queryClient.invalidateQueries({ queryKey: ["favorite-listings"] }),
+				queryClient.invalidateQueries({ queryKey: ["favorite-communities"] }),
 			]);
 		},
 	});
 	const { data: discordStatsByCode } = useDiscordInviteStats(
-		listing ? [listing] : [],
+		community ? [community] : [],
 	);
 
 	if (isLoading) {
 		return <CommunityDetailsSkeleton />;
 	}
 
-	if (!listing) {
+	if (!community) {
 		return <div className="p-20 text-center">Comunidade não encontrada.</div>;
 	}
 
-	const discordInviteUrl = normalizeDiscordInvite(listing.discordInvite ?? "");
+	const discordInviteUrl = normalizeDiscordInvite(
+		community.discordInvite ?? "",
+	);
 	const discordStats = discordInviteUrl
 		? Object.values(discordStatsByCode ?? {})[0]
 		: undefined;
-	const displayedViewsCount = viewsCount ?? listing.views;
+	const displayedViewsCount = viewsCount ?? community.views;
 
 	const handleCopyIP = async () => {
-		if ("ip" in listing && listing.ip) {
+		if ("ip" in community && community.ip) {
 			if (copiedTimeoutRef.current) {
 				window.clearTimeout(copiedTimeoutRef.current);
 			}
 
 			try {
-				await navigator.clipboard.writeText(listing.ip);
+				await navigator.clipboard.writeText(community.ip);
 				setCopied(true);
 				copiedTimeoutRef.current = window.setTimeout(() => {
 					setCopied(false);
@@ -259,14 +265,14 @@ function CommunityDetails() {
 
 	const handleLike = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		if (!listing.slug) return;
+		if (!community.slug) return;
 		if (isSessionLoading || likeMutation.isPending) return;
 		if (!session) {
 			openAuthPrompt({
 				title: "Curtir comunidade",
 				description:
 					"Entre ou cadastre-se com Discord para curtir comunidades.",
-				redirectTo: `/comunidades/${listing.slug}`,
+				redirectTo: `/comunidades/${community.slug}`,
 			});
 			return;
 		}
@@ -279,7 +285,7 @@ function CommunityDetails() {
 			return;
 		}
 
-		navigate({ to: "/games/$slug", params: { slug: listing.game.slug } });
+		navigate({ to: "/games/$slug", params: { slug: community.game.slug } });
 	};
 
 	return (
@@ -304,7 +310,7 @@ function CommunityDetails() {
 						>
 							<div className="relative mb-0">
 								<GameArtwork
-									game={listing.game}
+									game={community.game}
 									variant="tile"
 									className="h-40 overflow-hidden md:h-56 rounded-t-2xl"
 								/>
@@ -315,19 +321,19 @@ function CommunityDetails() {
 								<div className="flex items-center gap-3 mb-2">
 									<Link
 										to={"/games/$slug"}
-										params={{ slug: listing.game.slug }}
+										params={{ slug: community.game.slug }}
 										className="text-brand-primary text-xs transition-colors hover:underline"
 									>
-										{listing.game.name}
+										{community.game.name}
 									</Link>
 									<div className="h-1 w-1 rounded-full bg-gray-600" />
 									<span className="text-gray-500 text-xs">
-										{formatPostedAt(listing.createdAt)}
+										{formatPostedAt(community.createdAt)}
 									</span>
 								</div>
 
 								<h1 className="text-2xl font-bold leading-snug mb-1">
-									{listing.title}
+									{community.title}
 								</h1>
 
 								<div className="flex gap-3 mb-0">
@@ -359,7 +365,7 @@ function CommunityDetails() {
 										disabled={isSessionLoading || likeMutation.isPending}
 										className={cn(
 											"flex items-center justify-center gap-2 py-4 px-4 rounded-2xl font-bold text-xs transition-all border",
-											listing.userLiked
+											community.userLiked
 												? "text-red-500 border-0"
 												: "text-gray-400 border-0 hover:text-red-500",
 										)}
@@ -367,16 +373,16 @@ function CommunityDetails() {
 										<Heart
 											className={cn(
 												"w-4 h-4",
-												listing.userLiked && "fill-current",
+												community.userLiked && "fill-current",
 											)}
 										/>
-										{listing.likesCount}{" "}
-										{listing.likesCount === 1 ? "curtida" : "curtidas"}
+										{community.likesCount}{" "}
+										{community.likesCount === 1 ? "curtida" : "curtidas"}
 									</button>
 								</div>
 
 								<div className="flex flex-wrap gap-2 pt-1">
-									{listing.tags?.map((tag) => (
+									{community.tags?.map((tag) => (
 										<span
 											key={tag}
 											className="text-[10px] font-bold bg-white/5 px-3 py-1.5 rounded-full border border-white/10 text-gray-400 hover:border-brand-primary/30 hover:text-brand-primary transition-colors cursor-default"
@@ -388,7 +394,7 @@ function CommunityDetails() {
 
 								<div className="prose prose-invert max-w-none">
 									<p className="text-gray-300 text-md leading-relaxed	whitespace-pre-wrap break-words">
-										{listing.description}
+										{community.description}
 									</p>
 								</div>
 
@@ -405,7 +411,7 @@ function CommunityDetails() {
 										</a>
 									)}
 
-									{listing.ip && (
+									{community.ip && (
 										<button
 											type="button"
 											onClick={handleCopyIP}
@@ -423,22 +429,22 @@ function CommunityDetails() {
 
 								<Link
 									to="/profile/$profileFullName"
-									params={{ profileFullName: listing.profile.fullName }}
+									params={{ profileFullName: community.profile.fullName }}
 									className="flex items-center gap-4 pt-6 border-t border-white/5 transition-colors hover:text-brand-primary"
 								>
 									<div className="relative">
 										<UserAvatar
-											avatarUrl={listing.profile.avatarUrl}
+											avatarUrl={community.profile.avatarUrl}
 											className="w-14 h-14 rounded-full object-cover"
-											name={listing.profile.fullName}
+											name={community.profile.fullName}
 										/>
 									</div>
 									<div>
 										<p className="font-semibold text-md tracking-tight">
-											{listing.profile.fullName}
+											{community.profile.fullName}
 										</p>
 										<p className="text-xs text-gray-400">
-											Membro desde {memberSince(listing.profile)}
+											Membro desde {memberSince(community.profile)}
 										</p>
 									</div>
 								</Link>

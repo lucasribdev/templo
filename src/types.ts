@@ -50,7 +50,7 @@ export interface DiscordInviteStats {
 	invalidAt: string | null;
 }
 
-export interface ListingByIdRpcRow {
+export interface CommunityByIdRpcRow {
 	id: string;
 	slug: string;
 	user_id: string;
@@ -78,7 +78,7 @@ export interface ListingByIdRpcRow {
 	profile_created_at: string;
 }
 
-export interface ListingsRpcRow {
+export interface CommunitiesRpcRow {
 	id: string;
 	slug: string;
 	user_id: string;
@@ -147,25 +147,25 @@ export interface CreateCommunityInput {
 	tags: string[];
 }
 
-export interface ListingLikes {
+export interface CommunityLikes {
 	id: string;
-	listingId: string;
+	communityId: string;
 	userId: string;
 	createdAt: string;
 }
 
-export interface ListingLikesRow {
+export interface CommunityLikesRow {
 	id: string;
-	listing_id: string;
+	community_id: string;
 	user_id: string;
 	created_at: string;
 }
 
-export interface ListingLikeCount {
+export interface CommunityLikeCount {
 	count: number;
 }
 
-export interface ListingLikeUser {
+export interface CommunityLikeUser {
 	user_id: string;
 }
 

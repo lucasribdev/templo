@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import type { ListingByIdRpcRow } from "@/types";
-import { mapGame, mapListingByIdRpc, mapProfile } from "@/utils/mappers";
+import type { CommunityByIdRpcRow } from "@/types";
+import { mapCommunityByIdRpc, mapGame, mapProfile } from "@/utils/mappers";
 import { supabase } from "@/utils/supabase";
 
 export const getGamePageData = createServerFn({
@@ -21,14 +21,14 @@ export const getGamePageData = createServerFn({
 		return mapGame(data);
 	});
 
-export const getListingPageData = createServerFn({
+export const getCommunityPageData = createServerFn({
 	method: "GET",
 })
 	.inputValidator((slug: string) => slug.trim())
 	.handler(async ({ data: slug }) => {
 		const { data, error } = await supabase
-			.rpc("get_listing_by_slug", {
-				p_listing_slug: slug,
+			.rpc("get_community_by_slug", {
+				p_community_slug: slug,
 			})
 			.maybeSingle();
 
@@ -36,10 +36,8 @@ export const getListingPageData = createServerFn({
 			return null;
 		}
 
-		return mapListingByIdRpc(data as ListingByIdRpcRow);
+		return mapCommunityByIdRpc(data as CommunityByIdRpcRow);
 	});
-
-export const getCommunityPageData = getListingPageData;
 
 export const getProfilePageData = createServerFn({
 	method: "GET",
@@ -57,7 +55,7 @@ export const getProfilePageData = createServerFn({
 		}
 
 		const { count: likesCount, error: likesError } = await supabase
-			.from("listing_likes")
+			.from("community_likes")
 			.select("*", { count: "exact", head: true })
 			.eq("user_id", profile.id);
 

@@ -1,16 +1,16 @@
 import type {
+	CommunitiesRpcRow,
 	Community,
+	CommunityByIdRpcRow,
 	GameRow,
-	ListingByIdRpcRow,
-	ListingsRpcRow,
 	Profile,
 	ProfileRow,
 	ProfileSummary,
 } from "@/types";
 
-function mapListingProfile(
+function mapCommunityProfile(
 	row: Pick<
-		ListingByIdRpcRow | ListingsRpcRow,
+		CommunityByIdRpcRow | CommunitiesRpcRow,
 		| "profile_avatar_url"
 		| "profile_full_name"
 		| "profile_username"
@@ -27,7 +27,9 @@ function mapListingProfile(
 	};
 }
 
-function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Community {
+function mapCommunityRpcBase(
+	row: CommunityByIdRpcRow | CommunitiesRpcRow,
+): Community {
 	return {
 		id: row.id,
 		slug: row.slug,
@@ -42,7 +44,7 @@ function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Community {
 			website: row.game_website ?? "",
 			createdAt: row.created_at,
 		},
-		profile: mapListingProfile(row),
+		profile: mapCommunityProfile(row),
 		title: row.title,
 		description: row.description,
 		ip: row.ip,
@@ -57,12 +59,12 @@ function mapListingRpcBase(row: ListingByIdRpcRow | ListingsRpcRow): Community {
 	};
 }
 
-export function mapListingByIdRpc(row: ListingByIdRpcRow): Community {
-	return mapListingRpcBase(row);
+export function mapCommunityByIdRpc(row: CommunityByIdRpcRow): Community {
+	return mapCommunityRpcBase(row);
 }
 
-export function mapListingsRpc(row: ListingsRpcRow): Community {
-	return mapListingRpcBase(row);
+export function mapCommunitiesRpc(row: CommunitiesRpcRow): Community {
+	return mapCommunityRpcBase(row);
 }
 
 export function mapGame(row: GameRow) {

@@ -35,7 +35,7 @@ async function getProfileByProfileFullName(
 	}
 
 	const { count: likesCount, error: likesError } = await supabaseClient
-		.from("listing_likes")
+		.from("community_likes")
 		.select("*", { count: "exact", head: true })
 		.eq("user_id", profile.id);
 

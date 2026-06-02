@@ -39,9 +39,9 @@ const homeGameSkeletonIds = [
 	"home-game-5",
 	"home-game-6",
 ];
-const homeListingSkeletonIds = Array.from(
+const homeCommunitySkeletonIds = Array.from(
 	{ length: pageSize },
-	(_, index) => `home-listing-${index + 1}`,
+	(_, index) => `home-community-${index + 1}`,
 );
 
 function GameCardSkeleton() {
@@ -111,9 +111,9 @@ function App() {
 		fetchNextPage,
 		hasNextPage,
 		isFetchingNextPage,
-		isLoading: isListingsLoading,
+		isLoading: isCommunitiesLoading,
 	} = useInfiniteQuery({
-		queryKey: ["listings", deferredSearch, filterGame, sortBy],
+		queryKey: ["communities", deferredSearch, filterGame, sortBy],
 		initialPageParam: 0,
 		queryFn: ({ pageParam, signal }) =>
 			getCommunities({
@@ -130,8 +130,8 @@ function App() {
 		},
 	});
 
-	const listings = data?.pages.flat() ?? [];
-	const { data: discordStatsByCode } = useDiscordInviteStats(listings);
+	const communities = data?.pages.flat() ?? [];
+	const { data: discordStatsByCode } = useDiscordInviteStats(communities);
 	const setLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
 		hasNextPage,
 		isFetchingNextPage,
@@ -238,17 +238,17 @@ function App() {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-					{isListingsLoading
-						? homeListingSkeletonIds.map((id) => (
+					{isCommunitiesLoading
+						? homeCommunitySkeletonIds.map((id) => (
 								<CommunityCardSkeleton key={id} />
 							))
-						: listings.map((listing) => (
+						: communities.map((community) => (
 								<CommunityCard
-									key={listing.id}
-									listing={listing}
+									key={community.id}
+									community={community}
 									discordStats={
 										discordStatsByCode?.[
-											extractDiscordInviteCode(listing.discordInvite) ?? ""
+											extractDiscordInviteCode(community.discordInvite) ?? ""
 										]
 									}
 								/>
@@ -258,9 +258,9 @@ function App() {
 							Carregando mais comunidades...
 						</div>
 					)}
-					{!isListingsLoading &&
+					{!isCommunitiesLoading &&
 						!isFetchingNextPage &&
-						listings.length === 0 && (
+						communities.length === 0 && (
 							<div className="col-span-full py-20 text-center glass-panel">
 								<Info className="w-12 h-12 text-gray-600 mx-auto mb-4" />
 								<p className="text-gray-400">

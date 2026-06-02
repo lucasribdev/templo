@@ -138,7 +138,7 @@ export async function getCommunities({
 	search,
 	sortBy,
 }: GetCommunitiesParams): Promise<Community[]> {
-	return apiRequest<Community[]>("/api/listings", {
+	return apiRequest<Community[]>("/api/communities", {
 		signal,
 		requireAuth: true,
 		query: getCommunitiesQuery({
@@ -156,7 +156,7 @@ export async function getCommunitiesByGameId(
 	id: string,
 	signal?: AbortSignal,
 ): Promise<Community[]> {
-	return apiRequest<Community[]>("/api/listings", {
+	return apiRequest<Community[]>("/api/communities", {
 		signal,
 		requireAuth: true,
 		query: getCommunitiesQuery({ gameId: id }),
@@ -174,7 +174,7 @@ export async function getCommunitiesByUserId({
 	offset?: number;
 	userId: string;
 }): Promise<Community[]> {
-	return apiRequest<Community[]>("/api/listings", {
+	return apiRequest<Community[]>("/api/communities", {
 		signal,
 		requireAuth: true,
 		query: getCommunitiesQuery({
@@ -197,7 +197,7 @@ export async function getLikedCommunitiesByUserId({
 	offset?: number;
 }): Promise<Community[]> {
 	return apiRequest<Community[]>(
-		`/api/users/${encodeURIComponent(userId)}/liked-listings`,
+		`/api/users/${encodeURIComponent(userId)}/liked-communities`,
 		{
 			signal,
 			requireAuth: true,
@@ -213,7 +213,7 @@ export async function getCommunityBySlug(
 	slug: string,
 	signal?: AbortSignal,
 ): Promise<Community> {
-	return apiRequest<Community>(`/api/listings/${slug}`, {
+	return apiRequest<Community>(`/api/communities/${slug}`, {
 		signal,
 		requireAuth: true,
 	});
@@ -234,7 +234,7 @@ export async function incrementCommunityViews(
 	signal?: AbortSignal,
 ): Promise<number> {
 	const payload = await apiRequest<{ views: number }>(
-		`/api/listings/${slug}/views`,
+		`/api/communities/${slug}/views`,
 		{
 			method: "POST",
 			requireAuth: true,
@@ -252,7 +252,7 @@ export async function toggleCommunityLike(
 	slug: string,
 	signal?: AbortSignal,
 ): Promise<void> {
-	await apiRequest(`/api/listings/${slug}/likes`, {
+	await apiRequest(`/api/communities/${slug}/likes`, {
 		method: "POST",
 		requireAuth: true,
 		signal,
@@ -282,7 +282,7 @@ export async function createCommunity(
 	input: CreateCommunityInput,
 	signal?: AbortSignal,
 ): Promise<Community> {
-	return apiRequest<Community>("/api/listings", {
+	return apiRequest<Community>("/api/communities", {
 		method: "POST",
 		requireAuth: true,
 		headers: {

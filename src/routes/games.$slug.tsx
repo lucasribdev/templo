@@ -44,13 +44,13 @@ export const Route = createFileRoute("/games/$slug")({
 	},
 	component: GameDetails,
 });
-const gameDetailsListingSkeletonIds = [
-	"game-details-listing-1",
-	"game-details-listing-2",
-	"game-details-listing-3",
-	"game-details-listing-4",
-	"game-details-listing-5",
-	"game-details-listing-6",
+const gameDetailsCommunitySkeletonIds = [
+	"game-details-community-1",
+	"game-details-community-2",
+	"game-details-community-3",
+	"game-details-community-4",
+	"game-details-community-5",
+	"game-details-community-6",
 ];
 
 function CommunityCardSkeleton() {
@@ -118,7 +118,7 @@ function GameDetailsSkeleton() {
 					<Skeleton className="h-5 w-32" />
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-					{gameDetailsListingSkeletonIds.map((id) => (
+					{gameDetailsCommunitySkeletonIds.map((id) => (
 						<CommunityCardSkeleton key={id} />
 					))}
 				</div>
@@ -139,13 +139,13 @@ function GameDetails() {
 		initialData: initialGame,
 	});
 
-	const { data: listingsData, isLoading: isListingsLoading } = useQuery({
-		queryKey: ["listings", slug, game?.id],
+	const { data: communitiesData, isLoading: isCommunitiesLoading } = useQuery({
+		queryKey: ["communities", slug, game?.id],
 		queryFn: ({ signal }) => getCommunitiesByGameId(game?.id ?? "", signal),
 		enabled: Boolean(game?.id),
 	});
-	const listings = game ? (listingsData ?? []) : [];
-	const { data: discordStatsByCode } = useDiscordInviteStats(listings ?? []);
+	const communities = game ? (communitiesData ?? []) : [];
+	const { data: discordStatsByCode } = useDiscordInviteStats(communities ?? []);
 
 	if (isGameLoading) {
 		return <GameDetailsSkeleton />;
@@ -232,22 +232,22 @@ function GameDetails() {
 
 			<div className="space-y-6">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-					{isListingsLoading
-						? gameDetailsListingSkeletonIds.map((id) => (
+					{isCommunitiesLoading
+						? gameDetailsCommunitySkeletonIds.map((id) => (
 								<CommunityCardSkeleton key={id} />
 							))
-						: listings?.map((listing) => (
+						: communities?.map((community) => (
 								<CommunityCard
-									key={listing.id}
-									listing={listing}
+									key={community.id}
+									community={community}
 									discordStats={
 										discordStatsByCode?.[
-											extractDiscordInviteCode(listing.discordInvite) ?? ""
+											extractDiscordInviteCode(community.discordInvite) ?? ""
 										]
 									}
 								/>
 							))}
-					{!isListingsLoading && listings?.length === 0 && (
+					{!isCommunitiesLoading && communities?.length === 0 && (
 						<div className="col-span-full py-20 text-center glass-panel">
 							<p className="text-gray-500">
 								Ainda não há comunidades para {game.name}.

@@ -4,23 +4,23 @@ import { getDiscordInviteStats } from "@/lib/api";
 import type { Community, DiscordInviteStats } from "@/types";
 import { extractDiscordInviteCode } from "@/utils/discord";
 
-export function getDiscordInviteCodesFromCommunities(listings: Community[]) {
+export function getDiscordInviteCodesFromCommunities(communities: Community[]) {
 	return Array.from(
 		new Set(
-			listings
-				.map((listing) => extractDiscordInviteCode(listing.discordInvite))
+			communities
+				.map((community) => extractDiscordInviteCode(community.discordInvite))
 				.filter((code): code is string => Boolean(code)),
 		),
 	).sort();
 }
 
-export function useDiscordInviteStats(listings: Community[]) {
+export function useDiscordInviteStats(communities: Community[]) {
 	const [statsByCode, setStatsByCode] = useState<
 		Record<string, DiscordInviteStats>
 	>({});
 	const inviteCodes = useMemo(
-		() => getDiscordInviteCodesFromCommunities(listings),
-		[listings],
+		() => getDiscordInviteCodesFromCommunities(communities),
+		[communities],
 	);
 	const missingInviteCodes = useMemo(
 		() => inviteCodes.filter((code) => !statsByCode[code]),

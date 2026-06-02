@@ -34,12 +34,15 @@ Notes:
 
 - `supabase/migrations/20260318130000_initial_schema.sql`
   - Creates the full initial schema in one step: tables, indexes, triggers, RLS policies, RPCs and grants.
-  - Represents the final database state expected by the app, including the profile fields returned by `get_listing_by_id`.
+  - Represents the initial database shape for fresh local resets. Later migrations transition the backend naming to communities.
   - This is intended for `supabase db reset` / fresh environments, since there is no existing data to preserve.
+- `supabase/migrations/20260602183000_rename_listings_to_communities.sql`
+  - Renames backend database objects from listings to communities without deleting data.
+  - Keeps the backend API and RPC surface on the communities naming only.
 
 Seed data:
 
-- Creates local sample users, profiles, games, listings and likes.
+- Creates local sample users, profiles, games, communities and likes.
 - Gives enough data to test list/detail pages and like counts locally.
 - Apply migrations and seed together with:
 

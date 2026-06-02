@@ -13,29 +13,29 @@ import { formatPostedAt } from "@/utils/date";
 
 export default function CommunityCard({
 	discordStats,
-	listing,
+	community,
 }: {
 	discordStats?: DiscordInviteStats;
-	listing: Community;
+	community: Community;
 }) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
 	const [likeState, setLikeState] = useState({
-		likesCount: listing.likesCount,
-		userLiked: listing.userLiked,
+		likesCount: community.likesCount,
+		userLiked: community.userLiked,
 	});
 
 	useEffect(() => {
 		setLikeState({
-			likesCount: listing.likesCount,
-			userLiked: listing.userLiked,
+			likesCount: community.likesCount,
+			userLiked: community.userLiked,
 		});
-	}, [listing.likesCount, listing.userLiked]);
+	}, [community.likesCount, community.userLiked]);
 
 	const likeMutation = useMutation({
-		mutationFn: () => toggleCommunityLike(listing.slug),
+		mutationFn: () => toggleCommunityLike(community.slug),
 		onMutate: () => {
 			const previousState = {
 				likesCount: likeState.likesCount,
@@ -56,10 +56,12 @@ export default function CommunityCard({
 		},
 		onSettled: async () => {
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ["listing", listing.slug] }),
-				queryClient.invalidateQueries({ queryKey: ["listings"] }),
+				queryClient.invalidateQueries({
+					queryKey: ["community", community.slug],
+				}),
+				queryClient.invalidateQueries({ queryKey: ["communities"] }),
 				queryClient.invalidateQueries({ queryKey: ["profile"] }),
-				queryClient.invalidateQueries({ queryKey: ["favorite-listings"] }),
+				queryClient.invalidateQueries({ queryKey: ["favorite-communities"] }),
 			]);
 		},
 	});
@@ -72,7 +74,7 @@ export default function CommunityCard({
 				title: "Curtir comunidade",
 				description:
 					"Entre ou cadastre-se com Discord para curtir comunidades.",
-				redirectTo: `/comunidades/${listing.slug}`,
+				redirectTo: `/comunidades/${community.slug}`,
 			});
 			return;
 		}
@@ -83,7 +85,7 @@ export default function CommunityCard({
 		e.stopPropagation();
 		navigate({
 			to: "/profile/$profileFullName",
-			params: { profileFullName: listing.profile.fullName },
+			params: { profileFullName: community.profile.fullName },
 		});
 	};
 
@@ -92,12 +94,12 @@ export default function CommunityCard({
 			whileHover={{ y: -4 }}
 			className="glass-panel p-5 flex flex-col gap-4 cursor-pointer group"
 			onClick={() =>
-				navigate({ to: "/comunidades/$slug", params: { slug: listing.slug } })
+				navigate({ to: "/comunidades/$slug", params: { slug: community.slug } })
 			}
 		>
 			<div className="flex justify-between items-start">
 				<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-					<Gamepad2 className="w-3 h-3" /> {listing.game.name}
+					<Gamepad2 className="w-3 h-3" /> {community.game.name}
 				</p>
 				<button
 					type="button"
@@ -120,16 +122,16 @@ export default function CommunityCard({
 
 			<div>
 				<h3 className="text-lg font-bold group-hover:text-brand-primary transition-colors line-clamp-1">
-					{listing.title}
+					{community.title}
 				</h3>
 			</div>
 
 			<p className="text-sm text-gray-400 line-clamp-2 min-h-[40px]">
-				{listing.description}
+				{community.description}
 			</p>
 
 			<div className="flex flex-wrap gap-2 mt-auto">
-				{listing?.tags?.slice(0, 3).map((tag) => (
+				{community?.tags?.slice(0, 3).map((tag) => (
 					<span
 						key={tag}
 						className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-gray-400"
@@ -147,16 +149,16 @@ export default function CommunityCard({
 						className="flex items-center gap-1.5 rounded-sm transition-colors hover:text-brand-primary"
 					>
 						<UserAvatar
-							avatarUrl={listing.profile.avatarUrl}
+							avatarUrl={community.profile.avatarUrl}
 							className="w-6 h-6 shrink-0 rounded-full object-cover border border-white/10"
-							name={listing.profile.fullName}
+							name={community.profile.fullName}
 						/>
 						<span className="text-xs text-gray-500">
-							{listing.profile?.fullName}
+							{community.profile?.fullName}
 						</span>
 					</button>
 					<div className="flex items-center gap-1 text-xs text-gray-500">
-						<Clock className="w-3 h-3" /> {formatPostedAt(listing.createdAt)}
+						<Clock className="w-3 h-3" /> {formatPostedAt(community.createdAt)}
 					</div>
 				</div>
 				<div className="flex items-center gap-3">
@@ -182,9 +184,9 @@ export default function CommunityCard({
 					</div>
 					<div
 						className="flex items-center gap-1 text-xs text-gray-500"
-						title={`${listing.views} ${listing.views === 1 ? "visualização" : "visualizações"}`}
+						title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}
 					>
-						<Eye className="w-3 h-3" /> {listing.views}
+						<Eye className="w-3 h-3" /> {community.views}
 					</div>
 				</div>
 			</div>

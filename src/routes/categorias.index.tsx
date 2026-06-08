@@ -30,9 +30,9 @@ const categorySkeletonIds = [
 	"categories-index-8",
 ];
 
-function CategoryCardSkeleton() {
+export function CategoryCardSkeleton() {
 	return (
-		<div className="glass-panel min-h-28 p-4">
+		<div className="glass-panel p-4">
 			<Skeleton className="h-4 w-2/3" />
 			<div className="flex gap-2 pt-3">
 				<Skeleton className="h-5 w-14 rounded-md" />

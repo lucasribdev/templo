@@ -8,7 +8,7 @@ export default function CategoryCard({ category }: { category: Category }) {
 			params={{ slug: category.slug }}
 			className="group"
 		>
-			<div className="glass-panel h-full min-h-28 p-4 transition-all group-hover:border-brand-primary">
+			<div className="flex flex-col justify-between glass-panel h-full p-4 transition-all group-hover:border-brand-primary">
 				<h3 className="text-sm font-bold text-white tracking-wide">
 					{category.name}
 				</h3>

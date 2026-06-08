@@ -3,6 +3,8 @@ import type {
 	CommunitiesRpcRow,
 	Community,
 	CommunityByIdRpcRow,
+	CommunityLink,
+	CommunityLinkRow,
 	Profile,
 	ProfileRow,
 	ProfileSummary,
@@ -27,6 +29,20 @@ function mapCommunityProfile(
 	};
 }
 
+export function mapCommunityLink(row: CommunityLinkRow): CommunityLink {
+	return {
+		id: row.id,
+		communityId: row.community_id,
+		platform: row.platform,
+		url: row.url,
+		position: row.position,
+		clicksCount: row.clicks_count,
+		label: row.label,
+		createdAt: row.created_at,
+		updatedAt: row.updated_at,
+	};
+}
+
 function mapCommunityRpcBase(
 	row: CommunityByIdRpcRow | CommunitiesRpcRow,
 ): Community {
@@ -47,7 +63,7 @@ function mapCommunityRpcBase(
 		title: row.title,
 		description: row.description,
 		tags: row.tags,
-		discordInvite: row.discord_invite,
+		links: (row.links ?? []).map(mapCommunityLink),
 		views: row.views,
 		active: row.active,
 		likesCount: row.likes_count,

@@ -10,13 +10,13 @@ create table if not exists public.community_links (
   updated_at timestamptz not null default now(),
   constraint community_links_platform_check check (
     platform in (
-      'Discord',
-      'Telegram',
-      'WhatsApp',
-      'GitHub',
-      'YouTube',
-      'Site Oficial',
-      'Outra'
+      'DISCORD',
+      'TELEGRAM',
+      'WHATSAPP',
+      'GITHUB',
+      'YOUTUBE',
+      'SITE_OFICIAL',
+      'OUTRA'
     )
   ),
   constraint community_links_url_check check (length(trim(url)) > 0),

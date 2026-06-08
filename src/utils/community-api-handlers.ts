@@ -2,10 +2,22 @@ import type {
 	CommunitiesRpcRow,
 	CommunityByIdRpcRow,
 	CommunityLikesRow,
+	CommunityPlatform,
+	CreateCommunityLinkInput,
 } from "@/types";
 import { normalizeDiscordInvite } from "@/utils/discord";
 import { mapCommunitiesRpc, mapCommunityByIdRpc } from "@/utils/mappers";
 import { createSupabaseUserClient, supabase } from "@/utils/supabase";
+
+const communityPlatforms = new Set<CommunityPlatform>([
+	"DISCORD",
+	"TELEGRAM",
+	"WHATSAPP",
+	"GITHUB",
+	"YOUTUBE",
+	"SITE_OFICIAL",
+	"OUTRA",
+]);
 
 function normalizeVisitorId(value: string | null) {
 	if (!value) {
@@ -18,6 +30,50 @@ function normalizeVisitorId(value: string | null) {
 	}
 
 	return trimmedValue.slice(0, 128);
+}
+
+function normalizeCommunityUrl(value: string) {
+	const trimmedValue = value.trim();
+	if (!trimmedValue) return null;
+
+	const normalizedValue = /^[a-z][a-z\d+\-.]*:\/\//i.test(trimmedValue)
+		? trimmedValue
+		: `https://${trimmedValue}`;
+
+	try {
+		return new URL(normalizedValue).toString();
+	} catch {
+		return null;
+	}
+}
+
+function normalizeCommunityLinks(value: unknown) {
+	if (!Array.isArray(value)) {
+		return [];
+	}
+
+	return value
+		.map((link, index): CreateCommunityLinkInput | null => {
+			if (!link || typeof link !== "object") return null;
+
+			const rawLink = link as Partial<CreateCommunityLinkInput>;
+			const platform = rawLink.platform;
+			if (!platform || !communityPlatforms.has(platform)) return null;
+
+			const normalizedUrl =
+				platform === "DISCORD"
+					? normalizeDiscordInvite(rawLink.url ?? "")
+					: normalizeCommunityUrl(rawLink.url ?? "");
+			if (!normalizedUrl) return null;
+
+			return {
+				platform,
+				url: normalizedUrl,
+				position: Math.max(0, Number(rawLink.position ?? index) || 0),
+				label: rawLink.label?.trim() || undefined,
+			};
+		})
+		.filter((link): link is CreateCommunityLinkInput => Boolean(link));
 }
 
 export async function getCommunitiesHandler({ request }: { request: Request }) {
@@ -70,12 +126,14 @@ export async function createCommunityHandler({
 	}
 
 	const body = await request.json();
-	const discordInvite = normalizeDiscordInvite(body.discordInvite ?? "");
+	const links = normalizeCommunityLinks(body.links);
+	const legacyDiscordInvite =
+		links.find((link) => link.platform === "DISCORD")?.url ?? null;
 	const suggestedCategoryName = String(body.suggestedCategoryName ?? "").trim();
 
-	if (!discordInvite) {
+	if (links.length === 0) {
 		return Response.json(
-			{ error: "Discord invite must be a valid Discord URL" },
+			{ error: "At least one valid community link is required" },
 			{ status: 400 },
 		);
 	}
@@ -120,7 +178,7 @@ export async function createCommunityHandler({
 			title: body.title,
 			description: body.description,
 			tags: body.tags,
-			discord_invite: discordInvite,
+			discord_invite: legacyDiscordInvite,
 			active: true,
 		})
 		.select()
@@ -128,6 +186,22 @@ export async function createCommunityHandler({
 
 	if (error) {
 		return Response.json({ error: error.message }, { status: 500 });
+	}
+
+	const { error: linksError } = await supabaseUser
+		.from("community_links")
+		.insert(
+			links.map((link) => ({
+				community_id: data.id,
+				platform: link.platform,
+				url: link.url,
+				position: link.position,
+				label: link.label,
+			})),
+		);
+
+	if (linksError) {
+		return Response.json({ error: linksError.message }, { status: 500 });
 	}
 
 	const { data: createdCommunity, error: createdCommunityError } =
@@ -149,7 +223,9 @@ export async function createCommunityHandler({
 
 	return Response.json(
 		mapCommunityByIdRpc(createdCommunity as CommunityByIdRpcRow),
-		{ status: 201 },
+		{
+			status: 201,
+		},
 	);
 }
 

@@ -1,5 +1,13 @@
 export type CommunitySortBy = "DATE" | "POPULARITY" | "RELEVANCE";
 export type CategorySortBy = "CREATED_AT" | "ALPHABETICAL";
+export type CommunityPlatform =
+	| "DISCORD"
+	| "TELEGRAM"
+	| "WHATSAPP"
+	| "GITHUB"
+	| "YOUTUBE"
+	| "SITE_OFICIAL"
+	| "OUTRA";
 
 export interface Category {
 	id: string;
@@ -30,7 +38,7 @@ export interface Community {
 	title: string;
 	description?: string;
 	tags?: string[];
-	discordInvite?: string;
+	links: CommunityLink[];
 	views: number;
 	active: boolean;
 	likesCount: number;
@@ -38,6 +46,35 @@ export interface Community {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface CommunityLink {
+	id: string;
+	communityId: string;
+	platform: CommunityPlatform;
+	url: string;
+	position: number;
+	clicksCount: number;
+	label?: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface CommunityLinkRow {
+	id: string;
+	community_id: string;
+	platform: CommunityPlatform;
+	url: string;
+	position: number;
+	clicks_count: number;
+	label?: string;
+	created_at: string;
+	updated_at: string;
+}
+
+export type CreateCommunityLinkInput = Pick<
+	CommunityLink,
+	"platform" | "url" | "position" | "label"
+>;
 
 export interface CommunityByIdRpcRow {
 	id: string;
@@ -53,6 +90,7 @@ export interface CommunityByIdRpcRow {
 	description?: string;
 	tags?: string[];
 	discord_invite?: string;
+	links?: CommunityLinkRow[];
 	views: number;
 	active: boolean;
 	likes_count: number;
@@ -76,6 +114,7 @@ export interface CommunitiesRpcRow {
 	description?: string;
 	tags?: string[];
 	discord_invite?: string;
+	links?: CommunityLinkRow[];
 	views: number;
 	active: boolean;
 	likes_count: number;
@@ -127,7 +166,7 @@ export interface CreateCommunityInput {
 	suggestedCategoryName?: string;
 	title: string;
 	description: string;
-	discordInvite: string;
+	links: CreateCommunityLinkInput[];
 	tags: string[];
 }
 

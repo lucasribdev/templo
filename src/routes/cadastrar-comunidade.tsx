@@ -152,7 +152,13 @@ function RouteComponent() {
 				suggestedCategoryName: suggestedCategory?.trim() || undefined,
 				title: value.title,
 				description: value.description,
-				discordInvite: normalizeDiscordInvite(value.discord_invite) ?? "",
+				links: [
+					{
+						platform: "DISCORD",
+						url: normalizeDiscordInvite(value.discord_invite) ?? "",
+						position: 0,
+					},
+				],
 				tags: value.tags,
 			});
 

@@ -16,7 +16,6 @@ import { getCommunityPageData } from "@/lib/page-data";
 import { cn } from "@/lib/utils";
 import type { Community } from "@/types";
 import { formatPostedAt } from "@/utils/date";
-import { normalizeDiscordInvite } from "@/utils/discord";
 
 export const Route = createFileRoute("/comunidades/$slug")({
 	loader: async ({ params }) => {
@@ -210,9 +209,6 @@ function CommunityDetails() {
 		return <div className="p-20 text-center">Comunidade não encontrada.</div>;
 	}
 
-	const discordInviteUrl = normalizeDiscordInvite(
-		community.discordInvite ?? "",
-	);
 	const displayedViewsCount = viewsCount ?? community.views;
 
 	const handleLike = (e: React.MouseEvent) => {
@@ -331,18 +327,19 @@ function CommunityDetails() {
 									</p>
 								</div>
 
-								<div className="flex gap-3">
-									{discordInviteUrl && (
+								<div className="flex flex-wrap gap-3">
+									{community.links.map((link) => (
 										<a
-											href={discordInviteUrl}
+											key={link.id}
+											href={link.url}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-bold text-sm btn-discord transition-all shadow-lg shadow-discord/20 group"
 										>
 											<ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform" />
-											Entrar no Discord
+											{link.label || `Abrir ${link.platform}`}
 										</a>
-									)}
+									))}
 								</div>
 							</div>
 						</motion.div>

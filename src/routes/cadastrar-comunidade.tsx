@@ -10,7 +10,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
-import CategoryArtwork from "@/components/CategoryArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
@@ -34,8 +33,7 @@ const categoryOptionSkeletonIds = [
 
 function CategoryOptionSkeleton() {
 	return (
-		<div className="glass-panel p-4 flex flex-col items-center gap-3">
-			<Skeleton className="h-12 w-12 rounded-lg" />
+		<div className="glass-panel p-4 flex min-h-20 items-center justify-center">
 			<Skeleton className="h-4 w-20" />
 		</div>
 	);
@@ -251,16 +249,11 @@ function RouteComponent() {
 												setStep(2);
 											}}
 											className={cn(
-												"glass-panel p-4 flex flex-col items-center gap-3 transition-all hover:border-brand-primary",
+												"glass-panel p-4 min-h-20 flex items-center justify-center text-center transition-all hover:border-brand-primary",
 												selectedCategory === category.id &&
 													"border-brand-primary bg-brand-primary/5",
 											)}
 										>
-											<CategoryArtwork
-												category={category}
-												variant="thumb"
-												className="w-12 h-12 rounded-lg"
-											/>
 											<span className="font-bold text-sm">{category.name}</span>
 										</button>
 									))}

@@ -4,7 +4,6 @@ import { ArrowLeft, ExternalLink, Eye, Heart } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
-import CategoryArtwork from "@/components/CategoryArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -47,7 +46,6 @@ export const Route = createFileRoute("/comunidades/$slug")({
 							`Comunidade de ${loaderData.initialCommunity.category.name} criada por ${loaderData.initialCommunity.profile.fullName}.`,
 					)
 				: "Veja os detalhes desta comunidade no Templo.",
-			image: loaderData.initialCommunity?.category.coverUrl || undefined,
 		});
 	},
 	component: CommunityDetails,
@@ -265,15 +263,6 @@ function CommunityDetails() {
 							animate={{ opacity: 1, y: 0 }}
 							className="glass-panel space-y-8"
 						>
-							<div className="relative mb-0">
-								<CategoryArtwork
-									category={community.category}
-									variant="tile"
-									className="h-40 overflow-hidden md:h-56 rounded-t-2xl"
-								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-card-dark to-transparent" />
-							</div>
-
 							<div className="p-6 space-y-6">
 								<div className="flex items-center gap-3 mb-2">
 									<Link

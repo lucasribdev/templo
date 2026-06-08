@@ -46,14 +46,11 @@ const homeCommunitySkeletonIds = Array.from(
 
 function CategoryCardSkeleton() {
 	return (
-		<div className="relative aspect-video rounded-xl overflow-hidden bg-card-dark">
-			<Skeleton className="h-full w-full rounded-none" />
-			<div className="absolute inset-0 flex flex-col justify-end p-3">
-				<Skeleton className="h-4 w-2/3" />
-				<div className="flex gap-2 pt-2">
-					<Skeleton className="h-5 w-14 rounded-md" />
-					<Skeleton className="h-5 w-16 rounded-md" />
-				</div>
+		<div className="glass-panel min-h-28 p-4">
+			<Skeleton className="h-4 w-2/3" />
+			<div className="flex gap-2 pt-3">
+				<Skeleton className="h-5 w-14 rounded-md" />
+				<Skeleton className="h-5 w-16 rounded-md" />
 			</div>
 		</div>
 	);

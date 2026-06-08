@@ -5,7 +5,6 @@ export interface Category {
 	id: string;
 	slug: string;
 	name: string;
-	coverUrl: string;
 	genres: string[];
 	releaseDate: string;
 	website: string;
@@ -16,7 +15,6 @@ export interface CategoryRow {
 	id: string;
 	slug: string;
 	name: string;
-	cover_url: string;
 	genres: string[];
 	release_date: string;
 	website: string;
@@ -48,7 +46,6 @@ export interface CommunityByIdRpcRow {
 	category_id: string;
 	category_slug: string;
 	category_name: string;
-	category_cover_url?: string;
 	category_genres?: string[];
 	category_release_date?: string;
 	category_website?: string;
@@ -85,7 +82,6 @@ export interface CommunitiesRpcRow {
 	user_liked: boolean;
 	created_at: string;
 	updated_at: string;
-	category_cover_url?: string;
 	category_genres?: string[];
 	category_release_date?: string;
 	category_website?: string;

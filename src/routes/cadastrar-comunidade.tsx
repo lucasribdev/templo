@@ -10,12 +10,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { CommunityLinksEditor } from "@/components/CommunityLinksEditor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { createCommunity, getCategories, getCategoryBySlug } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { isValidDiscordInvite, normalizeDiscordInvite } from "@/utils/discord";
+import type { CreateCommunityLinkInput } from "@/types";
 
 type CreateCommunitySearch = {
 	category?: string;
@@ -53,6 +54,9 @@ function RouteComponent() {
 		null,
 	);
 	const [tagInput, setTagInput] = useState("");
+	const [communityLinks, setCommunityLinks] = useState<
+		CreateCommunityLinkInput[]
+	>([]);
 	const [search, setSearch] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState("");
 	const tagsInputId = useId();
@@ -123,7 +127,6 @@ function RouteComponent() {
 		defaultValues: {
 			title: "",
 			description: "",
-			discord_invite: "",
 			tags: [] as string[],
 		},
 		onSubmit: async ({ value }) => {
@@ -147,18 +150,17 @@ function RouteComponent() {
 				return;
 			}
 
+			if (communityLinks.length === 0) {
+				toast.error("Adicione pelo menos um link válido.");
+				return;
+			}
+
 			const createdCommunity = await createCommunity({
 				categoryId: selectedCategory ?? undefined,
 				suggestedCategoryName: suggestedCategory?.trim() || undefined,
 				title: value.title,
 				description: value.description,
-				links: [
-					{
-						platform: "DISCORD",
-						url: normalizeDiscordInvite(value.discord_invite) ?? "",
-						position: 0,
-					},
-				],
+				links: communityLinks,
 				tags: value.tags,
 			});
 
@@ -385,45 +387,10 @@ function RouteComponent() {
 								)}
 							</communityForm.Field>
 
-							<communityForm.Field
-								name="discord_invite"
-								validators={{
-									onChange: ({ value }) => {
-										if (!value.trim()) return "Discord é obrigatório";
-										if (!isValidDiscordInvite(value)) {
-											return "Use um link válido do Discord";
-										}
-										return undefined;
-									},
-								}}
-							>
-								{(field) => (
-									<div className="space-y-2">
-										<label
-											htmlFor={field.name}
-											className="text-xs font-bold text-gray-500 uppercase"
-										>
-											Convite do Discord
-										</label>
-										<input
-											id={field.name}
-											name={field.name}
-											type="text"
-											value={field.state.value}
-											onBlur={field.handleBlur}
-											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="https://discord.gg/..."
-											className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
-										/>
-										{field.state.meta.isTouched &&
-											field.state.meta.errors.length > 0 && (
-												<p className="text-xs text-red-400">
-													{String(field.state.meta.errors[0])}
-												</p>
-											)}
-									</div>
-								)}
-							</communityForm.Field>
+							<CommunityLinksEditor
+								value={communityLinks}
+								onChange={setCommunityLinks}
+							/>
 							<communityForm.Field name="tags">
 								{(field) => {
 									const handleAddTag = (
@@ -502,10 +469,14 @@ function RouteComponent() {
 								{({ canSubmit, isSubmitting }) => (
 									<button
 										type="submit"
-										disabled={!canSubmit || isSubmitting}
+										disabled={
+											!canSubmit || isSubmitting || communityLinks.length === 0
+										}
 										className={cn(
 											"btn-primary w-full py-4 text-lg",
-											(!canSubmit || isSubmitting) &&
+											(!canSubmit ||
+												isSubmitting ||
+												communityLinks.length === 0) &&
 												"opacity-60 cursor-not-allowed",
 										)}
 									>

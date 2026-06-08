@@ -1,6 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ExternalLink, Eye, Heart } from "lucide-react";
+import {
+	ArrowLeft,
+	Eye,
+	Github,
+	Globe2,
+	Heart,
+	Instagram,
+	Link as LinkIcon,
+	MessageCircle,
+	Send,
+	Youtube,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
@@ -14,8 +25,33 @@ import {
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getCommunityPageData } from "@/lib/page-data";
 import { cn } from "@/lib/utils";
-import type { Community } from "@/types";
+import type { Community, CommunityPlatform } from "@/types";
 import { formatPostedAt } from "@/utils/date";
+
+const communityPlatformMeta: Record<
+	CommunityPlatform,
+	{
+		label: string;
+		Icon: typeof LinkIcon;
+	}
+> = {
+	DISCORD: { label: "Discord", Icon: MessageCircle },
+	TELEGRAM: { label: "Telegram", Icon: Send },
+	WHATSAPP: { label: "WhatsApp", Icon: MessageCircle },
+	GITHUB: { label: "GitHub", Icon: Github },
+	YOUTUBE: { label: "YouTube", Icon: Youtube },
+	INSTAGRAM: { label: "Instagram", Icon: Instagram },
+	SITE_OFICIAL: { label: "Site oficial", Icon: Globe2 },
+	OUTRA: { label: "Outro canal", Icon: LinkIcon },
+};
+
+function getCommunityLinkLabel(link: Community["links"][number]) {
+	if (link.platform === "OUTRA") {
+		return link.label || communityPlatformMeta.OUTRA.label;
+	}
+
+	return communityPlatformMeta[link.platform]?.label ?? link.platform;
+}
 
 export const Route = createFileRoute("/comunidades/$slug")({
 	loader: async ({ params }) => {
@@ -327,20 +363,38 @@ function CommunityDetails() {
 									</p>
 								</div>
 
-								<div className="flex flex-wrap gap-3">
-									{community.links.map((link) => (
-										<a
-											key={link.id}
-											href={link.url}
-											target="_blank"
-											rel="noopener noreferrer"
-											className="flex items-center justify-center gap-3 py-4 px-6 rounded-2xl font-bold text-sm btn-discord transition-all shadow-lg shadow-discord/20 group"
-										>
-											<ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform" />
-											{link.label || `Abrir ${link.platform}`}
-										</a>
-									))}
-								</div>
+								<section className="space-y-3 border-t border-white/10 pt-6">
+									<h2 className="text-sm font-bold uppercase text-gray-500">
+										Canais da comunidade
+									</h2>
+									{community.links.length > 0 ? (
+										<div className="flex flex-wrap gap-3">
+											{community.links.map((link) => {
+												const platform =
+													communityPlatformMeta[link.platform] ??
+													communityPlatformMeta.OUTRA;
+												const Icon = platform.Icon;
+
+												return (
+													<a
+														key={link.id}
+														href={link.url}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-gray-200 transition-colors hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary"
+													>
+														<Icon className="h-5 w-5" />
+														{getCommunityLinkLabel(link)}
+													</a>
+												);
+											})}
+										</div>
+									) : (
+										<p className="text-sm text-gray-500">
+											Nenhum canal cadastrado.
+										</p>
+									)}
+								</section>
 							</div>
 						</motion.div>
 					</div>

@@ -7,15 +7,9 @@ import { useAuthPrompt } from "@/components/AuthPromptModal";
 import { useAuth } from "@/hooks/use-auth";
 import { toggleCommunityLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { Community, DiscordInviteStats } from "@/types";
+import type { Community } from "@/types";
 
-export default function CommunityCard({
-	discordStats,
-	community,
-}: {
-	discordStats?: DiscordInviteStats;
-	community: Community;
-}) {
+export default function CommunityCard({ community }: { community: Community }) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
@@ -131,26 +125,6 @@ export default function CommunityCard({
 			</div>
 
 			<div className="flex items-center gap-3">
-				<div
-					className="flex min-w-[74px] items-center gap-1 text-xs text-gray-500"
-					title={
-						discordStats?.approximatePresenceCount !== null &&
-						discordStats?.approximatePresenceCount !== undefined
-							? `${discordStats.approximatePresenceCount} online agora no Discord`
-							: "Carregando jogadores online no Discord"
-					}
-				>
-					<span
-						className={cn(
-							"size-2 rounded-full",
-							discordStats?.approximatePresenceCount === null ||
-								discordStats?.approximatePresenceCount === undefined
-								? "bg-gray-600"
-								: "bg-brand-primary",
-						)}
-					/>
-					{discordStats?.approximatePresenceCount ?? "--"} online
-				</div>
 				<div
 					className="flex items-center gap-1 text-xs text-gray-500"
 					title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}

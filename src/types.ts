@@ -41,14 +41,6 @@ export interface Community {
 	updatedAt: string;
 }
 
-export interface DiscordInviteStats {
-	inviteCode: string;
-	approximatePresenceCount: number | null;
-	approximateMemberCount: number | null;
-	fetchedAt: string | null;
-	invalidAt: string | null;
-}
-
 export interface CommunityByIdRpcRow {
 	id: string;
 	slug: string;

@@ -18,7 +18,6 @@ import { Route as CategoriasIndexRouteImport } from './routes/categorias.index'
 import { Route as PerfilProfileFullNameRouteImport } from './routes/perfil.$profileFullName'
 import { Route as ComunidadesSlugRouteImport } from './routes/comunidades.$slug'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias.$slug'
-import { Route as ApiDiscordInviteStatsRouteImport } from './routes/api/discord-invite-stats'
 import { Route as ApiCommunitiesRouteImport } from './routes/api/communities'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
 import { Route as ApiProfileProfileFullNameRouteImport } from './routes/api/profile.$profileFullName'
@@ -73,11 +72,6 @@ const CategoriasSlugRoute = CategoriasSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => CategoriasRoute,
 } as any)
-const ApiDiscordInviteStatsRoute = ApiDiscordInviteStatsRouteImport.update({
-  id: '/api/discord-invite-stats',
-  path: '/api/discord-invite-stats',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiCommunitiesRoute = ApiCommunitiesRouteImport.update({
   id: '/api/communities',
   path: '/api/communities',
@@ -129,7 +123,6 @@ export interface FileRoutesByFullPath {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
-  '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
   '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
@@ -148,7 +141,6 @@ export interface FileRoutesByTo {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
-  '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
   '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
@@ -169,7 +161,6 @@ export interface FileRoutesById {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
-  '/api/discord-invite-stats': typeof ApiDiscordInviteStatsRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
   '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
@@ -191,7 +182,6 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/api/categories'
     | '/api/communities'
-    | '/api/discord-invite-stats'
     | '/categorias/$slug'
     | '/comunidades/$slug'
     | '/perfil/$profileFullName'
@@ -210,7 +200,6 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/api/categories'
     | '/api/communities'
-    | '/api/discord-invite-stats'
     | '/categorias/$slug'
     | '/comunidades/$slug'
     | '/perfil/$profileFullName'
@@ -230,7 +219,6 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/api/categories'
     | '/api/communities'
-    | '/api/discord-invite-stats'
     | '/categorias/$slug'
     | '/comunidades/$slug'
     | '/perfil/$profileFullName'
@@ -251,7 +239,6 @@ export interface RootRouteChildren {
   TermosDeUsoRoute: typeof TermosDeUsoRoute
   ApiCategoriesRoute: typeof ApiCategoriesRouteWithChildren
   ApiCommunitiesRoute: typeof ApiCommunitiesRouteWithChildren
-  ApiDiscordInviteStatsRoute: typeof ApiDiscordInviteStatsRoute
   ComunidadesSlugRoute: typeof ComunidadesSlugRoute
   PerfilProfileFullNameRoute: typeof PerfilProfileFullNameRoute
   ApiProfileProfileFullNameRoute: typeof ApiProfileProfileFullNameRoute
@@ -322,13 +309,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/categorias/$slug'
       preLoaderRoute: typeof CategoriasSlugRouteImport
       parentRoute: typeof CategoriasRoute
-    }
-    '/api/discord-invite-stats': {
-      id: '/api/discord-invite-stats'
-      path: '/api/discord-invite-stats'
-      fullPath: '/api/discord-invite-stats'
-      preLoaderRoute: typeof ApiDiscordInviteStatsRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/api/communities': {
       id: '/api/communities'
@@ -448,7 +428,6 @@ const rootRouteChildren: RootRouteChildren = {
   TermosDeUsoRoute: TermosDeUsoRoute,
   ApiCategoriesRoute: ApiCategoriesRouteWithChildren,
   ApiCommunitiesRoute: ApiCommunitiesRouteWithChildren,
-  ApiDiscordInviteStatsRoute: ApiDiscordInviteStatsRoute,
   ComunidadesSlugRoute: ComunidadesSlugRoute,
   PerfilProfileFullNameRoute: PerfilProfileFullNameRoute,
   ApiProfileProfileFullNameRoute: ApiProfileProfileFullNameRoute,

@@ -6,11 +6,9 @@ import CategoryArtwork from "@/components/CategoryArtwork";
 import CommunityCard from "@/components/CommunityCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
-import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { getCategoryBySlug, getCommunitiesByCategoryId } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getCategoryPageData } from "@/lib/page-data";
-import { extractDiscordInviteCode } from "@/utils/discord";
 
 export const Route = createFileRoute("/categorias/$slug")({
 	loader: async ({ params }) => {
@@ -146,7 +144,6 @@ function CategoryDetails() {
 		enabled: Boolean(category?.id),
 	});
 	const communities = category ? (communitiesData ?? []) : [];
-	const { data: discordStatsByCode } = useDiscordInviteStats(communities ?? []);
 
 	if (isCategoryLoading) {
 		return <CategoryDetailsSkeleton />;
@@ -242,15 +239,7 @@ function CategoryDetails() {
 								<CommunityCardSkeleton key={id} />
 							))
 						: communities?.map((community) => (
-								<CommunityCard
-									key={community.id}
-									community={community}
-									discordStats={
-										discordStatsByCode?.[
-											extractDiscordInviteCode(community.discordInvite) ?? ""
-										]
-									}
-								/>
+								<CommunityCard key={community.id} community={community} />
 							))}
 					{!isCommunitiesLoading && communities?.length === 0 && (
 						<div className="col-span-full py-20 text-center glass-panel">

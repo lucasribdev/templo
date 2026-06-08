@@ -61,54 +61,6 @@ supabase db pull
 supabase migration new <name>
 ```
 
-# Discord Invite Stats Cache
-
-The app reads Discord invite online/member counts through:
-
-```txt
-GET /api/discord-invite-stats?codes=invite-a,invite-b
-```
-
-The API caches the latest Discord response in the `discord_invite_stats` table for 5 minutes. This avoids calling Discord again on every page render and reduces the chance of hitting Discord rate limits.
-
-Required migrations:
-
-- `supabase/migrations/20260514172000_create_discord_invite_stats.sql`
-  - Creates the `discord_invite_stats` cache table and the `upsert_discord_invite_stats` RPC.
-- `supabase/migrations/20260514203500_grant_discord_invite_stats_select.sql`
-  - Grants `select` on `discord_invite_stats` to `anon` and `authenticated`.
-
-Apply them with:
-
-```bash
-supabase db push
-```
-
-Cache response headers:
-
-- `X-Discord-Stats-Cache: hit`
-  - All requested invite codes were served from the local Supabase cache.
-- `X-Discord-Stats-Cache: miss`
-  - No fresh cache was available, so Discord was called and the cache was refreshed.
-- `X-Discord-Stats-Cache: partial`
-  - Some invite codes came from cache and some were refreshed from Discord.
-- `X-Discord-Stats-Cache: unavailable`
-  - The cache table could not be read. The API falls back to live Discord calls.
-
-If the response includes this header:
-
-```txt
-X-Discord-Stats-Cache-Error: 42501
-```
-
-Postgres denied permission to read the cache table. Run the migrations above, or apply the grant manually in Supabase SQL Editor:
-
-```sql
-grant select on public.discord_invite_stats to anon, authenticated;
-```
-
-After the grant is applied, the first request should usually return `miss` and refresh the rows. A second request with the same invite codes within 5 minutes should return `hit`.
-
 # Building For Production
 
 To build this application for production:

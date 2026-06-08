@@ -2,7 +2,6 @@ import type {
 	Category,
 	Community,
 	CreateCommunityInput,
-	DiscordInviteStats,
 	GetCategoriesParams,
 	GetCommunitiesParams,
 	Profile,
@@ -257,25 +256,6 @@ export async function toggleCommunityLike(
 		requireAuth: true,
 		signal,
 	});
-}
-
-export async function getDiscordInviteStats(
-	inviteCodes: string[],
-	signal?: AbortSignal,
-): Promise<Record<string, DiscordInviteStats>> {
-	if (inviteCodes.length === 0) {
-		return {};
-	}
-
-	return apiRequest<Record<string, DiscordInviteStats>>(
-		"/api/discord-invite-stats",
-		{
-			signal,
-			query: {
-				codes: Array.from(new Set(inviteCodes)).join(","),
-			},
-		},
-	);
 }
 
 export async function createCommunity(

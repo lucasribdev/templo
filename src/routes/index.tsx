@@ -14,12 +14,10 @@ import { useDeferredValue, useState } from "react";
 import CategoryCard from "@/components/CategoryCard";
 import CommunityCard from "@/components/CommunityCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { getCategories, getCommunities } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
 import type { Category, CommunitySortBy } from "@/types";
-import { extractDiscordInviteCode } from "@/utils/discord";
 
 export const Route = createFileRoute("/")({
 	head: () =>
@@ -131,7 +129,6 @@ function App() {
 	});
 
 	const communities = data?.pages.flat() ?? [];
-	const { data: discordStatsByCode } = useDiscordInviteStats(communities);
 	const setLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
 		hasNextPage,
 		isFetchingNextPage,
@@ -248,15 +245,7 @@ function App() {
 								<CommunityCardSkeleton key={id} />
 							))
 						: communities.map((community) => (
-								<CommunityCard
-									key={community.id}
-									community={community}
-									discordStats={
-										discordStatsByCode?.[
-											extractDiscordInviteCode(community.discordInvite) ?? ""
-										]
-									}
-								/>
+								<CommunityCard key={community.id} community={community} />
 							))}
 					{isFetchingNextPage && (
 						<div className="col-span-full text-center text-sm text-gray-400 py-4">

@@ -7,7 +7,6 @@ import { useAuthPrompt } from "@/components/AuthPromptModal";
 import CategoryArtwork from "@/components/CategoryArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
-import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
 import {
 	getCommunityBySlug,
 	incrementCommunityViews,
@@ -204,9 +203,6 @@ function CommunityDetails() {
 			]);
 		},
 	});
-	const { data: discordStatsByCode } = useDiscordInviteStats(
-		community ? [community] : [],
-	);
 
 	if (isLoading) {
 		return <CommunityDetailsSkeleton />;
@@ -219,9 +215,6 @@ function CommunityDetails() {
 	const discordInviteUrl = normalizeDiscordInvite(
 		community.discordInvite ?? "",
 	);
-	const discordStats = discordInviteUrl
-		? Object.values(discordStatsByCode ?? {})[0]
-		: undefined;
 	const displayedViewsCount = viewsCount ?? community.views;
 
 	const handleLike = (e: React.MouseEvent) => {
@@ -310,19 +303,6 @@ function CommunityDetails() {
 												: "visualizações"}
 										</span>
 									</div>
-									{discordStats?.approximatePresenceCount !== null &&
-										discordStats?.approximatePresenceCount !== undefined && (
-											<div
-												className="flex items-center gap-2 font-bold text-xs text-gray-400"
-												title={`${discordStats.approximatePresenceCount} online agora no Discord`}
-											>
-												<span className="size-2 rounded-full bg-brand-primary" />
-												<span>
-													{discordStats.approximatePresenceCount} online
-												</span>
-											</div>
-										)}
-
 									<button
 										type="button"
 										onClick={handleLike}

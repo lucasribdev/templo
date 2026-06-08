@@ -15,6 +15,7 @@ create table if not exists public.community_links (
       'WHATSAPP',
       'GITHUB',
       'YOUTUBE',
+      'INSTAGRAM',
       'SITE_OFICIAL',
       'OUTRA'
     )

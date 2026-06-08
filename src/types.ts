@@ -6,6 +6,7 @@ export type CommunityPlatform =
 	| "WHATSAPP"
 	| "GITHUB"
 	| "YOUTUBE"
+	| "INSTAGRAM"
 	| "SITE_OFICIAL"
 	| "OUTRA";
 

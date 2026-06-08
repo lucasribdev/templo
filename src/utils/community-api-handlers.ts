@@ -15,8 +15,24 @@ const communityPlatforms = new Set<CommunityPlatform>([
 	"WHATSAPP",
 	"GITHUB",
 	"YOUTUBE",
+	"INSTAGRAM",
 	"SITE_OFICIAL",
 	"OUTRA",
+]);
+
+const communityPlatformAliases = new Map<string, CommunityPlatform>([
+	["DISCORD", "DISCORD"],
+	["TELEGRAM", "TELEGRAM"],
+	["WHATSAPP", "WHATSAPP"],
+	["GITHUB", "GITHUB"],
+	["YOUTUBE", "YOUTUBE"],
+	["INSTAGRAM", "INSTAGRAM"],
+	["SITE", "SITE_OFICIAL"],
+	["SITE OFICIAL", "SITE_OFICIAL"],
+	["SITE_OFICIAL", "SITE_OFICIAL"],
+	["OFFICIAL_SITE", "SITE_OFICIAL"],
+	["OUTRA", "OUTRA"],
+	["OTHER", "OUTRA"],
 ]);
 
 function normalizeVisitorId(value: string | null) {
@@ -47,24 +63,53 @@ function normalizeCommunityUrl(value: string) {
 	}
 }
 
-function normalizeCommunityLinks(value: unknown) {
-	if (!Array.isArray(value)) {
-		return [];
+function normalizeCommunityPlatform(value: unknown) {
+	if (typeof value !== "string") {
+		return null;
 	}
 
-	return value
+	const normalizedValue = value
+		.trim()
+		.replace(/[\s-]+/g, "_")
+		.toUpperCase();
+	const platform =
+		communityPlatformAliases.get(normalizedValue) ??
+		communityPlatformAliases.get(normalizedValue.replace(/_/g, " "));
+
+	return platform && communityPlatforms.has(platform) ? platform : null;
+}
+
+function normalizeCommunityLinks(value: unknown) {
+	if (!Array.isArray(value)) {
+		return {
+			links: [],
+			errors: ["links must be an array"],
+		};
+	}
+
+	const errors: string[] = [];
+	const links = value
 		.map((link, index): CreateCommunityLinkInput | null => {
-			if (!link || typeof link !== "object") return null;
+			if (!link || typeof link !== "object") {
+				errors.push(`Link ${index + 1} is invalid`);
+				return null;
+			}
 
 			const rawLink = link as Partial<CreateCommunityLinkInput>;
-			const platform = rawLink.platform;
-			if (!platform || !communityPlatforms.has(platform)) return null;
+			const platform = normalizeCommunityPlatform(rawLink.platform);
+			if (!platform) {
+				errors.push(`Link ${index + 1} has an unsupported platform`);
+				return null;
+			}
 
 			const normalizedUrl =
 				platform === "DISCORD"
 					? normalizeDiscordInvite(rawLink.url ?? "")
 					: normalizeCommunityUrl(rawLink.url ?? "");
-			if (!normalizedUrl) return null;
+			if (!normalizedUrl) {
+				errors.push(`Link ${index + 1} has an invalid URL`);
+				return null;
+			}
 
 			return {
 				platform,
@@ -74,6 +119,8 @@ function normalizeCommunityLinks(value: unknown) {
 			};
 		})
 		.filter((link): link is CreateCommunityLinkInput => Boolean(link));
+
+	return { links, errors };
 }
 
 export async function getCommunitiesHandler({ request }: { request: Request }) {
@@ -126,10 +173,21 @@ export async function createCommunityHandler({
 	}
 
 	const body = await request.json();
-	const links = normalizeCommunityLinks(body.links);
+	const validatedLinks = normalizeCommunityLinks(body.links);
+	const { links } = validatedLinks;
 	const legacyDiscordInvite =
 		links.find((link) => link.platform === "DISCORD")?.url ?? null;
 	const suggestedCategoryName = String(body.suggestedCategoryName ?? "").trim();
+
+	if (validatedLinks.errors.length > 0) {
+		return Response.json(
+			{
+				error: "Community links must use a supported platform and valid URL",
+				details: validatedLinks.errors,
+			},
+			{ status: 400 },
+		);
+	}
 
 	if (links.length === 0) {
 		return Response.json(
@@ -201,6 +259,7 @@ export async function createCommunityHandler({
 		);
 
 	if (linksError) {
+		await supabaseUser.from("communities").delete().eq("id", data.id);
 		return Response.json({ error: linksError.message }, { status: 500 });
 	}
 

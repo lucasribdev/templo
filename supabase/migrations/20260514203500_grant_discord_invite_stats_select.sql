@@ -1,0 +1,2 @@
+-- Historical migration version retained because it was already applied remotely.
+-- Discord invite stats were removed in 20260608121000_drop_discord_invite_stats.sql.

@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import CategoryArtwork from "@/components/CategoryArtwork";
-import UserAvatar from "@/components/UserAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useDiscordInviteStats } from "@/hooks/use-discord-invite-stats";
@@ -20,7 +19,6 @@ import { cn } from "@/lib/utils";
 import type { Community } from "@/types";
 import { formatPostedAt } from "@/utils/date";
 import { normalizeDiscordInvite } from "@/utils/discord";
-import { memberSince } from "@/utils/profile";
 
 export const Route = createFileRoute("/comunidades/$slug")({
 	loader: async ({ params }) => {
@@ -99,14 +97,6 @@ function CommunityDetailsSkeleton() {
 								<div className="flex flex-wrap gap-3">
 									<Skeleton className="h-14 w-48 rounded-2xl" />
 									<Skeleton className="h-14 w-40 rounded-2xl" />
-								</div>
-
-								<div className="flex items-center gap-4 pt-6 border-t border-white/5">
-									<Skeleton className="h-14 w-14 rounded-full" />
-									<div className="space-y-2">
-										<Skeleton className="h-5 w-32" />
-										<Skeleton className="h-3 w-24" />
-									</div>
 								</div>
 							</div>
 						</div>
@@ -385,28 +375,6 @@ function CommunityDetails() {
 										</a>
 									)}
 								</div>
-
-								<Link
-									to="/perfil/$profileFullName"
-									params={{ profileFullName: community.profile.fullName }}
-									className="flex items-center gap-4 pt-6 border-t border-white/5 transition-colors hover:text-brand-primary"
-								>
-									<div className="relative">
-										<UserAvatar
-											avatarUrl={community.profile.avatarUrl}
-											className="w-14 h-14 rounded-full object-cover"
-											name={community.profile.fullName}
-										/>
-									</div>
-									<div>
-										<p className="font-semibold text-md tracking-tight">
-											{community.profile.fullName}
-										</p>
-										<p className="text-xs text-gray-400">
-											Membro desde {memberSince(community.profile)}
-										</p>
-									</div>
-								</Link>
 							</div>
 						</motion.div>
 					</div>

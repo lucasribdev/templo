@@ -404,7 +404,7 @@ function RouteComponent() {
 											htmlFor={field.name}
 											className="text-xs font-bold text-gray-500 uppercase"
 										>
-											Link do Discord
+											Convite do Discord
 										</label>
 										<input
 											id={field.name}

@@ -1,15 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Clock, Eye, Heart, Tags } from "lucide-react";
+import { Eye, Heart, Tags } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
-import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/hooks/use-auth";
 import { toggleCommunityLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { Community, DiscordInviteStats } from "@/types";
-import { formatPostedAt } from "@/utils/date";
 
 export default function CommunityCard({
 	discordStats,
@@ -81,14 +79,6 @@ export default function CommunityCard({
 		likeMutation.mutate();
 	};
 
-	const handleProfileClick = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		navigate({
-			to: "/perfil/$profileFullName",
-			params: { profileFullName: community.profile.fullName },
-		});
-	};
-
 	return (
 		<motion.div
 			whileHover={{ y: -4 }}
@@ -98,9 +88,14 @@ export default function CommunityCard({
 			}
 		>
 			<div className="flex justify-between items-start">
-				<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-					<Tags className="w-3 h-3" /> {community.category.name}
-				</p>
+				<div>
+					<h3 className="text-lg font-bold group-hover:text-brand-primary transition-colors line-clamp-1">
+						{community.title}
+					</h3>
+					<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+						<Tags className="w-3 h-3" /> {community.category.name}
+					</p>
+				</div>
 				<button
 					type="button"
 					title={`${likeState.likesCount} ${likeState.likesCount === 1 ? "curtida" : "curtidas"}`}
@@ -120,13 +115,7 @@ export default function CommunityCard({
 				</button>
 			</div>
 
-			<div>
-				<h3 className="text-lg font-bold group-hover:text-brand-primary transition-colors line-clamp-1">
-					{community.title}
-				</h3>
-			</div>
-
-			<p className="text-sm text-gray-400 line-clamp-2 min-h-[40px]">
+			<p className="text-sm text-gray-400 line-clamp-2">
 				{community.description}
 			</p>
 
@@ -141,53 +130,32 @@ export default function CommunityCard({
 				))}
 			</div>
 
-			<div className="pt-4 border-t border-border-dark flex justify-between items-center">
-				<div className="flex items-center gap-3">
-					<button
-						type="button"
-						onClick={handleProfileClick}
-						className="flex items-center gap-1.5 rounded-sm transition-colors hover:text-brand-primary"
-					>
-						<UserAvatar
-							avatarUrl={community.profile.avatarUrl}
-							className="w-6 h-6 shrink-0 rounded-full object-cover border border-white/10"
-							name={community.profile.fullName}
-						/>
-						<span className="text-xs text-gray-500">
-							{community.profile?.fullName}
-						</span>
-					</button>
-					<div className="flex items-center gap-1 text-xs text-gray-500">
-						<Clock className="w-3 h-3" /> {formatPostedAt(community.createdAt)}
-					</div>
+			<div className="flex items-center gap-3">
+				<div
+					className="flex min-w-[74px] items-center gap-1 text-xs text-gray-500"
+					title={
+						discordStats?.approximatePresenceCount !== null &&
+						discordStats?.approximatePresenceCount !== undefined
+							? `${discordStats.approximatePresenceCount} online agora no Discord`
+							: "Carregando jogadores online no Discord"
+					}
+				>
+					<span
+						className={cn(
+							"size-2 rounded-full",
+							discordStats?.approximatePresenceCount === null ||
+								discordStats?.approximatePresenceCount === undefined
+								? "bg-gray-600"
+								: "bg-brand-primary",
+						)}
+					/>
+					{discordStats?.approximatePresenceCount ?? "--"} online
 				</div>
-				<div className="flex items-center gap-3">
-					<div
-						className="flex min-w-[74px] items-center gap-1 text-xs text-gray-500"
-						title={
-							discordStats?.approximatePresenceCount !== null &&
-							discordStats?.approximatePresenceCount !== undefined
-								? `${discordStats.approximatePresenceCount} online agora no Discord`
-								: "Carregando jogadores online no Discord"
-						}
-					>
-						<span
-							className={cn(
-								"size-2 rounded-full",
-								discordStats?.approximatePresenceCount === null ||
-									discordStats?.approximatePresenceCount === undefined
-									? "bg-gray-600"
-									: "bg-brand-primary",
-							)}
-						/>
-						{discordStats?.approximatePresenceCount ?? "--"} online
-					</div>
-					<div
-						className="flex items-center gap-1 text-xs text-gray-500"
-						title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}
-					>
-						<Eye className="w-3 h-3" /> {community.views}
-					</div>
+				<div
+					className="flex items-center gap-1 text-xs text-gray-500"
+					title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}
+				>
+					<Eye className="w-3 h-3" /> {community.views}
 				</div>
 			</div>
 		</motion.div>

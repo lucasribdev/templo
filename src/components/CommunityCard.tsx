@@ -4,10 +4,48 @@ import { Eye, Heart, Tags } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { toggleCommunityLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { Community } from "@/types";
+
+export function CommunityCardSkeleton() {
+	return (
+		<div className="glass-panel p-5 flex flex-col gap-4">
+			<div className="flex justify-between items-start gap-4">
+				<div className="min-w-0 flex-1 space-y-2">
+					<Skeleton className="h-6 w-3/4 max-w-56" />
+					<div className="flex items-center gap-1.5">
+						<Skeleton className="h-3 w-3 rounded-sm" />
+						<Skeleton className="h-3 w-24" />
+					</div>
+				</div>
+				<div className="flex items-center gap-1">
+					<Skeleton className="h-3 w-5" />
+					<Skeleton className="h-5 w-5 rounded-full" />
+				</div>
+			</div>
+
+			<div className="space-y-2">
+				<Skeleton className="h-4 w-full" />
+				<Skeleton className="h-4 w-4/5" />
+			</div>
+
+			<div className="mt-auto flex items-center justify-between gap-3">
+				<div className="flex flex-wrap gap-2">
+					<Skeleton className="h-5 w-14 rounded-md" />
+					<Skeleton className="h-5 w-16 rounded-md" />
+					<Skeleton className="h-5 w-12 rounded-md" />
+				</div>
+				<div className="flex items-center gap-1">
+					<Skeleton className="h-3 w-3 rounded-full" />
+					<Skeleton className="h-3 w-7" />
+				</div>
+			</div>
+		</div>
+	);
+}
 
 export default function CommunityCard({ community }: { community: Community }) {
 	const navigate = useNavigate();
@@ -113,18 +151,17 @@ export default function CommunityCard({ community }: { community: Community }) {
 				{community.description}
 			</p>
 
-			<div className="flex flex-wrap gap-2 mt-auto">
-				{community?.tags?.slice(0, 3).map((tag) => (
-					<span
-						key={tag}
-						className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-gray-400"
-					>
-						#{tag}
-					</span>
-				))}
-			</div>
-
-			<div className="flex items-center gap-3">
+			<div className="flex items-center justify-between gap-3">
+				<div className="flex flex-wrap gap-2 mt-auto">
+					{community?.tags?.slice(0, 3).map((tag) => (
+						<span
+							key={tag}
+							className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-gray-400"
+						>
+							#{tag}
+						</span>
+					))}
+				</div>
 				<div
 					className="flex items-center gap-1 text-xs text-gray-500"
 					title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}

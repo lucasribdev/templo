@@ -3,7 +3,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, Globe, PlusCircle } from "lucide-react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import CategoryArtwork from "@/components/CategoryArtwork";
-import CommunityCard from "@/components/CommunityCard";
+import CommunityCard, {
+	CommunityCardSkeleton,
+} from "@/components/CommunityCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { getCategoryBySlug, getCommunitiesByCategoryId } from "@/lib/api";
@@ -50,41 +52,6 @@ const categoryDetailsCommunitySkeletonIds = [
 	"category-details-community-5",
 	"category-details-community-6",
 ];
-
-function CommunityCardSkeleton() {
-	return (
-		<div className="glass-panel p-5 flex flex-col gap-4">
-			<div className="flex justify-between items-start">
-				<Skeleton className="h-5 w-28 rounded-full" />
-				<Skeleton className="h-5 w-10" />
-			</div>
-			<div className="space-y-2">
-				<Skeleton className="h-6 w-3/4" />
-				<Skeleton className="h-4 w-1/2" />
-			</div>
-			<div className="space-y-2">
-				<Skeleton className="h-4 w-full" />
-				<Skeleton className="h-4 w-5/6" />
-			</div>
-			<div className="flex gap-2">
-				<Skeleton className="h-5 w-14 rounded-full" />
-				<Skeleton className="h-5 w-16 rounded-full" />
-				<Skeleton className="h-5 w-12 rounded-full" />
-			</div>
-			<div className="pt-4 border-t border-border-dark flex justify-between items-center gap-3">
-				<div className="flex items-center gap-3">
-					<div className="flex items-center gap-1.5">
-						<Skeleton className="h-4 w-4 rounded-full" />
-						<Skeleton className="h-3 w-24" />
-					</div>
-					<Skeleton className="h-3 w-16" />
-					<Skeleton className="h-3 w-10" />
-				</div>
-				<Skeleton className="h-4 w-20" />
-			</div>
-		</div>
-	);
-}
 
 function CategoryDetailsSkeleton() {
 	return (

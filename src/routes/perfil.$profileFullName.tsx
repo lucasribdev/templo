@@ -333,7 +333,7 @@ function Profile() {
 
 				<section className="space-y-6">
 					<h2 className="text-2xl font-bold flex items-center gap-2">
-						<Heart className="text-red-500" /> Favoritos
+						<Heart className="text-red-500" /> Curtidas
 					</h2>
 					<div className="space-y-4">
 						{isLikedCommunitiesLoading
@@ -345,12 +345,12 @@ function Profile() {
 								))}
 						{isFetchingNextLikedCommunitiesPage && (
 							<p className="text-sm text-gray-400 text-center py-4">
-								Carregando mais favoritos...
+								Carregando mais curtidas...
 							</p>
 						)}
 						{!isLikedCommunitiesLoading && likedCommunities.length === 0 && (
 							<p className="text-gray-500 text-center py-10 glass-panel">
-								Você ainda não favoritou nenhuma comunidade.
+								Você ainda não curtiu nenhuma comunidade.
 							</p>
 						)}
 						<div ref={setLikedCommunitiesLoadMoreNode} />

@@ -15,7 +15,6 @@ import CategoryCard from "@/components/CategoryCard";
 import CommunityCard, {
 	CommunityCardSkeleton,
 } from "@/components/CommunityCard";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useInfiniteScrollTrigger } from "@/hooks/use-infinite-scroll-trigger";
 import { getCategories, getCommunities } from "@/lib/api";
 import { buildPageHead } from "@/lib/metadata";
@@ -26,7 +25,9 @@ export const Route = createFileRoute("/")({
 	head: () =>
 		buildPageHead({
 			path: "/",
-			title: "Templo - Encontre outros jogadores facilmente",
+			title: "Templo - Toda comunidade merece um endereço próprio",
+			description:
+				"Crie e descubra páginas oficiais de comunidades online. Reúna canais, identidade e presença em um endereço fácil de compartilhar.",
 		}),
 	component: App,
 });
@@ -100,12 +101,14 @@ function App() {
 					animate={{ opacity: 1, y: 0 }}
 					className="text-5xl md:text-6xl font-bold tracking-tighter"
 				>
-					Onde os <span className="text-brand-primary">jogadores</span> se
-					encontram.
+					Toda comunidade merece um{" "}
+					<span className="text-brand-primary">endereço próprio</span> na
+					internet.
 				</motion.h1>
 				<p className="text-gray-400 text-lg max-w-2xl mx-auto">
-					Descubra comunidades, clãs e guildas para jogar. Conecte-se com
-					jogadores que compartilham sua paixão.
+					O Templo ajuda comunidades online a terem uma página oficial, reunirem
+					seus canais e serem descobertas por quem procura um lugar para
+					participar.
 				</p>
 			</section>
 
@@ -141,6 +144,10 @@ function App() {
 						<h2 className="text-lg font-bold flex items-center gap-3">
 							<Sparkles className="text-brand-primary w-5 h-5" /> Comunidades
 						</h2>
+						<p className="text-sm text-gray-500">
+							Descubra páginas oficiais e encontre os canais certos para cada
+							comunidade.
+						</p>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -148,7 +155,7 @@ function App() {
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
 							<input
 								type="text"
-								placeholder="Buscar por título..."
+								placeholder="Buscar comunidades..."
 								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}

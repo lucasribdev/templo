@@ -13,7 +13,7 @@ export const Route = createFileRoute("/categorias/")({
 			path: "/categories",
 			title: "Explorar Categorias | Templo",
 			description:
-				"Explore categorias e encontre comunidades, servidores e grupos ativos para jogar junto.",
+				"Explore categorias e descubra páginas oficiais de comunidades online no Templo.",
 		}),
 	component: Categories,
 });
@@ -101,7 +101,7 @@ function Categories() {
 						Explorar Categorias
 					</h1>
 					<p className="text-gray-500">
-						Encontre comunidades para suas categorias favoritas
+						Descubra páginas oficiais para suas categorias favoritas
 					</p>
 				</div>
 

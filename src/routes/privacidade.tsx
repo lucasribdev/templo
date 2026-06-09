@@ -32,10 +32,12 @@ function PrivacyPolicy() {
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">1. Visão geral</h2>
 						<p>
-							O Templo é uma plataforma para jogadores encontrarem servidores,
-							clãs, guildas, comunidades e outros jogadores. Esta política
-							explica como tratamos dados pessoais quando você acessa, cria uma
-							conta ou publica comunidades na plataforma.
+							O Templo é uma plataforma de identidade e descoberta para
+							comunidades online. Ele permite criar uma página oficial para a
+							comunidade, reunir canais externos e facilitar que novas pessoas a
+							encontrem. Esta política explica como tratamos dados pessoais
+							quando você acessa, cria uma conta ou publica comunidades na
+							plataforma.
 						</p>
 					</section>
 
@@ -50,8 +52,8 @@ function PrivacyPolicy() {
 								identificador, nome de usuário, nome exibido e avatar;
 							</li>
 							<li>
-								informações publicadas por você, como título, descrição, jogo,
-								tags e convite do Discord;
+								informações publicadas por você, como nome, descrição,
+								categoria, tags, canais e links externos da comunidade;
 							</li>
 							<li>
 								dados de uso da plataforma, como visualizações, curtidas,
@@ -74,10 +76,11 @@ function PrivacyPolicy() {
 						<p>Usamos os dados para:</p>
 						<ul className="list-disc pl-6 space-y-2">
 							<li>
-								permitir login, criação de perfil e publicação de comunidades;
+								permitir login, criação de perfil e publicação de páginas de
+								comunidades;
 							</li>
 							<li>
-								exibir, organizar e recomendar conteúdos dentro da plataforma;
+								exibir, organizar e recomendar comunidades dentro da plataforma;
 							</li>
 							<li>
 								prevenir abuso, spam, fraude e atividades que violem os termos;
@@ -101,10 +104,11 @@ function PrivacyPolicy() {
 							4. Conteúdo público
 						</h2>
 						<p>
-							Comunidades, perfis públicos, links de convite, tags, descrições e
-							outros conteúdos publicados podem ficar visíveis para outros
-							usuários e visitantes. Evite publicar dados pessoais sensíveis ou
-							informações que você não deseja tornar públicas.
+							Páginas de comunidades, perfis públicos, canais, links externos,
+							tags, descrições e outros conteúdos publicados podem ficar
+							visíveis para outros usuários e visitantes. Evite publicar dados
+							pessoais sensíveis ou informações que você não deseja tornar
+							públicas.
 						</p>
 					</section>
 
@@ -176,12 +180,13 @@ function PrivacyPolicy() {
 							9. Serviços de terceiros
 						</h2>
 						<p>
-							O Templo pode conter links para Discord, servidores de jogos,
-							Google Analytics e outros serviços externos. Esses serviços têm
-							suas próprias políticas, e não controlamos como terceiros tratam
-							dados fora da plataforma. O Google Analytics, quando autorizado,
-							pode processar identificadores, dados técnicos e eventos de
-							navegação conforme as configurações do serviço.
+							O Templo pode conter links para canais externos da comunidade,
+							como Discord, WhatsApp, Telegram, sites oficiais, redes sociais,
+							Google Analytics e outros serviços. Esses serviços têm suas
+							próprias políticas, e não controlamos como terceiros tratam dados
+							fora da plataforma. O Google Analytics, quando autorizado, pode
+							processar identificadores, dados técnicos e eventos de navegação
+							conforme as configurações do serviço.
 						</p>
 					</section>
 

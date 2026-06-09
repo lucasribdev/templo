@@ -43,7 +43,7 @@ export const Route = createFileRoute("/perfil/$profileFullName")({
 				: "Perfil | Templo",
 			description: loaderData.initialProfile
 				? truncateDescription(
-						`${loaderData.initialProfile.fullName} está no Templo. Veja comunidades publicadas, curtidas e jogos em comum.`,
+						`${loaderData.initialProfile.fullName} está no Templo. Veja páginas de comunidades publicadas e curtidas.`,
 					)
 				: "Veja este perfil no Templo.",
 			image: loaderData.initialProfile?.avatarUrl || undefined,

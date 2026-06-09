@@ -1,7 +1,7 @@
 const APP_NAME = "Templo";
-const DEFAULT_TITLE = "Templo - Encontre outros jogadores facilmente";
+const DEFAULT_TITLE = "Templo - Toda comunidade merece um endereço próprio";
 const DEFAULT_DESCRIPTION =
-	"Descubra servidores, clãs, guildas e comunidades para jogar. Conecte-se com jogadores que compartilham sua paixão.";
+	"Toda comunidade merece um endereço próprio na internet. Crie a página oficial da sua comunidade, reúna seus canais e seja encontrado.";
 const DEFAULT_IMAGE_PATH = "/logo192.png";
 const DEFAULT_IMAGE_SIZE = 192;
 

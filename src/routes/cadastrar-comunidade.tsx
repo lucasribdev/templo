@@ -138,8 +138,7 @@ function RouteComponent() {
 			if (!session?.user?.id) {
 				openAuthPrompt({
 					title: "Cadastrar comunidade",
-					description:
-						"Você precisa estar autenticado para cadastrar uma comunidade.",
+					description: "Entre para criar a página oficial da sua comunidade.",
 					redirectTo: "/cadastrar-comunidade",
 				});
 				return;
@@ -176,8 +175,7 @@ function RouteComponent() {
 
 		openAuthPrompt({
 			title: "Cadastrar comunidade",
-			description:
-				"Você precisa estar autenticado para cadastrar uma comunidade.",
+			description: "Entre para criar a página oficial da sua comunidade.",
 			redirectTo: "/cadastrar-comunidade",
 		});
 	}, [isSessionLoading, session, openAuthPrompt]);
@@ -204,7 +202,7 @@ function RouteComponent() {
 		<div className="max-w-3xl mx-auto px-4 py-12">
 			<div className="mb-12 space-y-4 text-center">
 				<h1 className="text-4xl font-bold tracking-tight">
-					Cadastrar nova comunidade
+					Criar página da comunidade
 				</h1>
 				<div className="flex justify-center gap-4">
 					{[1, 2].map((s) => (
@@ -228,7 +226,7 @@ function RouteComponent() {
 						className="space-y-6"
 					>
 						<h2 className="text-2xl font-bold text-center">
-							Qual é a categoria?
+							Onde sua comunidade deve ser descoberta?
 						</h2>
 
 						<div className="relative max-w-md mx-auto">
@@ -301,7 +299,7 @@ function RouteComponent() {
 						className="space-y-6"
 					>
 						<h2 className="text-2xl font-bold text-center">
-							Preencha os detalhes
+							Monte a presença oficial da comunidade
 						</h2>
 						<form
 							className="glass-panel p-8 space-y-6"
@@ -327,7 +325,7 @@ function RouteComponent() {
 											htmlFor={field.name}
 											className="text-xs font-bold text-gray-500 uppercase"
 										>
-											Título da comunidade
+											Nome da comunidade
 										</label>
 										<input
 											id={field.name}
@@ -336,7 +334,7 @@ function RouteComponent() {
 											value={field.state.value}
 											onBlur={field.handleBlur}
 											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="Ex: Servidor Hardcore PVP"
+											placeholder="Ex: Comunidade Hardcore PVP"
 											className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
 										/>
 										{field.state.meta.isTouched &&
@@ -365,7 +363,7 @@ function RouteComponent() {
 											htmlFor={field.name}
 											className="text-xs font-bold text-gray-500 uppercase"
 										>
-											Descrição
+											Descrição da página
 										</label>
 										<textarea
 											id={field.name}
@@ -374,7 +372,7 @@ function RouteComponent() {
 											value={field.state.value}
 											onBlur={field.handleBlur}
 											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="Conte mais sobre o que você está oferecendo..."
+											placeholder="Apresente a comunidade, seus objetivos e para quem ela é feita..."
 											className="w-full bg-bg-dark border border-border-dark rounded-lg p-3 focus:outline-none focus:border-brand-primary"
 										/>
 										{field.state.meta.isTouched &&
@@ -480,7 +478,7 @@ function RouteComponent() {
 												"opacity-60 cursor-not-allowed",
 										)}
 									>
-										{isSubmitting ? "Publicando..." : "Publicar comunidade"}
+										{isSubmitting ? "Publicando..." : "Publicar página"}
 									</button>
 								)}
 							</communityForm.Subscribe>

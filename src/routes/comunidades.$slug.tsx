@@ -66,7 +66,7 @@ export const Route = createFileRoute("/comunidades/$slug")({
 			return buildPageHead({
 				path: "/comunidades",
 				title: "Comunidade | Templo",
-				description: "Veja os detalhes desta comunidade no Templo.",
+				description: "Veja a página oficial desta comunidade no Templo.",
 			});
 		}
 
@@ -78,9 +78,9 @@ export const Route = createFileRoute("/comunidades/$slug")({
 			description: loaderData.initialCommunity
 				? truncateDescription(
 						loaderData.initialCommunity.description ||
-							`Comunidade de ${loaderData.initialCommunity.category.name} criada por ${loaderData.initialCommunity.profile.fullName}.`,
+							`Página oficial da comunidade de ${loaderData.initialCommunity.category.name} criada por ${loaderData.initialCommunity.profile.fullName}.`,
 					)
-				: "Veja os detalhes desta comunidade no Templo.",
+				: "Veja a página oficial desta comunidade no Templo.",
 		});
 	},
 	component: CommunityDetails,
@@ -254,8 +254,7 @@ function CommunityDetails() {
 		if (!session) {
 			openAuthPrompt({
 				title: "Curtir comunidade",
-				description:
-					"Entre ou cadastre-se com Discord para curtir comunidades.",
+				description: "Entre para salvar e curtir comunidades no Templo.",
 				redirectTo: `/comunidades/${community.slug}`,
 			});
 			return;

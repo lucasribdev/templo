@@ -141,8 +141,7 @@ export default function CommunityCard({ community }: { community: Community }) {
 		if (!session) {
 			openAuthPrompt({
 				title: "Curtir comunidade",
-				description:
-					"Entre ou cadastre-se com Discord para curtir comunidades.",
+				description: "Entre para salvar e curtir comunidades no Templo.",
 				redirectTo: `/comunidades/${community.slug}`,
 			});
 			return;

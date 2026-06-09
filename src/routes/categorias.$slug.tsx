@@ -24,7 +24,8 @@ export const Route = createFileRoute("/categorias/$slug")({
 			return buildPageHead({
 				path: "/categories",
 				title: "Categoria | Templo",
-				description: "Encontre comunidades para esta categoria no Templo.",
+				description:
+					"Descubra páginas oficiais de comunidades desta categoria no Templo.",
 			});
 		}
 
@@ -35,9 +36,9 @@ export const Route = createFileRoute("/categorias/$slug")({
 				: "Categoria | Templo",
 			description: loaderData.initialCategory
 				? truncateDescription(
-						`Encontre comunidades ativas de ${loaderData.initialCategory.name} no Templo.`,
+						`Descubra páginas oficiais de comunidades de ${loaderData.initialCategory.name} no Templo.`,
 					)
-				: "Encontre comunidades para esta categoria no Templo.",
+				: "Descubra páginas oficiais de comunidades desta categoria no Templo.",
 		});
 	},
 	component: CategoryDetails,
@@ -119,8 +120,7 @@ function CategoryDetails() {
 		if (!session) {
 			openAuthPrompt({
 				title: "Cadastrar comunidade",
-				description:
-					"Você precisa estar autenticado para cadastrar uma comunidade.",
+				description: "Entre para criar a página oficial da sua comunidade.",
 				redirectTo: `/cadastrar-comunidade?category=${category.slug}`,
 			});
 		}

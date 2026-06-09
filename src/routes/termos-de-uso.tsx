@@ -7,7 +7,7 @@ export const Route = createFileRoute("/termos-de-uso")({
 			path: "/termos-de-uso",
 			title: "Termos de Uso - Templo",
 			description:
-				"Conheça as regras para usar o Templo, publicar comunidades e interagir com outros jogadores.",
+				"Conheça as regras para usar o Templo, publicar páginas de comunidades e acessar canais externos.",
 		}),
 	component: TermsOfUse,
 });
@@ -47,10 +47,9 @@ function TermsOfUse() {
 					<section className="space-y-3">
 						<h2 className="text-xl font-bold text-white">2. O serviço</h2>
 						<p>
-							O Templo permite descobrir, publicar e acessar comunidades
-							relacionadas a servidores, clãs, guildas e grupos de jogadores. A
-							plataforma atua como espaço de divulgação e conexão entre
-							usuários.
+							O Templo permite descobrir, publicar e acessar páginas oficiais de
+							comunidades online. A plataforma atua como espaço de identidade,
+							descoberta e organização de canais externos da comunidade.
 						</p>
 					</section>
 
@@ -143,11 +142,11 @@ function TermsOfUse() {
 							8. Serviços e links de terceiros
 						</h2>
 						<p>
-							Comunidades podem direcionar para Discord, servidores de jogos e
-							outros serviços externos. O Templo não controla esses ambientes e
-							não se responsabiliza por regras, disponibilidade, segurança,
-							pagamentos, conteúdos ou interações que ocorram fora da
-							plataforma.
+							Comunidades podem direcionar para canais externos, como Discord,
+							WhatsApp, Telegram, sites oficiais, redes sociais e outros
+							serviços. O Templo não controla esses ambientes e não se
+							responsabiliza por regras, disponibilidade, segurança, pagamentos,
+							conteúdos ou interações que ocorram fora da plataforma.
 						</p>
 					</section>
 
@@ -168,8 +167,8 @@ function TermsOfUse() {
 						<p>
 							O Templo é fornecido no estado em que se encontra. Na máxima
 							extensão permitida por lei, não nos responsabilizamos por perdas,
-							danos, conflitos entre usuários, problemas em servidores externos
-							ou decisões tomadas com base em conteúdo publicado por terceiros.
+							danos, conflitos entre usuários, problemas em canais externos ou
+							decisões tomadas com base em conteúdo publicado por terceiros.
 						</p>
 					</section>
 

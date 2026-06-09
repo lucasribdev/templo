@@ -110,9 +110,9 @@ function CategoryDetails() {
 		if (isSessionLoading) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Cadastrar comunidade",
+				title: "Criar comunidade",
 				description: "Entre para criar a página oficial da sua comunidade.",
-				redirectTo: `/cadastrar-comunidade?category=${category.slug}`,
+				redirectTo: `/criar-comunidade?category=${category.slug}`,
 			});
 		}
 	};
@@ -128,11 +128,11 @@ function CategoryDetails() {
 					</div>
 					{session ? (
 						<Link
-							to={"/cadastrar-comunidade"}
+							to={"/criar-comunidade"}
 							search={{ category: category.slug }}
 							className="btn-primary flex items-center gap-2"
 						>
-							<PlusCircle className="w-5 h-5" /> Cadastrar Comunidade
+							<PlusCircle className="w-5 h-5" /> Criar Comunidade
 						</Link>
 					) : (
 						<button
@@ -141,7 +141,7 @@ function CategoryDetails() {
 							disabled={isSessionLoading}
 							className="btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
 						>
-							<PlusCircle className="w-5 h-5" /> Cadastrar Comunidade
+							<PlusCircle className="w-5 h-5" /> Criar Comunidade
 						</button>
 					)}
 				</div>

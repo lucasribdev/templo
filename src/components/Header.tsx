@@ -26,14 +26,14 @@ export default function Header() {
 
 	const handleCreateCommunity = () => {
 		if (session) {
-			navigate({ to: "/cadastrar-comunidade" });
+			navigate({ to: "/criar-comunidade" });
 			return;
 		}
 
 		openAuthPrompt({
-			title: "Cadastrar comunidade",
+			title: "Criar comunidade",
 			description: "Entre para criar a página oficial da sua comunidade.",
-			redirectTo: "/cadastrar-comunidade",
+			redirectTo: "/criar-comunidade",
 		});
 	};
 
@@ -61,7 +61,7 @@ export default function Header() {
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />
-									<span className="hidden sm:inline">Cadastrar</span>
+									<span className="hidden sm:inline">Criar comunidade</span>
 								</button>
 								<button
 									type="button"
@@ -81,7 +81,7 @@ export default function Header() {
 									className="btn-primary flex items-center gap-2 text-sm py-1.5"
 								>
 									<PlusCircle className="w-4 h-4" />
-									<span className="hidden sm:inline">Cadastrar</span>
+									<span className="hidden sm:inline">Criar comunidade</span>
 								</button>
 								<Link
 									to="/perfil/$profileFullName"

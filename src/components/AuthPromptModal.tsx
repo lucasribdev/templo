@@ -23,9 +23,9 @@ type AuthPromptContextValue = {
 };
 
 const defaultPrompt = {
-	title: "Cadastrar comunidade",
+	title: "Criar comunidade",
 	description: "Entre para criar a página oficial da sua comunidade.",
-	redirectTo: "/cadastrar-comunidade",
+	redirectTo: "/criar-comunidade",
 };
 
 const AuthPromptContext = createContext<AuthPromptContextValue | null>(null);

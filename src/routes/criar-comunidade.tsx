@@ -40,7 +40,7 @@ function CategoryOptionSkeleton() {
 	);
 }
 
-export const Route = createFileRoute("/cadastrar-comunidade")({
+export const Route = createFileRoute("/criar-comunidade")({
 	validateSearch: (search: CreateCommunitySearch & SearchSchemaInput) => ({
 		category: typeof search.category === "string" ? search.category : undefined,
 	}),
@@ -137,9 +137,9 @@ function RouteComponent() {
 
 			if (!session?.user?.id) {
 				openAuthPrompt({
-					title: "Cadastrar comunidade",
+					title: "Criar comunidade",
 					description: "Entre para criar a página oficial da sua comunidade.",
-					redirectTo: "/cadastrar-comunidade",
+					redirectTo: "/criar-comunidade",
 				});
 				return;
 			}
@@ -174,9 +174,9 @@ function RouteComponent() {
 		if (isSessionLoading || session) return;
 
 		openAuthPrompt({
-			title: "Cadastrar comunidade",
+			title: "Criar comunidade",
 			description: "Entre para criar a página oficial da sua comunidade.",
-			redirectTo: "/cadastrar-comunidade",
+			redirectTo: "/criar-comunidade",
 		});
 	}, [isSessionLoading, session, openAuthPrompt]);
 

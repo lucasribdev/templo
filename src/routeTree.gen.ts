@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as CriarComunidadeRouteImport } from './routes/criar-comunidade'
 import { Route as CategoriasRouteImport } from './routes/categorias'
-import { Route as CadastrarComunidadeRouteImport } from './routes/cadastrar-comunidade'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias.index'
 import { Route as PerfilProfileFullNameRouteImport } from './routes/perfil.$profileFullName'
@@ -38,14 +38,14 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CriarComunidadeRoute = CriarComunidadeRouteImport.update({
+  id: '/criar-comunidade',
+  path: '/criar-comunidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategoriasRoute = CategoriasRouteImport.update({
   id: '/categorias',
   path: '/categorias',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CadastrarComunidadeRoute = CadastrarComunidadeRouteImport.update({
-  id: '/cadastrar-comunidade',
-  path: '/cadastrar-comunidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -124,8 +124,8 @@ const ApiCommunitiesSlugLikesRoute = ApiCommunitiesSlugLikesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/cadastrar-comunidade': typeof CadastrarComunidadeRoute
   '/categorias': typeof CategoriasRouteWithChildren
+  '/criar-comunidade': typeof CriarComunidadeRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
@@ -144,7 +144,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/cadastrar-comunidade': typeof CadastrarComunidadeRoute
+  '/criar-comunidade': typeof CriarComunidadeRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
@@ -164,8 +164,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/cadastrar-comunidade': typeof CadastrarComunidadeRoute
   '/categorias': typeof CategoriasRouteWithChildren
+  '/criar-comunidade': typeof CriarComunidadeRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/api/categories': typeof ApiCategoriesRouteWithChildren
@@ -186,8 +186,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/cadastrar-comunidade'
     | '/categorias'
+    | '/criar-comunidade'
     | '/privacidade'
     | '/termos-de-uso'
     | '/api/categories'
@@ -206,7 +206,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/cadastrar-comunidade'
+    | '/criar-comunidade'
     | '/privacidade'
     | '/termos-de-uso'
     | '/api/categories'
@@ -225,8 +225,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/cadastrar-comunidade'
     | '/categorias'
+    | '/criar-comunidade'
     | '/privacidade'
     | '/termos-de-uso'
     | '/api/categories'
@@ -246,8 +246,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CadastrarComunidadeRoute: typeof CadastrarComunidadeRoute
   CategoriasRoute: typeof CategoriasRouteWithChildren
+  CriarComunidadeRoute: typeof CriarComunidadeRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   TermosDeUsoRoute: typeof TermosDeUsoRoute
   ApiCategoriesRoute: typeof ApiCategoriesRouteWithChildren
@@ -275,18 +275,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/criar-comunidade': {
+      id: '/criar-comunidade'
+      path: '/criar-comunidade'
+      fullPath: '/criar-comunidade'
+      preLoaderRoute: typeof CriarComunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/categorias': {
       id: '/categorias'
       path: '/categorias'
       fullPath: '/categorias'
       preLoaderRoute: typeof CategoriasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cadastrar-comunidade': {
-      id: '/cadastrar-comunidade'
-      path: '/cadastrar-comunidade'
-      fullPath: '/cadastrar-comunidade'
-      preLoaderRoute: typeof CadastrarComunidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -443,8 +443,8 @@ const ApiCommunitiesRouteWithChildren = ApiCommunitiesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CadastrarComunidadeRoute: CadastrarComunidadeRoute,
   CategoriasRoute: CategoriasRouteWithChildren,
+  CriarComunidadeRoute: CriarComunidadeRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   TermosDeUsoRoute: TermosDeUsoRoute,
   ApiCategoriesRoute: ApiCategoriesRouteWithChildren,

@@ -1,18 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Link as RouterLink } from "@tanstack/react-router";
 import {
 	Eye,
 	Github,
 	Globe2,
 	Heart,
 	Instagram,
-	Link,
+	Link as LinkIcon,
 	MessageCircle,
 	Send,
 	Tags,
 	Youtube,
 } from "lucide-react";
-import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,7 +24,7 @@ const communityPlatformMeta: Record<
 	CommunityPlatform,
 	{
 		label: string;
-		Icon: typeof Link;
+		Icon: typeof LinkIcon;
 	}
 > = {
 	DISCORD: { label: "Discord", Icon: MessageCircle },
@@ -35,7 +34,7 @@ const communityPlatformMeta: Record<
 	YOUTUBE: { label: "YouTube", Icon: Youtube },
 	INSTAGRAM: { label: "Instagram", Icon: Instagram },
 	SITE_OFICIAL: { label: "Site oficial", Icon: Globe2 },
-	OUTRA: { label: "Outro canal", Icon: Link },
+	OUTRA: { label: "Outro canal", Icon: LinkIcon },
 };
 
 function getCommunityPlatforms(community: Community) {
@@ -86,7 +85,6 @@ export function CommunityCardSkeleton() {
 }
 
 export default function CommunityCard({ community }: { community: Community }) {
-	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
@@ -150,15 +148,13 @@ export default function CommunityCard({ community }: { community: Community }) {
 	};
 
 	return (
-		<motion.div
-			whileHover={{ y: -4 }}
-			className="glass-panel p-5 flex flex-col gap-4 cursor-pointer group"
-			onClick={() =>
-				navigate({ to: "/comunidades/$slug", params: { slug: community.slug } })
-			}
-		>
-			<div className="flex justify-between items-start gap-4">
-				<div className="min-w-0 flex-1">
+		<div className="glass-panel relative p-5 flex flex-col gap-4 group transition-transform hover:-translate-y-1">
+			<RouterLink
+				to="/comunidades/$slug"
+				params={{ slug: community.slug }}
+				className="flex flex-1 flex-col gap-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary"
+			>
+				<div className="min-w-0 pr-16">
 					<h3 className="text-lg font-bold group-hover:text-brand-primary transition-colors line-clamp-1">
 						{community.title}
 					</h3>
@@ -194,47 +190,47 @@ export default function CommunityCard({ community }: { community: Community }) {
 						</div>
 					)}
 				</div>
-				<button
-					type="button"
-					title={`${likeState.likesCount} ${likeState.likesCount === 1 ? "curtida" : "curtidas"}`}
-					onClick={handleLike}
-					disabled={isSessionLoading || likeMutation.isPending}
-					className={cn(
-						"flex items-center gap-1 transition-all",
-						likeState.userLiked
-							? "text-red-500"
-							: "text-gray-500 hover:text-red-400",
-					)}
-				>
-					<span className="text-xs font-bold">{likeState.likesCount}</span>
-					<Heart
-						className={cn("w-5 h-5", likeState.userLiked && "fill-current")}
-					/>
-				</button>
-			</div>
 
-			<p className="text-sm text-gray-400 line-clamp-2">
-				{community.description}
-			</p>
+				<p className="text-sm text-gray-400 line-clamp-2">
+					{community.description}
+				</p>
 
-			<div className="flex items-center justify-between gap-3">
-				<div className="flex flex-wrap gap-2 mt-auto">
-					{community?.tags?.slice(0, 3).map((tag) => (
-						<span
-							key={tag}
-							className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-gray-400"
-						>
-							#{tag}
-						</span>
-					))}
+				<div className="flex items-center justify-between gap-3">
+					<div className="flex flex-wrap gap-2 mt-auto">
+						{community?.tags?.slice(0, 3).map((tag) => (
+							<span
+								key={tag}
+								className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md text-gray-400"
+							>
+								#{tag}
+							</span>
+						))}
+					</div>
+					<div
+						className="flex items-center gap-1 text-xs text-gray-500"
+						title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}
+					>
+						<Eye className="w-3 h-3" /> {community.views}
+					</div>
 				</div>
-				<div
-					className="flex items-center gap-1 text-xs text-gray-500"
-					title={`${community.views} ${community.views === 1 ? "visualização" : "visualizações"}`}
-				>
-					<Eye className="w-3 h-3" /> {community.views}
-				</div>
-			</div>
-		</motion.div>
+			</RouterLink>
+			<button
+				type="button"
+				title={`${likeState.likesCount} ${likeState.likesCount === 1 ? "curtida" : "curtidas"}`}
+				onClick={handleLike}
+				disabled={isSessionLoading || likeMutation.isPending}
+				className={cn(
+					"absolute right-5 top-5 z-10 flex items-center gap-1 transition-all",
+					likeState.userLiked
+						? "text-red-500"
+						: "text-gray-500 hover:text-red-400",
+				)}
+			>
+				<span className="text-xs font-bold">{likeState.likesCount}</span>
+				<Heart
+					className={cn("w-5 h-5", likeState.userLiked && "fill-current")}
+				/>
+			</button>
+		</div>
 	);
 }

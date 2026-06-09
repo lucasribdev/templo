@@ -152,6 +152,10 @@ code {
 }
 
 @layer components {
+  .animate-hero-title {
+    animation: hero-title-in 420ms ease-out both;
+  }
+
   .glass-panel {
     @apply bg-card-dark/80 backdrop-blur-md border border-border-dark rounded-xl;
   }
@@ -166,5 +170,17 @@ code {
 
   .btn-secondary {
     @apply bg-transparent border border-brand-primary text-brand-primary font-bold py-2 px-4 rounded-lg transition-all hover:bg-brand-primary/10 active:scale-95;
+  }
+}
+
+@keyframes hero-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

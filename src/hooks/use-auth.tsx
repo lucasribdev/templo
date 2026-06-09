@@ -8,7 +8,11 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { supabase } from "@/utils/supabase";
+
+async function getSupabase() {
+	const { supabase } = await import("@/utils/supabase");
+	return supabase;
+}
 
 type AuthContextValue = {
 	session: Session | null;
@@ -44,6 +48,7 @@ function getProfileUpdatesFromSession(session: Session) {
 
 async function syncProfileFromSession(session: Session) {
 	const updates = getProfileUpdatesFromSession(session);
+	const supabase = await getSupabase();
 
 	await supabase.from("profiles").update(updates).eq("id", session.user.id);
 }
@@ -56,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		let isMounted = true;
 
 		const loadSession = async () => {
+			const supabase = await getSupabase();
 			const { data } = await supabase.auth.getSession();
 			if (!isMounted) return;
 			setSession(data.session ?? null);
@@ -67,18 +73,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 		loadSession();
 
-		const { data } = supabase.auth.onAuthStateChange((_event, next) => {
+		let unsubscribe: (() => void) | undefined;
+
+		getSupabase().then((supabase) => {
 			if (!isMounted) return;
-			setSession(next);
-			setIsSessionLoading(false);
-			if (next) {
-				void syncProfileFromSession(next);
-			}
+
+			const { data } = supabase.auth.onAuthStateChange((_event, next) => {
+				if (!isMounted) return;
+				setSession(next);
+				setIsSessionLoading(false);
+				if (next) {
+					void syncProfileFromSession(next);
+				}
+			});
+
+			unsubscribe = () => data.subscription.unsubscribe();
 		});
 
 		return () => {
 			isMounted = false;
-			data.subscription.unsubscribe();
+			unsubscribe?.();
 		};
 	}, []);
 
@@ -87,6 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			return { error: null };
 		}
 
+		const supabase = await getSupabase();
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider: "discord",
 			options: { redirectTo },
@@ -96,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	const signOut = useCallback(async () => {
+		const supabase = await getSupabase();
 		const { error } = await supabase.auth.signOut();
 		if (!error) {
 			setSession(null);

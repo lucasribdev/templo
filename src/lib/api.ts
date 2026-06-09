@@ -6,7 +6,6 @@ import type {
 	GetCommunitiesParams,
 	Profile,
 } from "@/types";
-import { supabase } from "@/utils/supabase";
 import { getOrCreateVisitorId } from "@/utils/visitor-id";
 
 type QueryValue = string | number | null | undefined;
@@ -21,6 +20,7 @@ type ApiRequestOptions = {
 };
 
 async function getAuthHeaders() {
+	const { supabase } = await import("@/utils/supabase");
 	const { data } = await supabase.auth.getSession();
 	const accessToken = data.session?.access_token;
 

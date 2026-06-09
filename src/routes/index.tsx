@@ -8,7 +8,6 @@ import {
 	Sparkles,
 	Tags,
 } from "lucide-react";
-import { motion } from "motion/react";
 import { useDeferredValue, useState } from "react";
 import CategoryCard from "@/components/CategoryCard";
 import CommunityCard, {
@@ -95,13 +94,9 @@ function App() {
 	return (
 		<div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
 			<section className="text-center space-y-6 py-12">
-				<motion.h1
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					className="text-5xl md:text-6xl font-bold tracking-tighter"
-				>
+				<h1 className="animate-hero-title text-5xl md:text-6xl font-bold tracking-tighter">
 					Encontre sua <span className="text-brand-primary">tribo</span>.
-				</motion.h1>
+				</h1>
 				<p className="text-gray-400 text-lg max-w-2xl mx-auto">
 					Descubra comunidades de tecnologia, esportes, hobbies, investimentos,
 					games e muito mais.

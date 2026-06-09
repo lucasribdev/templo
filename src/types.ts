@@ -90,7 +90,6 @@ export interface CommunityByIdRpcRow {
 	title: string;
 	description?: string;
 	tags?: string[];
-	discord_invite?: string;
 	links?: CommunityLinkRow[];
 	views: number;
 	active: boolean;
@@ -114,7 +113,6 @@ export interface CommunitiesRpcRow {
 	title: string;
 	description?: string;
 	tags?: string[];
-	discord_invite?: string;
 	links?: CommunityLinkRow[];
 	views: number;
 	active: boolean;

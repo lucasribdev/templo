@@ -1,6 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Eye, Heart, Tags } from "lucide-react";
+import {
+	Eye,
+	Github,
+	Globe2,
+	Heart,
+	Instagram,
+	Link,
+	MessageCircle,
+	Send,
+	Tags,
+	Youtube,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
@@ -8,7 +19,34 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { toggleCommunityLike } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { Community } from "@/types";
+import type { Community, CommunityPlatform } from "@/types";
+
+const communityPlatformMeta: Record<
+	CommunityPlatform,
+	{
+		label: string;
+		Icon: typeof Link;
+	}
+> = {
+	DISCORD: { label: "Discord", Icon: MessageCircle },
+	TELEGRAM: { label: "Telegram", Icon: Send },
+	WHATSAPP: { label: "WhatsApp", Icon: MessageCircle },
+	GITHUB: { label: "GitHub", Icon: Github },
+	YOUTUBE: { label: "YouTube", Icon: Youtube },
+	INSTAGRAM: { label: "Instagram", Icon: Instagram },
+	SITE_OFICIAL: { label: "Site oficial", Icon: Globe2 },
+	OUTRA: { label: "Outro canal", Icon: Link },
+};
+
+function getCommunityPlatforms(community: Community) {
+	const platforms = new Set<CommunityPlatform>();
+
+	for (const link of community.links) {
+		platforms.add(link.platform);
+	}
+
+	return Array.from(platforms);
+}
 
 export function CommunityCardSkeleton() {
 	return (
@@ -52,6 +90,7 @@ export default function CommunityCard({ community }: { community: Community }) {
 	const queryClient = useQueryClient();
 	const { session, isSessionLoading } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
+	const communityPlatforms = getCommunityPlatforms(community);
 	const [likeState, setLikeState] = useState({
 		likesCount: community.likesCount,
 		userLiked: community.userLiked,
@@ -119,14 +158,42 @@ export default function CommunityCard({ community }: { community: Community }) {
 				navigate({ to: "/comunidades/$slug", params: { slug: community.slug } })
 			}
 		>
-			<div className="flex justify-between items-start">
-				<div>
+			<div className="flex justify-between items-start gap-4">
+				<div className="min-w-0 flex-1">
 					<h3 className="text-lg font-bold group-hover:text-brand-primary transition-colors line-clamp-1">
 						{community.title}
 					</h3>
 					<p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
 						<Tags className="w-3 h-3" /> {community.category.name}
 					</p>
+					{communityPlatforms.length > 0 && (
+						<div className="mt-3 flex flex-wrap gap-1.5">
+							{communityPlatforms.slice(0, 5).map((platform) => {
+								const meta =
+									communityPlatformMeta[platform] ??
+									communityPlatformMeta.OUTRA;
+								const Icon = meta.Icon;
+
+								return (
+									<span
+										key={platform}
+										title={meta.label}
+										className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition-colors group-hover:border-brand-primary/30 group-hover:text-brand-primary"
+									>
+										<Icon className="h-3.5 w-3.5" />
+									</span>
+								);
+							})}
+							{communityPlatforms.length > 5 && (
+								<span
+									title={`${communityPlatforms.length - 5} canais adicionais`}
+									className="inline-flex h-7 min-w-7 items-center justify-center rounded-lg border border-white/10 bg-white/5 px-1.5 text-[10px] font-bold text-gray-400"
+								>
+									+{communityPlatforms.length - 5}
+								</span>
+							)}
+						</div>
+					)}
 				</div>
 				<button
 					type="button"

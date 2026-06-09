@@ -175,8 +175,6 @@ export async function createCommunityHandler({
 	const body = await request.json();
 	const validatedLinks = normalizeCommunityLinks(body.links);
 	const { links } = validatedLinks;
-	const legacyDiscordInvite =
-		links.find((link) => link.platform === "DISCORD")?.url ?? null;
 	const suggestedCategoryName = String(body.suggestedCategoryName ?? "").trim();
 
 	if (validatedLinks.errors.length > 0) {
@@ -236,7 +234,6 @@ export async function createCommunityHandler({
 			title: body.title,
 			description: body.description,
 			tags: body.tags,
-			discord_invite: legacyDiscordInvite,
 			active: true,
 		})
 		.select()

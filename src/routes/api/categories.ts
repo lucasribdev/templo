@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/categories")({
 
 				let query = supabase
 					.from("categories")
-					.select("id, slug, name, genres, release_date, website, created_at");
+					.select("id, slug, name, created_at");
 
 				if (sortBy === "ALPHABETICAL") {
 					query = query.order("name");

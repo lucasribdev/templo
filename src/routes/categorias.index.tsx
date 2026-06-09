@@ -34,10 +34,6 @@ export function CategoryCardSkeleton() {
 	return (
 		<div className="glass-panel p-4">
 			<Skeleton className="h-4 w-2/3" />
-			<div className="flex gap-2 pt-3">
-				<Skeleton className="h-5 w-14 rounded-md" />
-				<Skeleton className="h-5 w-16 rounded-md" />
-			</div>
 		</div>
 	);
 }

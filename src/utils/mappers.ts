@@ -54,9 +54,6 @@ function mapCommunityRpcBase(
 			id: row.category_id,
 			slug: row.category_slug,
 			name: row.category_name,
-			genres: row.category_genres ?? [],
-			releaseDate: row.category_release_date ?? "",
-			website: row.category_website ?? "",
 			createdAt: row.created_at,
 		},
 		profile: mapCommunityProfile(row),
@@ -86,9 +83,6 @@ export function mapCategory(row: CategoryRow) {
 		id: row.id,
 		slug: row.slug,
 		name: row.name,
-		genres: row.genres ?? [],
-		releaseDate: row.release_date,
-		website: row.website,
 		createdAt: row.created_at,
 	};
 }

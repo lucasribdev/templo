@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Calendar, Globe, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useAuthPrompt } from "@/components/AuthPromptModal";
 import CommunityCard, {
 	CommunityCardSkeleton,
@@ -59,15 +59,6 @@ function CategoryDetailsSkeleton() {
 				<div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
 					<div className="space-y-4">
 						<Skeleton className="h-12 w-72 max-w-full" />
-						<div className="flex gap-4">
-							<Skeleton className="h-4 w-28" />
-							<Skeleton className="h-4 w-24" />
-						</div>
-						<div className="flex gap-2">
-							<Skeleton className="h-6 w-16 rounded-full" />
-							<Skeleton className="h-6 w-20 rounded-full" />
-							<Skeleton className="h-6 w-14 rounded-full" />
-						</div>
 					</div>
 					<Skeleton className="h-11 w-40 rounded-xl" />
 				</div>
@@ -134,37 +125,6 @@ function CategoryDetails() {
 						<h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
 							{category.name}
 						</h1>
-						<div className="flex flex-wrap gap-4 text-sm text-gray-500">
-							{category.releaseDate && (
-								<div className="flex items-center gap-1">
-									<Calendar className="w-4 h-4" />
-									<span>
-										Lançamento: {new Date(category.releaseDate).getFullYear()}
-									</span>
-								</div>
-							)}
-							{category.website && (
-								<a
-									href={category.website}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-1 hover:text-brand-primary transition-colors"
-								>
-									<Globe className="w-4 h-4" />
-									<span>Site Oficial</span>
-								</a>
-							)}
-						</div>
-						<div className="flex flex-wrap gap-2">
-							{category.genres?.map((genre) => (
-								<span
-									key={genre}
-									className="text-xs bg-white/5 px-3 py-1 rounded-full border border-white/10 text-gray-300"
-								>
-									{genre}
-								</span>
-							))}
-						</div>
 					</div>
 					{session ? (
 						<Link

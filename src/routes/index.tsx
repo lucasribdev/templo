@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
 	ArrowUpDown,
 	ChevronRight,
-	Flame,
 	Info,
 	Search,
 	Sparkles,
@@ -101,40 +100,38 @@ function App() {
 					animate={{ opacity: 1, y: 0 }}
 					className="text-5xl md:text-6xl font-bold tracking-tighter"
 				>
-					Toda comunidade merece um{" "}
-					<span className="text-brand-primary">endereço próprio</span> na
-					internet.
+					Encontre sua <span className="text-brand-primary">tribo</span>.
 				</motion.h1>
 				<p className="text-gray-400 text-lg max-w-2xl mx-auto">
-					O Templo ajuda comunidades online a terem uma página oficial, reunirem
-					seus canais e serem descobertas por quem procura um lugar para
-					participar.
+					Descubra comunidades de tecnologia, esportes, hobbies, investimentos,
+					games e muito mais.
 				</p>
 			</section>
 
-			<section className="hidden md:block space-y-6">
-				<div className="flex justify-between items-end">
-					<h2 className="text-lg font-bold flex items-center gap-2">
-						<Flame className="text-brand-primary w-5 h-5" /> Categorias em
-						Destaque
-					</h2>
-					<Link
-						to="/categorias"
-						className="text-sm text-brand-primary hover:underline"
-					>
-						Ver todas
-					</Link>
-				</div>
+			<section className="space-y-6">
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 					{categories
 						? categories
-								.slice(0, 6)
+								.slice(0, 5)
 								.map((category: Category) => (
 									<CategoryCard key={category.id} category={category} />
 								))
 						: homeCategorySkeletonIds.map((id) => (
 								<CategoryCardSkeleton key={id} />
 							))}
+					{categories ? (
+						<Link to="/categorias" className="group">
+							<div className="flex flex-col justify-between glass-panel h-full p-4 transition-all group-hover:border-brand-primary">
+								<h3 className="text-sm font-bold text-white tracking-wide">
+									Ver mais
+								</h3>
+								<div className="flex items-center gap-2 pt-3 text-xs text-brand-primary">
+									<span>Explorar categorias</span>
+									<ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+								</div>
+							</div>
+						</Link>
+					) : null}
 				</div>
 			</section>
 

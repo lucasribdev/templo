@@ -8,7 +8,7 @@ export const Route = createFileRoute("/api/categories/$slug")({
 			GET: async ({ params }) => {
 				const { data, error } = await supabase
 					.from("categories")
-					.select("id, slug, name, genres, release_date, website, created_at")
+					.select("id, slug, name, created_at")
 					.eq("slug", params.slug)
 					.maybeSingle();
 

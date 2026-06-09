@@ -12,16 +12,6 @@ export default function CategoryCard({ category }: { category: Category }) {
 				<h3 className="text-sm font-bold text-white tracking-wide">
 					{category.name}
 				</h3>
-				<div className="flex flex-wrap gap-2 pt-3">
-					{category.genres?.slice(0, 2).map((genre) => (
-						<span
-							key={genre}
-							className="text-xs bg-brand-primary/20 text-brand-primary px-2 py-0.5 rounded-md border border-brand-primary/30"
-						>
-							{genre}
-						</span>
-					))}
-				</div>
 			</div>
 		</Link>
 	);

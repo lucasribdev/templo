@@ -24,6 +24,7 @@ import { Route as ApiProfileProfileFullNameRouteImport } from './routes/api/prof
 import { Route as ApiCommunitiesSlugRouteImport } from './routes/api/communities.$slug'
 import { Route as ApiCategoriesSlugRouteImport } from './routes/api/categories.$slug'
 import { Route as ApiUsersIdLikedCommunitiesRouteImport } from './routes/api/users.$id.liked-communities'
+import { Route as ApiCommunityLinksIdClicksRouteImport } from './routes/api/community-links.$id.clicks'
 import { Route as ApiCommunitiesSlugViewsRouteImport } from './routes/api/communities.$slug.views'
 import { Route as ApiCommunitiesSlugLikesRouteImport } from './routes/api/communities.$slug.likes'
 
@@ -104,6 +105,12 @@ const ApiUsersIdLikedCommunitiesRoute =
     path: '/api/users/$id/liked-communities',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiCommunityLinksIdClicksRoute =
+  ApiCommunityLinksIdClicksRouteImport.update({
+    id: '/api/community-links/$id/clicks',
+    path: '/api/community-links/$id/clicks',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiCommunitiesSlugViewsRoute = ApiCommunitiesSlugViewsRouteImport.update({
   id: '/views',
   path: '/views',
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
+  '/api/community-links/$id/clicks': typeof ApiCommunityLinksIdClicksRoute
   '/api/users/$id/liked-communities': typeof ApiUsersIdLikedCommunitiesRoute
 }
 export interface FileRoutesByTo {
@@ -150,6 +158,7 @@ export interface FileRoutesByTo {
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
+  '/api/community-links/$id/clicks': typeof ApiCommunityLinksIdClicksRoute
   '/api/users/$id/liked-communities': typeof ApiUsersIdLikedCommunitiesRoute
 }
 export interface FileRoutesById {
@@ -170,6 +179,7 @@ export interface FileRoutesById {
   '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
+  '/api/community-links/$id/clicks': typeof ApiCommunityLinksIdClicksRoute
   '/api/users/$id/liked-communities': typeof ApiUsersIdLikedCommunitiesRoute
 }
 export interface FileRouteTypes {
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/api/profile/$profileFullName'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
+    | '/api/community-links/$id/clicks'
     | '/api/users/$id/liked-communities'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/api/profile/$profileFullName'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
+    | '/api/community-links/$id/clicks'
     | '/api/users/$id/liked-communities'
   id:
     | '__root__'
@@ -228,6 +240,7 @@ export interface FileRouteTypes {
     | '/api/profile/$profileFullName'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
+    | '/api/community-links/$id/clicks'
     | '/api/users/$id/liked-communities'
   fileRoutesById: FileRoutesById
 }
@@ -242,6 +255,7 @@ export interface RootRouteChildren {
   ComunidadesSlugRoute: typeof ComunidadesSlugRoute
   PerfilProfileFullNameRoute: typeof PerfilProfileFullNameRoute
   ApiProfileProfileFullNameRoute: typeof ApiProfileProfileFullNameRoute
+  ApiCommunityLinksIdClicksRoute: typeof ApiCommunityLinksIdClicksRoute
   ApiUsersIdLikedCommunitiesRoute: typeof ApiUsersIdLikedCommunitiesRoute
 }
 
@@ -352,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiUsersIdLikedCommunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/community-links/$id/clicks': {
+      id: '/api/community-links/$id/clicks'
+      path: '/api/community-links/$id/clicks'
+      fullPath: '/api/community-links/$id/clicks'
+      preLoaderRoute: typeof ApiCommunityLinksIdClicksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/communities/$slug/views': {
       id: '/api/communities/$slug/views'
       path: '/views'
@@ -431,6 +452,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComunidadesSlugRoute: ComunidadesSlugRoute,
   PerfilProfileFullNameRoute: PerfilProfileFullNameRoute,
   ApiProfileProfileFullNameRoute: ApiProfileProfileFullNameRoute,
+  ApiCommunityLinksIdClicksRoute: ApiCommunityLinksIdClicksRoute,
   ApiUsersIdLikedCommunitiesRoute: ApiUsersIdLikedCommunitiesRoute,
 }
 export const routeTree = rootRouteImport

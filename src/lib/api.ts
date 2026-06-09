@@ -258,6 +258,25 @@ export async function toggleCommunityLike(
 	});
 }
 
+export async function trackCommunityLinkClick(
+	linkId: string,
+	signal?: AbortSignal,
+): Promise<number> {
+	const payload = await apiRequest<{ clicksCount: number }>(
+		`/api/community-links/${encodeURIComponent(linkId)}/clicks`,
+		{
+			method: "POST",
+			requireAuth: true,
+			signal,
+			headers: {
+				"x-visitor-id": getOrCreateVisitorId(),
+			},
+		},
+	);
+
+	return payload.clicksCount;
+}
+
 export async function createCommunity(
 	input: CreateCommunityInput,
 	signal?: AbortSignal,

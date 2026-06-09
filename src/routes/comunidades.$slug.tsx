@@ -21,6 +21,7 @@ import {
 	getCommunityBySlug,
 	incrementCommunityViews,
 	toggleCommunityLike,
+	trackCommunityLinkClick,
 } from "@/lib/api";
 import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getCommunityPageData } from "@/lib/page-data";
@@ -274,6 +275,10 @@ function CommunityDetails() {
 		});
 	};
 
+	const handleCommunityLinkClick = (linkId: string) => {
+		trackCommunityLinkClick(linkId).catch(() => undefined);
+	};
+
 	return (
 		<div className="min-h-screen relative">
 			<div className="relative z-10 max-w-6xl mx-auto px-4 py-12 space-y-8">
@@ -380,6 +385,7 @@ function CommunityDetails() {
 														href={link.url}
 														target="_blank"
 														rel="noopener noreferrer"
+														onClick={() => handleCommunityLinkClick(link.id)}
 														className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-gray-200 transition-colors hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary"
 													>
 														<Icon className="h-5 w-5" />

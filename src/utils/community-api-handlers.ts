@@ -427,6 +427,42 @@ export async function trackCommunityViewHandler({
 	return Response.json({ views: data ?? 0 });
 }
 
+export async function trackCommunityLinkClickHandler({
+	params,
+	request,
+}: {
+	params: { id: string };
+	request: Request;
+}) {
+	const authHeader = request.headers.get("authorization");
+	const visitorId = normalizeVisitorId(request.headers.get("x-visitor-id"));
+	const userAgent = request.headers.get("user-agent");
+
+	const supabaseClient = authHeader
+		? createSupabaseUserClient(authHeader)
+		: supabase;
+	const { data, error } = await supabaseClient.rpc(
+		"track_community_link_click",
+		{
+			p_community_link_id: params.id,
+			p_visitor_id: visitorId,
+			p_user_agent: userAgent,
+		},
+	);
+
+	if (error || data === null) {
+		return Response.json(
+			{
+				error: "Failed to track community link click",
+				message: error?.message,
+			},
+			{ status: error ? 500 : 404 },
+		);
+	}
+
+	return Response.json({ clicksCount: data });
+}
+
 export async function getLikedCommunitiesHandler({
 	params,
 	request,

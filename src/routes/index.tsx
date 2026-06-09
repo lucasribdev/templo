@@ -8,7 +8,7 @@ import {
 	Sparkles,
 	Tags,
 } from "lucide-react";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useId, useState } from "react";
 import CategoryCard from "@/components/CategoryCard";
 import CommunityCard, {
 	CommunityCardSkeleton,
@@ -45,6 +45,9 @@ const homeCommunitySkeletonIds = Array.from(
 );
 
 function App() {
+	const searchId = useId();
+	const categoryId = useId();
+	const sortId = useId();
 	const [search, setSearch] = useState("");
 	const [filterCategory, setFilterCategory] = useState<string | "ALL">("ALL");
 	const [sortBy, setSortBy] = useState<CommunitySortBy>("DATE");
@@ -144,8 +147,12 @@ function App() {
 
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<div className="relative group">
+							<label htmlFor={searchId} className="sr-only">
+								Buscar comunidades
+							</label>
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
 							<input
+								id={searchId}
 								type="text"
 								placeholder="Buscar comunidades..."
 								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all"
@@ -155,8 +162,12 @@ function App() {
 						</div>
 
 						<div className="relative group">
+							<label htmlFor={categoryId} className="sr-only">
+								Filtrar por categoria
+							</label>
 							<Tags className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors pointer-events-none" />
 							<select
+								id={categoryId}
 								value={filterCategory}
 								onChange={(e) => setFilterCategory(e.target.value)}
 								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all appearance-none cursor-pointer"
@@ -174,8 +185,12 @@ function App() {
 						</div>
 
 						<div className="relative group">
+							<label htmlFor={sortId} className="sr-only">
+								Ordenar comunidades
+							</label>
 							<ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-primary transition-colors pointer-events-none" />
 							<select
+								id={sortId}
 								value={sortBy}
 								onChange={handleSortByChange}
 								className="w-full h-11 bg-card-dark border border-border-dark rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-brand-primary transition-all appearance-none cursor-pointer"

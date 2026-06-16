@@ -17,13 +17,21 @@ async function getSupabase() {
 type AuthContextValue = {
 	session: Session | null;
 	isSessionLoading: boolean;
-	signInWithDiscord: (
+	signInWithOAuthProvider: (
+		provider: OAuthProvider,
 		redirectTo?: string,
 	) => Promise<{ error: AuthError | null }>;
 	signOut: () => Promise<{ error: AuthError | null }>;
 };
 
+export type OAuthProvider = "discord" | "google";
+
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+function getRedirectUrl(redirectTo: string) {
+	if (typeof window === "undefined") return redirectTo;
+	return new URL(redirectTo, window.location.origin).toString();
+}
 
 function getProfileUpdatesFromSession(session: Session) {
 	const metadata = session.user.user_metadata;
@@ -96,19 +104,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		};
 	}, []);
 
-	const signInWithDiscord = useCallback(async (redirectTo = "/") => {
-		if (typeof window === "undefined") {
-			return { error: null };
-		}
+	const signInWithOAuthProvider = useCallback(
+		async (provider: OAuthProvider, redirectTo = "/") => {
+			if (typeof window === "undefined") {
+				return { error: null };
+			}
 
-		const supabase = await getSupabase();
-		const { error } = await supabase.auth.signInWithOAuth({
-			provider: "discord",
-			options: { redirectTo },
-		});
+			const supabase = await getSupabase();
+			const { error } = await supabase.auth.signInWithOAuth({
+				provider,
+				options: { redirectTo: getRedirectUrl(redirectTo) },
+			});
 
-		return { error };
-	}, []);
+			return { error };
+		},
+		[],
+	);
 
 	const signOut = useCallback(async () => {
 		const supabase = await getSupabase();
@@ -123,10 +134,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		() => ({
 			session,
 			isSessionLoading,
-			signInWithDiscord,
+			signInWithOAuthProvider,
 			signOut,
 		}),
-		[session, isSessionLoading, signInWithDiscord, signOut],
+		[session, isSessionLoading, signInWithOAuthProvider, signOut],
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

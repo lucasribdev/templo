@@ -40,7 +40,7 @@ export function AuthPromptProvider({ children }: { children: ReactNode }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isSigningIn, setIsSigningIn] = useState(false);
 	const titleId = useId();
-	const { session, signInWithDiscord } = useAuth();
+	const { session, signInWithOAuthProvider } = useAuth();
 
 	const closeAuthPrompt = useCallback(() => {
 		if (isSigningIn) return;
@@ -76,11 +76,12 @@ export function AuthPromptProvider({ children }: { children: ReactNode }) {
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [isOpen, closeAuthPrompt]);
 
-	const handleDiscordLogin = async () => {
+	const handleLogin = async () => {
 		if (isSigningIn) return;
 		setIsSigningIn(true);
 
-		const { error } = await signInWithDiscord(
+		const { error } = await signInWithOAuthProvider(
+			"discord",
 			prompt.redirectTo ?? getCurrentPath(),
 		);
 
@@ -136,7 +137,7 @@ export function AuthPromptProvider({ children }: { children: ReactNode }) {
 
 						<button
 							type="button"
-							onClick={handleDiscordLogin}
+							onClick={handleLogin}
 							disabled={isSigningIn}
 							className="btn-discord mt-7 inline-flex w-full items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
 						>

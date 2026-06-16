@@ -6,17 +6,17 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function Header() {
 	const [isAuthLoading, setIsAuthLoading] = useState(false);
-	const { isSessionLoading, session, signInWithDiscord } = useAuth();
+	const { isSessionLoading, session, signInWithOAuthProvider } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
 
 	const navigate = useNavigate();
 	const profileFullName = session?.user.user_metadata.full_name;
 
-	const handleDiscordLogin = async () => {
+	const handleLogin = async () => {
 		if (isAuthLoading) return;
 
 		setIsAuthLoading(true);
-		const { error } = await signInWithDiscord("/");
+		const { error } = await signInWithOAuthProvider("discord", "/");
 
 		if (error) {
 			window.location.href = "?error=oauth_failed";
@@ -54,25 +54,15 @@ export default function Header() {
 						{isSessionLoading ? (
 							<div className="h-8 w-[160px] rounded-md bg-white/5 animate-pulse" />
 						) : !session ? (
-							<>
-								<button
-									type="button"
-									onClick={handleCreateCommunity}
-									className="btn-primary flex items-center gap-2 text-sm py-1.5"
-								>
-									<PlusCircle className="w-4 h-4" />
-									<span className="hidden sm:inline">Criar comunidade</span>
-								</button>
-								<button
-									type="button"
-									onClick={handleDiscordLogin}
-									disabled={isAuthLoading}
-									className="text-sm font-medium hover:text-brand-primary transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
-								>
-									<LogIn className="w-4 h-4" />
-									{isAuthLoading ? "Entrando..." : "Entrar com Discord"}
-								</button>
-							</>
+							<button
+								type="button"
+								onClick={handleLogin}
+								disabled={isAuthLoading}
+								className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-brand-primary disabled:cursor-not-allowed disabled:opacity-60"
+							>
+								<LogIn className="w-4 h-4" />
+								{isAuthLoading ? "Entrando..." : "Entrar"}
+							</button>
 						) : (
 							<>
 								<button

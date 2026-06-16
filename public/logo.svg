@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Templo">
+  <rect width="512" height="512" rx="112" fill="#0a0a0c"/>
+  <path
+    d="M256 93c21 85 85 138 85 223a85 85 0 0 1-170 0c0-22 6-45 21-64a17 17 0 0 0 85 0c0-43-26-64-26-106c0-29 12-48 5-53z"
+    fill="none"
+    stroke="#00ff88"
+    stroke-width="48"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

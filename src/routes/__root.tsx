@@ -7,7 +7,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { Gamepad2 } from "lucide-react";
+import { Flame } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GoogleAnalytics } from "tanstack-router-ga4";
 import { AuthPromptProvider } from "@/components/AuthPromptModal";
@@ -47,6 +47,27 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				rel: "stylesheet",
 				href: appCss,
 			},
+			{
+				rel: "icon",
+				type: "image/png",
+				sizes: "32x32",
+				href: "/favicon-32x32.png",
+			},
+			{
+				rel: "icon",
+				type: "image/png",
+				sizes: "16x16",
+				href: "/favicon-16x16.png",
+			},
+			{
+				rel: "apple-touch-icon",
+				sizes: "180x180",
+				href: "/apple-touch-icon.png",
+			},
+			{
+				rel: "manifest",
+				href: "/site.webmanifest",
+			},
 		],
 	}),
 	notFoundComponent: NotFound,
@@ -83,7 +104,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 									<div className="max-w-7xl mx-auto px-4 text-center space-y-4">
 										<div className="flex items-center justify-center gap-2">
 											<div className="w-6 h-6 bg-brand-primary rounded flex items-center justify-center">
-												<Gamepad2 className="text-black w-4 h-4" />
+												<Flame className="text-black w-4 h-4" />
 											</div>
 											<span className="text-lg font-bold tracking-tighter">
 												Templo

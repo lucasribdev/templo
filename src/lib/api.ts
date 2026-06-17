@@ -219,10 +219,20 @@ export async function getCommunityBySlug(
 }
 
 export async function getProfile(
-	profileFullName: string,
+	username: string,
 	signal?: AbortSignal,
 ): Promise<Profile> {
-	return apiRequest<Profile>(`/api/profile/${profileFullName}`, {
+	return apiRequest<Profile>(`/api/profile/${username}`, {
+		signal,
+		requireAuth: true,
+	});
+}
+
+export async function getProfileById(
+	id: string,
+	signal?: AbortSignal,
+): Promise<Profile> {
+	return apiRequest<Profile>(`/api/profile-by-id/${id}`, {
 		signal,
 		requireAuth: true,
 	});

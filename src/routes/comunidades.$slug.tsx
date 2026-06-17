@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { useAuthPrompt } from "@/components/AuthPrompt";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -254,8 +254,6 @@ function CommunityDetails() {
 		if (isSessionLoading || likeMutation.isPending) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Curtir comunidade",
-				description: "Entre para salvar e curtir comunidades no Templo.",
 				redirectTo: `/comunidades/${community.slug}`,
 			});
 			return;

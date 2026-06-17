@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PlusCircle } from "lucide-react";
-import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { useAuthPrompt } from "@/components/AuthPrompt";
 import CommunityCard, {
 	CommunityCardSkeleton,
 } from "@/components/CommunityCard";
@@ -110,8 +110,6 @@ function CategoryDetails() {
 		if (isSessionLoading) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Criar comunidade",
-				description: "Entre para criar a página oficial da sua comunidade.",
 				redirectTo: `/criar-comunidade?category=${category.slug}`,
 			});
 		}

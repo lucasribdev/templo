@@ -10,7 +10,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Flame } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GoogleAnalytics } from "tanstack-router-ga4";
-import { AuthPromptProvider } from "@/components/AuthPromptModal";
+import { AuthPromptProvider } from "@/components/AuthPrompt";
 import BackToTop from "@/components/BackToTop";
 import {
 	CookieConsentBanner,

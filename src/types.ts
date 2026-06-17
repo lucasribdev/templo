@@ -131,7 +131,6 @@ export interface Profile {
 	fullName: string;
 	avatarUrl: string;
 	bio: string;
-	discordId: string;
 	likesCount: number;
 	createdAt: string;
 	updatedAt: string;
@@ -143,7 +142,8 @@ export interface ProfileRow {
 	full_name: string;
 	avatar_url: string;
 	bio: string;
-	discord_id: string;
+	auth_provider?: string;
+	auth_provider_id?: string;
 	created_at: string;
 	updated_at: string;
 }

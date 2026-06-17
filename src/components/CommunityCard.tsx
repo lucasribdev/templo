@@ -13,7 +13,7 @@ import {
 	Youtube,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { useAuthPrompt } from "@/components/AuthPrompt";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { toggleCommunityLike } from "@/lib/api";
@@ -138,8 +138,6 @@ export default function CommunityCard({ community }: { community: Community }) {
 		if (isSessionLoading || likeMutation.isPending) return;
 		if (!session) {
 			openAuthPrompt({
-				title: "Curtir comunidade",
-				description: "Entre para salvar e curtir comunidades no Templo.",
 				redirectTo: `/comunidades/${community.slug}`,
 			});
 			return;

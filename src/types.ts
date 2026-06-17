@@ -131,8 +131,6 @@ export interface Profile {
 	fullName: string;
 	avatarUrl: string;
 	bio: string;
-	authProvider?: string;
-	authProviderId?: string;
 	likesCount: number;
 	createdAt: string;
 	updatedAt: string;

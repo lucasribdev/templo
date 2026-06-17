@@ -94,8 +94,6 @@ export function mapProfile(row: ProfileRow): Profile {
 		fullName: row.full_name,
 		avatarUrl: row.avatar_url,
 		bio: row.bio,
-		authProvider: row.auth_provider,
-		authProviderId: row.auth_provider_id,
 		likesCount: 0,
 		createdAt: row.created_at,
 		updatedAt: row.updated_at,

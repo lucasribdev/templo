@@ -116,6 +116,7 @@ function LoginPage() {
 		);
 
 		if (error) {
+			window.sessionStorage.removeItem(AUTH_REDIRECT_STORAGE_KEY);
 			window.location.href = "/entrar?error=oauth_failed";
 			setSigningInProvider(null);
 		}

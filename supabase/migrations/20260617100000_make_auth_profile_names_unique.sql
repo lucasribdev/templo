@@ -29,53 +29,40 @@ begin
     candidate_username := 'usuario';
   end if;
 
-  while exists (
-    select 1
-    from public.profiles
-    where full_name = candidate_full_name
-      and id <> new.id
-  ) loop
-    suffix := suffix + 1;
-    candidate_full_name := base_name || ' ' || suffix::text;
+  loop
+    begin
+      insert into public.profiles (
+        id,
+        full_name,
+        avatar_url,
+        username,
+        auth_provider,
+        auth_provider_id
+      )
+      values (
+        new.id,
+        candidate_full_name,
+        coalesce(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture'),
+        candidate_username,
+        new.raw_app_meta_data->>'provider',
+        coalesce(new.raw_user_meta_data->>'provider_id', new.raw_user_meta_data->>'sub')
+      )
+      on conflict (id) do update
+      set
+        full_name = coalesce(public.profiles.full_name, excluded.full_name),
+        avatar_url = coalesce(excluded.avatar_url, public.profiles.avatar_url),
+        username = coalesce(public.profiles.username, excluded.username),
+        auth_provider = coalesce(excluded.auth_provider, public.profiles.auth_provider),
+        auth_provider_id = coalesce(excluded.auth_provider_id, public.profiles.auth_provider_id),
+        updated_at = now();
+
+      return new;
+    exception
+      when unique_violation then
+        suffix := suffix + 1;
+        candidate_full_name := base_name || ' ' || suffix::text;
+        candidate_username := public.slugify(base_name) || '-' || suffix::text;
+    end;
   end loop;
-
-  suffix := 1;
-
-  while exists (
-    select 1
-    from public.profiles
-    where username = candidate_username
-      and id <> new.id
-  ) loop
-    suffix := suffix + 1;
-    candidate_username := public.slugify(base_name) || '-' || suffix::text;
-  end loop;
-
-  insert into public.profiles (
-    id,
-    full_name,
-    avatar_url,
-    username,
-    auth_provider,
-    auth_provider_id
-  )
-  values (
-    new.id,
-    candidate_full_name,
-    coalesce(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture'),
-    candidate_username,
-    new.raw_app_meta_data->>'provider',
-    coalesce(new.raw_user_meta_data->>'provider_id', new.raw_user_meta_data->>'sub')
-  )
-  on conflict (id) do update
-  set
-    full_name = coalesce(public.profiles.full_name, excluded.full_name),
-    avatar_url = coalesce(excluded.avatar_url, public.profiles.avatar_url),
-    username = coalesce(public.profiles.username, excluded.username),
-    auth_provider = coalesce(excluded.auth_provider, public.profiles.auth_provider),
-    auth_provider_id = coalesce(excluded.auth_provider_id, public.profiles.auth_provider_id),
-    updated_at = now();
-
-  return new;
 end;
 $$;

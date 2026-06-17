@@ -42,12 +42,12 @@ export const getCommunityPageData = createServerFn({
 export const getProfilePageData = createServerFn({
 	method: "GET",
 })
-	.inputValidator((profileFullName: string) => profileFullName.trim())
-	.handler(async ({ data: profileFullName }) => {
+	.inputValidator((username: string) => username.trim())
+	.handler(async ({ data: username }) => {
 		const { data: profile, error: profileError } = await supabase
 			.from("profiles")
 			.select("*")
-			.eq("full_name", profileFullName)
+			.eq("username", username)
 			.maybeSingle();
 
 		if (profileError || !profile) {

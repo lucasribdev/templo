@@ -1,9 +1,8 @@
 import {
 	createFileRoute,
 	type SearchSchemaInput,
-	useNavigate,
 } from "@tanstack/react-router";
-import { Github, Mail } from "lucide-react";
+import { Github, Mail, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type OAuthProvider, useAuth } from "@/hooks/use-auth";
 import { buildPageHead } from "@/lib/metadata";
@@ -17,9 +16,12 @@ const authProviders: Array<{
 	label: string;
 	Icon: typeof Mail;
 }> = [
-	{ provider: "google", label: "Continuar com Google/Gmail", Icon: Mail },
+	{ provider: "google", label: "Continuar com Google", Icon: Mail },
 	{ provider: "github", label: "Continuar com GitHub", Icon: Github },
+	{ provider: "discord", label: "Continuar com Discord", Icon: MessageCircle },
 ];
+
+const AUTH_REDIRECT_STORAGE_KEY = "templo.auth.redirectTo";
 
 function normalizeRedirectTo(value?: string) {
 	if (!value?.startsWith("/") || value.startsWith("//")) {
@@ -27,6 +29,23 @@ function normalizeRedirectTo(value?: string) {
 	}
 
 	return value;
+}
+
+function getLoginCallbackRedirectUrl(redirectTo: string) {
+	const callbackPath = `/entrar?redirectTo=${encodeURIComponent(redirectTo)}`;
+	if (typeof window === "undefined") return callbackPath;
+	return new URL(callbackPath, window.location.origin).toString();
+}
+
+function getPostLoginRedirectPath(redirectTo?: string) {
+	if (typeof window === "undefined") return redirectTo || "/";
+
+	const storedRedirectTo = window.sessionStorage.getItem(
+		AUTH_REDIRECT_STORAGE_KEY,
+	);
+	window.sessionStorage.removeItem(AUTH_REDIRECT_STORAGE_KEY);
+
+	return normalizeRedirectTo(storedRedirectTo ?? redirectTo);
 }
 
 export const Route = createFileRoute("/entrar")({
@@ -39,30 +58,61 @@ export const Route = createFileRoute("/entrar")({
 		buildPageHead({
 			path: "/entrar",
 			title: "Entrar | Templo",
-			description: "Entre no Templo com sua conta Google ou GitHub.",
+			description: "Entre no Templo com sua conta Google, GitHub ou Discord.",
 		}),
 	component: LoginPage,
 });
 
 function LoginPage() {
-	const navigate = useNavigate();
 	const { redirectTo } = Route.useSearch();
 	const { isSessionLoading, session, signInWithOAuthProvider } = useAuth();
+	const [isCompletingSignIn, setIsCompletingSignIn] = useState(false);
 	const [signingInProvider, setSigningInProvider] =
 		useState<OAuthProvider | null>(null);
 
 	useEffect(() => {
+		if (typeof window === "undefined" || session) return;
+
+		const code = new URL(window.location.href).searchParams.get("code");
+		if (!code) return;
+
+		let isMounted = true;
+
+		const completeSignIn = async () => {
+			setIsCompletingSignIn(true);
+			const { supabase } = await import("@/utils/supabase");
+			const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+			if (!isMounted) return;
+
+			if (error) {
+				window.location.replace("/entrar?error=oauth_failed");
+				return;
+			}
+
+			window.location.replace(getPostLoginRedirectPath(redirectTo));
+		};
+
+		void completeSignIn();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [redirectTo, session]);
+
+	useEffect(() => {
 		if (isSessionLoading || !session) return;
-		navigate({ to: redirectTo || "/" });
-	}, [isSessionLoading, navigate, redirectTo, session]);
+		window.location.replace(getPostLoginRedirectPath(redirectTo));
+	}, [isSessionLoading, redirectTo, session]);
 
 	const handleLogin = async (provider: OAuthProvider) => {
-		if (signingInProvider) return;
+		if (signingInProvider || isCompletingSignIn) return;
 		setSigningInProvider(provider);
+		window.sessionStorage.setItem(AUTH_REDIRECT_STORAGE_KEY, redirectTo || "/");
 
 		const { error } = await signInWithOAuthProvider(
 			provider,
-			redirectTo || "/",
+			getLoginCallbackRedirectUrl(redirectTo || "/"),
 		);
 
 		if (error) {
@@ -77,8 +127,8 @@ function LoginPage() {
 				<div className="space-y-3 text-center">
 					<h1 className="text-4xl font-bold tracking-tight">Entrar</h1>
 					<p className="text-sm leading-6 text-gray-400">
-						Use sua conta Google ou GitHub para criar comunidades, curtir
-						páginas e gerenciar seu perfil.
+						Use sua conta Google, GitHub ou Discord para criar comunidades,
+						curtir páginas e gerenciar seu perfil.
 					</p>
 				</div>
 
@@ -89,11 +139,17 @@ function LoginPage() {
 								key={provider}
 								type="button"
 								onClick={() => handleLogin(provider)}
-								disabled={isSessionLoading || Boolean(signingInProvider)}
+								disabled={
+									isSessionLoading ||
+									isCompletingSignIn ||
+									Boolean(signingInProvider)
+								}
 								className="btn-auth-provider inline-flex w-full items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
 							>
 								<Icon className="size-4" />
-								{signingInProvider === provider ? "Entrando..." : label}
+								{signingInProvider === provider || isCompletingSignIn
+									? "Entrando..."
+									: label}
 							</button>
 						))}
 					</div>

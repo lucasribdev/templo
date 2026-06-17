@@ -1,7 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Flame, LogIn, PlusCircle, UserIcon } from "lucide-react";
 import { useAuthPrompt } from "@/components/AuthPrompt";
 import { useAuth } from "@/hooks/use-auth";
+import { getProfileById } from "@/lib/api";
 
 export default function Header() {
 	const { isSessionLoading, session } = useAuth();
@@ -10,20 +12,20 @@ export default function Header() {
 	const navigate = useNavigate();
 	const pathname = useLocation({ select: (location) => location.pathname });
 	const isLoginRoute = pathname === "/entrar";
-	const metadata = session?.user.user_metadata;
-	const profileFullName =
-		typeof metadata?.full_name === "string"
-			? metadata.full_name
-			: typeof metadata?.name === "string"
-				? metadata.name
-				: typeof metadata?.user_name === "string"
-					? metadata.user_name
-					: undefined;
+	const { data: profile } = useQuery({
+		queryKey: ["profile", session?.user.id],
+		queryFn: ({ signal }) => {
+			if (!session?.user.id) {
+				throw new Error("Missing session user");
+			}
+
+			return getProfileById(session.user.id, signal);
+		},
+		enabled: Boolean(session?.user.id),
+	});
 
 	const handleLogin = () => {
-		openAuthPrompt({
-			redirectTo: "/",
-		});
+		openAuthPrompt();
 	};
 
 	const handleCreateCommunity = () => {
@@ -62,7 +64,7 @@ export default function Header() {
 								<LogIn className="w-4 h-4" />
 								Entrar
 							</button>
-						) : !session ? null : profileFullName ? (
+						) : !session ? null : profile?.username ? (
 							<>
 								<button
 									type="button"
@@ -73,8 +75,8 @@ export default function Header() {
 									<span className="hidden sm:inline">Criar comunidade</span>
 								</button>
 								<Link
-									to="/perfil/$profileFullName"
-									params={{ profileFullName }}
+									to="/perfil/$username"
+									params={{ username: profile.username }}
 									className="text-sm font-medium text-gray-300 hover:text-brand-primary transition-colors flex items-center gap-2"
 								>
 									<UserIcon className="w-4 h-4" /> Perfil

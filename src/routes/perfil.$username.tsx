@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Check, Copy, Heart, LogOut, PlusCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Heart, LogOut, PlusCircle } from "lucide-react";
+import { useState } from "react";
 import CommunityCard, {
 	CommunityCardSkeleton,
 } from "@/components/CommunityCard";
@@ -18,12 +18,12 @@ import { buildPageHead, truncateDescription } from "@/lib/metadata";
 import { getProfilePageData } from "@/lib/page-data";
 import { memberSince } from "@/utils/profile";
 
-export const Route = createFileRoute("/perfil/$profileFullName")({
+export const Route = createFileRoute("/perfil/$username")({
 	loader: async ({ params }) => {
-		const profileFullName = params?.profileFullName;
+		const username = params?.username;
 		return {
-			profileFullName,
-			initialProfile: await getProfilePageData({ data: profileFullName }),
+			username,
+			initialProfile: await getProfilePageData({ data: username }),
 		};
 	},
 	head: ({ loaderData }) => {
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/perfil/$profileFullName")({
 		}
 
 		return buildPageHead({
-			path: `/profile/${loaderData.profileFullName}`,
+			path: `/perfil/${loaderData.username}`,
 			title: loaderData.initialProfile
 				? `${loaderData.initialProfile.fullName} | Templo`
 				: "Perfil | Templo",
@@ -98,16 +98,14 @@ function ProfileSkeleton() {
 }
 
 function Profile() {
-	const [fullNameCopied, setFullNameCopied] = useState(false);
 	const [isSigningOut, setIsSigningOut] = useState(false);
-	const fullNameCopiedTimeoutRef = useRef<number | null>(null);
-	const { profileFullName, initialProfile } = Route.useLoaderData();
+	const { username, initialProfile } = Route.useLoaderData();
 	const navigate = useNavigate();
 	const { session, signOut } = useAuth();
 
 	const { data: profile, isLoading: isProfileLoading } = useQuery({
-		queryKey: ["profile", profileFullName],
-		queryFn: ({ signal }) => getProfile(profileFullName, signal),
+		queryKey: ["profile", username],
+		queryFn: ({ signal }) => getProfile(username, signal),
 		initialData: initialProfile,
 	});
 
@@ -169,17 +167,7 @@ function Profile() {
 
 	const communities = communitiesData?.pages.flat() ?? [];
 	const likedCommunities = likedCommunitiesData?.pages.flat() ?? [];
-	const isOwnProfile = Boolean(
-		session?.user?.id && profile?.id === session.user.id,
-	);
-
-	useEffect(() => {
-		return () => {
-			if (fullNameCopiedTimeoutRef.current) {
-				window.clearTimeout(fullNameCopiedTimeoutRef.current);
-			}
-		};
-	}, []);
+	const isAuthenticated = Boolean(session?.user?.id);
 
 	const setCommunitiesLoadMoreNode = useInfiniteScrollTrigger<HTMLDivElement>({
 		hasNextPage: hasNextCommunitiesPage,
@@ -208,23 +196,6 @@ function Profile() {
 		);
 	}
 
-	const handleCopyFullName = async () => {
-		if (fullNameCopiedTimeoutRef.current) {
-			window.clearTimeout(fullNameCopiedTimeoutRef.current);
-		}
-
-		try {
-			await navigator.clipboard.writeText(profile.fullName);
-			setFullNameCopied(true);
-			fullNameCopiedTimeoutRef.current = window.setTimeout(() => {
-				setFullNameCopied(false);
-				fullNameCopiedTimeoutRef.current = null;
-			}, 2000);
-		} catch {
-			setFullNameCopied(false);
-		}
-	};
-
 	const handleSignOut = async () => {
 		if (isSigningOut) return;
 
@@ -248,24 +219,9 @@ function Profile() {
 					name={profile.fullName}
 				/>
 				<div className="text-center md:text-left space-y-2">
-					<div className="flex items-center justify-center gap-2 md:justify-start">
-						<h1 className="text-4xl font-bold tracking-tight">
-							{profile.fullName}
-						</h1>
-						<button
-							type="button"
-							onClick={handleCopyFullName}
-							className="inline-flex size-8 items-center justify-center rounded-md text-gray-400 hover:border hover:border-brand-primary/50 hover:text-brand-primary"
-							aria-label={`Copiar ${profile.fullName}`}
-							title={fullNameCopied ? "Copiado" : "Copiar nome"}
-						>
-							{fullNameCopied ? (
-								<Check className="size-4 text-emerald-400" />
-							) : (
-								<Copy className="size-4" />
-							)}
-						</button>
-					</div>
+					<h1 className="text-4xl font-bold tracking-tight">
+						{profile.fullName}
+					</h1>
 					{memberSince(profile) && (
 						<p className="text-gray-500">Membro desde {memberSince(profile)}</p>
 					)}
@@ -290,7 +246,7 @@ function Profile() {
 							</p>
 						</div>
 					</div>
-					{isOwnProfile && (
+					{isAuthenticated && (
 						<button
 							type="button"
 							onClick={handleSignOut}

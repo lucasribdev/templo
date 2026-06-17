@@ -24,13 +24,38 @@ type AuthContextValue = {
 	signOut: () => Promise<{ error: AuthError | null }>;
 };
 
-export type OAuthProvider = "github" | "google";
+export type OAuthProvider = "discord" | "github" | "google";
+
+const AUTH_REDIRECT_STORAGE_KEY = "templo.auth.redirectTo";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function getRedirectUrl(redirectTo: string) {
 	if (typeof window === "undefined") return redirectTo;
 	return new URL(redirectTo, window.location.origin).toString();
+}
+
+function getStoredAuthRedirectPath() {
+	if (typeof window === "undefined") return null;
+
+	const redirectTo = window.sessionStorage.getItem(AUTH_REDIRECT_STORAGE_KEY);
+	if (!redirectTo?.startsWith("/") || redirectTo.startsWith("//")) {
+		window.sessionStorage.removeItem(AUTH_REDIRECT_STORAGE_KEY);
+		return null;
+	}
+
+	window.sessionStorage.removeItem(AUTH_REDIRECT_STORAGE_KEY);
+	return redirectTo;
+}
+
+function maybeRedirectAfterAuth() {
+	const redirectTo = getStoredAuthRedirectPath();
+	if (!redirectTo) return;
+
+	const currentPath = `${window.location.pathname}${window.location.search}`;
+	if (currentPath === redirectTo) return;
+
+	window.location.replace(redirectTo);
 }
 
 function getProfileNameFromMetadata(
@@ -97,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			setIsSessionLoading(false);
 			if (data.session) {
 				void syncProfileFromSession(data.session);
+				maybeRedirectAfterAuth();
 			}
 		};
 
@@ -113,6 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				setIsSessionLoading(false);
 				if (next) {
 					void syncProfileFromSession(next);
+					maybeRedirectAfterAuth();
 				}
 			});
 

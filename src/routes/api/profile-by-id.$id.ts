@@ -2,10 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { mapProfile } from "@/utils/mappers";
 import { createSupabaseUserClient, supabase } from "@/utils/supabase";
 
-async function getProfileByProfileFullName(
-	request: Request,
-	profileFullName: string,
-) {
+async function getProfileById(request: Request, id: string) {
 	const authHeader = request.headers.get("authorization");
 	const supabaseClient = authHeader
 		? createSupabaseUserClient(authHeader)
@@ -14,7 +11,7 @@ async function getProfileByProfileFullName(
 	const { data: profile, error: profileError } = await supabaseClient
 		.from("profiles")
 		.select("*")
-		.eq("full_name", profileFullName)
+		.eq("id", id)
 		.maybeSingle();
 
 	if (profileError) {
@@ -34,39 +31,16 @@ async function getProfileByProfileFullName(
 		};
 	}
 
-	const { count: likesCount, error: likesError } = await supabaseClient
-		.from("community_likes")
-		.select("*", { count: "exact", head: true })
-		.eq("user_id", profile.id);
-
-	if (likesError) {
-		return {
-			error: Response.json(
-				{
-					error: "Failed to fetch profile likes",
-					message: likesError.message,
-				},
-				{ status: 500 },
-			),
-		};
-	}
-
 	return {
-		data: {
-			...mapProfile(profile),
-			likesCount: likesCount ?? 0,
-		},
+		data: mapProfile(profile),
 	};
 }
 
-export const Route = createFileRoute("/api/profile/$profileFullName")({
+export const Route = createFileRoute("/api/profile-by-id/$id")({
 	server: {
 		handlers: {
 			GET: async ({ params, request }) => {
-				const result = await getProfileByProfileFullName(
-					request,
-					params.profileFullName,
-				);
+				const result = await getProfileById(request, params.id);
 				if (result.error) {
 					return result.error;
 				}

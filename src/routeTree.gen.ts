@@ -16,12 +16,13 @@ import { Route as CriarComunidadeRouteImport } from './routes/criar-comunidade'
 import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias.index'
-import { Route as PerfilProfileFullNameRouteImport } from './routes/perfil.$profileFullName'
+import { Route as PerfilUsernameRouteImport } from './routes/perfil.$username'
 import { Route as ComunidadesSlugRouteImport } from './routes/comunidades.$slug'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias.$slug'
 import { Route as ApiCommunitiesRouteImport } from './routes/api/communities'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
-import { Route as ApiProfileProfileFullNameRouteImport } from './routes/api/profile.$profileFullName'
+import { Route as ApiProfileUsernameRouteImport } from './routes/api/profile.$username'
+import { Route as ApiProfileByIdIdRouteImport } from './routes/api/profile-by-id.$id'
 import { Route as ApiCommunitiesSlugRouteImport } from './routes/api/communities.$slug'
 import { Route as ApiCategoriesSlugRouteImport } from './routes/api/categories.$slug'
 import { Route as ApiUsersIdLikedCommunitiesRouteImport } from './routes/api/users.$id.liked-communities'
@@ -64,9 +65,9 @@ const CategoriasIndexRoute = CategoriasIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CategoriasRoute,
 } as any)
-const PerfilProfileFullNameRoute = PerfilProfileFullNameRouteImport.update({
-  id: '/perfil/$profileFullName',
-  path: '/perfil/$profileFullName',
+const PerfilUsernameRoute = PerfilUsernameRouteImport.update({
+  id: '/perfil/$username',
+  path: '/perfil/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComunidadesSlugRoute = ComunidadesSlugRouteImport.update({
@@ -89,12 +90,16 @@ const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
   path: '/api/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiProfileProfileFullNameRoute =
-  ApiProfileProfileFullNameRouteImport.update({
-    id: '/api/profile/$profileFullName',
-    path: '/api/profile/$profileFullName',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const ApiProfileUsernameRoute = ApiProfileUsernameRouteImport.update({
+  id: '/api/profile/$username',
+  path: '/api/profile/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiProfileByIdIdRoute = ApiProfileByIdIdRouteImport.update({
+  id: '/api/profile-by-id/$id',
+  path: '/api/profile-by-id/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCommunitiesSlugRoute = ApiCommunitiesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -139,11 +144,12 @@ export interface FileRoutesByFullPath {
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
+  '/perfil/$username': typeof PerfilUsernameRoute
   '/categorias/': typeof CategoriasIndexRoute
   '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
-  '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
+  '/api/profile-by-id/$id': typeof ApiProfileByIdIdRoute
+  '/api/profile/$username': typeof ApiProfileUsernameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
   '/api/community-links/$id/clicks': typeof ApiCommunityLinksIdClicksRoute
@@ -159,11 +165,12 @@ export interface FileRoutesByTo {
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
+  '/perfil/$username': typeof PerfilUsernameRoute
   '/categorias': typeof CategoriasIndexRoute
   '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
-  '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
+  '/api/profile-by-id/$id': typeof ApiProfileByIdIdRoute
+  '/api/profile/$username': typeof ApiProfileUsernameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
   '/api/community-links/$id/clicks': typeof ApiCommunityLinksIdClicksRoute
@@ -181,11 +188,12 @@ export interface FileRoutesById {
   '/api/communities': typeof ApiCommunitiesRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/comunidades/$slug': typeof ComunidadesSlugRoute
-  '/perfil/$profileFullName': typeof PerfilProfileFullNameRoute
+  '/perfil/$username': typeof PerfilUsernameRoute
   '/categorias/': typeof CategoriasIndexRoute
   '/api/categories/$slug': typeof ApiCategoriesSlugRoute
   '/api/communities/$slug': typeof ApiCommunitiesSlugRouteWithChildren
-  '/api/profile/$profileFullName': typeof ApiProfileProfileFullNameRoute
+  '/api/profile-by-id/$id': typeof ApiProfileByIdIdRoute
+  '/api/profile/$username': typeof ApiProfileUsernameRoute
   '/api/communities/$slug/likes': typeof ApiCommunitiesSlugLikesRoute
   '/api/communities/$slug/views': typeof ApiCommunitiesSlugViewsRoute
   '/api/community-links/$id/clicks': typeof ApiCommunityLinksIdClicksRoute
@@ -204,11 +212,12 @@ export interface FileRouteTypes {
     | '/api/communities'
     | '/categorias/$slug'
     | '/comunidades/$slug'
-    | '/perfil/$profileFullName'
+    | '/perfil/$username'
     | '/categorias/'
     | '/api/categories/$slug'
     | '/api/communities/$slug'
-    | '/api/profile/$profileFullName'
+    | '/api/profile-by-id/$id'
+    | '/api/profile/$username'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
     | '/api/community-links/$id/clicks'
@@ -224,11 +233,12 @@ export interface FileRouteTypes {
     | '/api/communities'
     | '/categorias/$slug'
     | '/comunidades/$slug'
-    | '/perfil/$profileFullName'
+    | '/perfil/$username'
     | '/categorias'
     | '/api/categories/$slug'
     | '/api/communities/$slug'
-    | '/api/profile/$profileFullName'
+    | '/api/profile-by-id/$id'
+    | '/api/profile/$username'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
     | '/api/community-links/$id/clicks'
@@ -245,11 +255,12 @@ export interface FileRouteTypes {
     | '/api/communities'
     | '/categorias/$slug'
     | '/comunidades/$slug'
-    | '/perfil/$profileFullName'
+    | '/perfil/$username'
     | '/categorias/'
     | '/api/categories/$slug'
     | '/api/communities/$slug'
-    | '/api/profile/$profileFullName'
+    | '/api/profile-by-id/$id'
+    | '/api/profile/$username'
     | '/api/communities/$slug/likes'
     | '/api/communities/$slug/views'
     | '/api/community-links/$id/clicks'
@@ -266,8 +277,9 @@ export interface RootRouteChildren {
   ApiCategoriesRoute: typeof ApiCategoriesRouteWithChildren
   ApiCommunitiesRoute: typeof ApiCommunitiesRouteWithChildren
   ComunidadesSlugRoute: typeof ComunidadesSlugRoute
-  PerfilProfileFullNameRoute: typeof PerfilProfileFullNameRoute
-  ApiProfileProfileFullNameRoute: typeof ApiProfileProfileFullNameRoute
+  PerfilUsernameRoute: typeof PerfilUsernameRoute
+  ApiProfileByIdIdRoute: typeof ApiProfileByIdIdRoute
+  ApiProfileUsernameRoute: typeof ApiProfileUsernameRoute
   ApiCommunityLinksIdClicksRoute: typeof ApiCommunityLinksIdClicksRoute
   ApiUsersIdLikedCommunitiesRoute: typeof ApiUsersIdLikedCommunitiesRoute
 }
@@ -323,11 +335,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriasIndexRouteImport
       parentRoute: typeof CategoriasRoute
     }
-    '/perfil/$profileFullName': {
-      id: '/perfil/$profileFullName'
-      path: '/perfil/$profileFullName'
-      fullPath: '/perfil/$profileFullName'
-      preLoaderRoute: typeof PerfilProfileFullNameRouteImport
+    '/perfil/$username': {
+      id: '/perfil/$username'
+      path: '/perfil/$username'
+      fullPath: '/perfil/$username'
+      preLoaderRoute: typeof PerfilUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comunidades/$slug': {
@@ -358,11 +370,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCategoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/profile/$profileFullName': {
-      id: '/api/profile/$profileFullName'
-      path: '/api/profile/$profileFullName'
-      fullPath: '/api/profile/$profileFullName'
-      preLoaderRoute: typeof ApiProfileProfileFullNameRouteImport
+    '/api/profile/$username': {
+      id: '/api/profile/$username'
+      path: '/api/profile/$username'
+      fullPath: '/api/profile/$username'
+      preLoaderRoute: typeof ApiProfileUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/profile-by-id/$id': {
+      id: '/api/profile-by-id/$id'
+      path: '/api/profile-by-id/$id'
+      fullPath: '/api/profile-by-id/$id'
+      preLoaderRoute: typeof ApiProfileByIdIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/communities/$slug': {
@@ -471,8 +490,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCategoriesRoute: ApiCategoriesRouteWithChildren,
   ApiCommunitiesRoute: ApiCommunitiesRouteWithChildren,
   ComunidadesSlugRoute: ComunidadesSlugRoute,
-  PerfilProfileFullNameRoute: PerfilProfileFullNameRoute,
-  ApiProfileProfileFullNameRoute: ApiProfileProfileFullNameRoute,
+  PerfilUsernameRoute: PerfilUsernameRoute,
+  ApiProfileByIdIdRoute: ApiProfileByIdIdRoute,
+  ApiProfileUsernameRoute: ApiProfileUsernameRoute,
   ApiCommunityLinksIdClicksRoute: ApiCommunityLinksIdClicksRoute,
   ApiUsersIdLikedCommunitiesRoute: ApiUsersIdLikedCommunitiesRoute,
 }

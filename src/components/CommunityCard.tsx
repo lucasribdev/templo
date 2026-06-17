@@ -1,17 +1,14 @@
+import {
+	SiDiscord,
+	SiGithub,
+	SiInstagram,
+	SiTelegram,
+	SiWhatsapp,
+	SiYoutube,
+} from "@icons-pack/react-simple-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link as RouterLink } from "@tanstack/react-router";
-import {
-	Eye,
-	Github,
-	Globe2,
-	Heart,
-	Instagram,
-	Link as LinkIcon,
-	MessageCircle,
-	Send,
-	Tags,
-	Youtube,
-} from "lucide-react";
+import { Eye, Globe2, Heart, Link as LinkIcon, Tags } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthPrompt } from "@/components/AuthPrompt";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,12 +24,12 @@ const communityPlatformMeta: Record<
 		Icon: typeof LinkIcon;
 	}
 > = {
-	DISCORD: { label: "Discord", Icon: MessageCircle },
-	TELEGRAM: { label: "Telegram", Icon: Send },
-	WHATSAPP: { label: "WhatsApp", Icon: MessageCircle },
-	GITHUB: { label: "GitHub", Icon: Github },
-	YOUTUBE: { label: "YouTube", Icon: Youtube },
-	INSTAGRAM: { label: "Instagram", Icon: Instagram },
+	DISCORD: { label: "Discord", Icon: SiDiscord },
+	TELEGRAM: { label: "Telegram", Icon: SiTelegram },
+	WHATSAPP: { label: "WhatsApp", Icon: SiWhatsapp },
+	GITHUB: { label: "GitHub", Icon: SiGithub },
+	YOUTUBE: { label: "YouTube", Icon: SiYoutube },
+	INSTAGRAM: { label: "Instagram", Icon: SiInstagram },
 	SITE_OFICIAL: { label: "Site oficial", Icon: Globe2 },
 	OUTRA: { label: "Outro canal", Icon: LinkIcon },
 };

@@ -1,14 +1,12 @@
 import {
-	Github,
-	Globe2,
-	Instagram,
-	Link,
-	MessageCircle,
-	Plus,
-	Send,
-	Trash2,
-	Youtube,
-} from "lucide-react";
+	SiDiscord,
+	SiGithub,
+	SiInstagram,
+	SiTelegram,
+	SiWhatsapp,
+	SiYoutube,
+} from "@icons-pack/react-simple-icons";
+import { Globe2, Link, Plus, Trash2 } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { CommunityPlatform, CreateCommunityLinkInput } from "@/types";
@@ -27,12 +25,12 @@ type PlatformOption = {
 };
 
 const platformOptions: PlatformOption[] = [
-	{ value: "DISCORD", label: "Discord", Icon: MessageCircle },
-	{ value: "WHATSAPP", label: "WhatsApp", Icon: MessageCircle },
-	{ value: "TELEGRAM", label: "Telegram", Icon: Send },
-	{ value: "GITHUB", label: "GitHub", Icon: Github },
-	{ value: "YOUTUBE", label: "YouTube", Icon: Youtube },
-	{ value: "INSTAGRAM", label: "Instagram", Icon: Instagram },
+	{ value: "DISCORD", label: "Discord", Icon: SiDiscord },
+	{ value: "WHATSAPP", label: "WhatsApp", Icon: SiWhatsapp },
+	{ value: "TELEGRAM", label: "Telegram", Icon: SiTelegram },
+	{ value: "GITHUB", label: "GitHub", Icon: SiGithub },
+	{ value: "YOUTUBE", label: "YouTube", Icon: SiYoutube },
+	{ value: "INSTAGRAM", label: "Instagram", Icon: SiInstagram },
 	{ value: "SITE_OFICIAL", label: "Site oficial", Icon: Globe2 },
 	{ value: "OUTRA", label: "Outra", Icon: Link },
 ];

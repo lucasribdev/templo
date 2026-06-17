@@ -1,8 +1,8 @@
+import { SiDiscord, SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
 import {
 	createFileRoute,
 	type SearchSchemaInput,
 } from "@tanstack/react-router";
-import { Github, Mail, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type OAuthProvider, useAuth } from "@/hooks/use-auth";
 import { buildPageHead } from "@/lib/metadata";
@@ -14,11 +14,11 @@ type LoginSearch = {
 const authProviders: Array<{
 	provider: OAuthProvider;
 	label: string;
-	Icon: typeof Mail;
+	Icon: typeof SiDiscord;
 }> = [
-	{ provider: "google", label: "Continuar com Google", Icon: Mail },
-	{ provider: "github", label: "Continuar com GitHub", Icon: Github },
-	{ provider: "discord", label: "Continuar com Discord", Icon: MessageCircle },
+	{ provider: "google", label: "Continuar com Google", Icon: SiGoogle },
+	{ provider: "github", label: "Continuar com GitHub", Icon: SiGithub },
+	{ provider: "discord", label: "Continuar com Discord", Icon: SiDiscord },
 ];
 
 const AUTH_REDIRECT_STORAGE_KEY = "templo.auth.redirectTo";

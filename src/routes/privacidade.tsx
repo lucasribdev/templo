@@ -48,7 +48,7 @@ function PrivacyPolicy() {
 						<p>Podemos coletar e tratar os seguintes dados:</p>
 						<ul className="list-disc pl-6 space-y-2">
 							<li>
-								dados de autenticação fornecidos pelo Discord, como
+								dados de autenticação fornecidos pelo provedor escolhido, como
 								identificador, nome de usuário, nome exibido e avatar;
 							</li>
 							<li>

@@ -58,10 +58,10 @@ function TermsOfUse() {
 							3. Conta e autenticação
 						</h2>
 						<p>
-							Alguns recursos exigem login por Discord. Você é responsável por
-							manter sua conta segura, por todas as atividades feitas a partir
-							da sua sessão e por fornecer informações corretas ao publicar
-							conteúdo.
+							Alguns recursos exigem login com um provedor externo. Você é
+							responsável por manter sua conta segura, por todas as atividades
+							feitas a partir da sua sessão e por fornecer informações corretas
+							ao publicar conteúdo.
 						</p>
 					</section>
 

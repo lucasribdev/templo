@@ -1,27 +1,29 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Flame, LogIn, PlusCircle, UserIcon } from "lucide-react";
-import { useState } from "react";
-import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { useAuthPrompt } from "@/components/AuthPrompt";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function Header() {
-	const [isAuthLoading, setIsAuthLoading] = useState(false);
-	const { isSessionLoading, session, signInWithOAuthProvider } = useAuth();
+	const { isSessionLoading, session } = useAuth();
 	const { openAuthPrompt } = useAuthPrompt();
 
 	const navigate = useNavigate();
-	const profileFullName = session?.user.user_metadata.full_name;
+	const pathname = useLocation({ select: (location) => location.pathname });
+	const isLoginRoute = pathname === "/entrar";
+	const metadata = session?.user.user_metadata;
+	const profileFullName =
+		typeof metadata?.full_name === "string"
+			? metadata.full_name
+			: typeof metadata?.name === "string"
+				? metadata.name
+				: typeof metadata?.user_name === "string"
+					? metadata.user_name
+					: undefined;
 
-	const handleLogin = async () => {
-		if (isAuthLoading) return;
-
-		setIsAuthLoading(true);
-		const { error } = await signInWithOAuthProvider("discord", "/");
-
-		if (error) {
-			window.location.href = "?error=oauth_failed";
-			setIsAuthLoading(false);
-		}
+	const handleLogin = () => {
+		openAuthPrompt({
+			redirectTo: "/",
+		});
 	};
 
 	const handleCreateCommunity = () => {
@@ -31,8 +33,6 @@ export default function Header() {
 		}
 
 		openAuthPrompt({
-			title: "Criar comunidade",
-			description: "Entre para criar a página oficial da sua comunidade.",
 			redirectTo: "/criar-comunidade",
 		});
 	};
@@ -53,17 +53,16 @@ export default function Header() {
 					<div className="flex items-center gap-4 min-w-[220px] justify-end">
 						{isSessionLoading ? (
 							<div className="h-8 w-[160px] rounded-md bg-white/5 animate-pulse" />
-						) : !session ? (
+						) : !session && !isLoginRoute ? (
 							<button
 								type="button"
 								onClick={handleLogin}
-								disabled={isAuthLoading}
-								className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-brand-primary disabled:cursor-not-allowed disabled:opacity-60"
+								className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-brand-primary"
 							>
 								<LogIn className="w-4 h-4" />
-								{isAuthLoading ? "Entrando..." : "Entrar"}
+								Entrar
 							</button>
-						) : (
+						) : !session ? null : profileFullName ? (
 							<>
 								<button
 									type="button"
@@ -81,6 +80,15 @@ export default function Header() {
 									<UserIcon className="w-4 h-4" /> Perfil
 								</Link>
 							</>
+						) : (
+							<button
+								type="button"
+								onClick={handleCreateCommunity}
+								className="btn-primary flex items-center gap-2 text-sm py-1.5"
+							>
+								<PlusCircle className="w-4 h-4" />
+								<span className="hidden sm:inline">Criar comunidade</span>
+							</button>
 						)}
 					</div>
 				</div>

@@ -24,7 +24,7 @@ type AuthContextValue = {
 	signOut: () => Promise<{ error: AuthError | null }>;
 };
 
-export type OAuthProvider = "discord" | "google";
+export type OAuthProvider = "github" | "google";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -33,15 +33,34 @@ function getRedirectUrl(redirectTo: string) {
 	return new URL(redirectTo, window.location.origin).toString();
 }
 
+function getProfileNameFromMetadata(
+	metadata: Session["user"]["user_metadata"],
+) {
+	const name =
+		typeof metadata.full_name === "string"
+			? metadata.full_name
+			: typeof metadata.name === "string"
+				? metadata.name
+				: typeof metadata.user_name === "string"
+					? metadata.user_name
+					: undefined;
+
+	return name?.trim() || undefined;
+}
+
 function getProfileUpdatesFromSession(session: Session) {
 	const metadata = session.user.user_metadata;
+	const provider =
+		typeof session.user.app_metadata.provider === "string"
+			? session.user.app_metadata.provider
+			: undefined;
 	const avatarUrl =
 		typeof metadata.avatar_url === "string"
 			? metadata.avatar_url
 			: typeof metadata.picture === "string"
 				? metadata.picture
 				: undefined;
-	const discordId =
+	const providerId =
 		typeof metadata.provider_id === "string"
 			? metadata.provider_id
 			: typeof metadata.sub === "string"
@@ -49,8 +68,10 @@ function getProfileUpdatesFromSession(session: Session) {
 				: undefined;
 
 	return {
+		full_name: getProfileNameFromMetadata(metadata),
 		avatar_url: avatarUrl,
-		discord_id: discordId,
+		auth_provider: provider,
+		auth_provider_id: providerId,
 	};
 }
 

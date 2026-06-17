@@ -9,7 +9,7 @@ import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { type KeyboardEvent, useEffect, useId, useState } from "react";
 import { toast } from "sonner";
-import { useAuthPrompt } from "@/components/AuthPromptModal";
+import { useAuthPrompt } from "@/components/AuthPrompt";
 import { CommunityLinksEditor } from "@/components/CommunityLinksEditor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
@@ -137,8 +137,6 @@ function RouteComponent() {
 
 			if (!session?.user?.id) {
 				openAuthPrompt({
-					title: "Criar comunidade",
-					description: "Entre para criar a página oficial da sua comunidade.",
 					redirectTo: "/criar-comunidade",
 				});
 				return;
@@ -174,8 +172,6 @@ function RouteComponent() {
 		if (isSessionLoading || session) return;
 
 		openAuthPrompt({
-			title: "Criar comunidade",
-			description: "Entre para criar a página oficial da sua comunidade.",
 			redirectTo: "/criar-comunidade",
 		});
 	}, [isSessionLoading, session, openAuthPrompt]);
